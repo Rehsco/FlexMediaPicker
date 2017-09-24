@@ -146,7 +146,7 @@ class CameraView: FlexView, CLLocationManagerDelegate, CameraManDelegate {
             self.didRecordVideo?(url)
         }
         
-        self.footerSize = 64
+        self.footerSize = FlexMediaPickerConfiguration.footerHeight
         self.footerText = " "
         if let ccp = self.footer as? CameraMediaControlPanel {
             ccp.setupMenu(in: self)

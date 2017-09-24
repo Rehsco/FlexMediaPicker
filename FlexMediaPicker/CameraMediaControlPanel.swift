@@ -38,7 +38,7 @@ class CameraMediaControlPanel: FlexFooterView {
     
     fileprivate var isVideoModeActive: Bool = false
     
-    var centerActionButtonHeight: CGFloat = 64
+    var centerActionButtonHeight: CGFloat = FlexMediaPickerConfiguration.takeButtonRadius
     var camVidSwitchSize: CGSize = CGSize(width: 80, height: 40)
     
     var flashActionHandler: ((Bool)->Void)?
@@ -57,10 +57,10 @@ class CameraMediaControlPanel: FlexFooterView {
         assert(vidIcon != nil && camIcon != nil)
         
         self.backTriggerButton = FlexLabel(frame: CGRect(x: 0, y: 0, width: centerActionButtonHeight, height: centerActionButtonHeight))
-        self.backTriggerButton?.style = FlexShapeStyle(style: .thumb)
+        self.backTriggerButton?.style = FlexMediaPickerConfiguration.takeButtonStyle
         self.backTriggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonBorderColor
         self.triggerButton = FlexLabel(frame: CGRect(x: 0, y: 0, width: centerActionButtonHeight-FlexMediaPickerConfiguration.takeButtonBorderWidth, height: centerActionButtonHeight-FlexMediaPickerConfiguration.takeButtonBorderWidth))
-        self.triggerButton?.style = FlexShapeStyle(style: .thumb)
+        self.triggerButton?.style = FlexMediaPickerConfiguration.takeButtonStyle
         self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonColor
         
         self.camVidSwitch = CamVidSwitch(frame: CGRect(origin: .zero, size: self.camVidSwitchSize), thumbIcon: camIcon!, sepIcon: vidIcon!, disabledThumbIcon: dcamIcon!, disabledSepIcon: dvidIcon!)
@@ -71,6 +71,11 @@ class CameraMediaControlPanel: FlexFooterView {
         self.camVidSwitch?.style = FlexMediaPickerConfiguration.camVidSwitchStyle
         self.camVidSwitch?.thumbStyle = FlexMediaPickerConfiguration.camVidSwitchStyle
         self.addSubview(self.camVidSwitch!)
+        
+        self.camVidSwitch?.valueChangedBlock = {
+            idx, val in
+            self.applyTriggerButtonStyle()
+        }
         
         let tgr = UITapGestureRecognizer(target: self, action: #selector(self.onCameraTriggerPressed(_:)))
         self.triggerButton?.addGestureRecognizer(tgr)
@@ -125,16 +130,29 @@ extension CameraMediaControlPanel {
         guard let cvs = self.camVidSwitch else { return }
         if cvs.on {
             self.isVideoModeActive = !self.isVideoModeActive
-            if self.isVideoModeActive {
-                self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonRecordingColor
-            }
-            else {
-                self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonColor
-            }
             self.recVideoActionHandler?()
         }
         else {
             self.takePhotoActionHandler?()
+        }
+        self.applyTriggerButtonStyle()
+    }
+    
+    func applyTriggerButtonStyle() {
+        guard let cvs = self.camVidSwitch else { return }
+        if cvs.on {
+            if self.isVideoModeActive {
+                self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonRecordingColor
+                self.triggerButton?.style = FlexMediaPickerConfiguration.takeButtonRecordingStyle
+            }
+            else {
+                self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonNotRecordingColor
+                self.triggerButton?.style = FlexMediaPickerConfiguration.takeButtonStyle
+            }
+        }
+        else {
+            self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonColor
+            self.triggerButton?.style = FlexMediaPickerConfiguration.takeButtonStyle
         }
     }
 }

@@ -33,36 +33,14 @@ import MJRFlexStyleComponents
 class MainMediaControlPanel: MediaControlPanel {
     private var micItem: FlexMenuItem?
     
-    override func initView() {
-        super.initView()
-        let camIcon = UIImage(named: "cameraImage_36pt", in: Bundle(for: MediaControlPanel.self), compatibleWith: nil)?.tint(FlexMediaPickerConfiguration.iconsColor)
-        
-        self.sizingType = .fixed
-        self.centerActionButton?.primaryActionItem.icon = camIcon
-        
-        self.centerActionButton?.actionActivationHandler = {
-            action in
-            switch action {
-            case .upper:
-                self.actionActivationHandler?(.microphone)
-                NSLog("mic activated")
-            case .primary:
-                self.actionActivationHandler?(.camera)
-                NSLog("cam activated")
-            case .lower:
-                break
-            }
-        }
-        self.centerActionButton?.createItems()
-    }
-    
-    func setupMenu(in flexView: FlexView) {
-        let leftMenu = CommonIconViewMenu(size: CGSize(width: 120, height: flexView.footerSize), hPos: .left, vPos: .footer)
-        if !FlexMediaPickerConfiguration.flashButtonAlwaysHidden {
+    override func setupMenu(in flexView: FlexView) {
+        super.setupMenu(in: flexView)
+        if FlexMediaPickerConfiguration.allowVoiceRecording {
+            let leftMenu = CommonIconViewMenu(size: CGSize(width: 120, height: flexView.footerSize * 0.8), hPos: .left, vPos: .footer)
             self.micItem = leftMenu.createIconMenuItem(imageName: "micImage", iconSize: 36) {
                 self.actionActivationHandler?(.microphone)
             }
+            flexView.addMenu(leftMenu)
         }
-        flexView.addMenu(leftMenu)
     }
 }

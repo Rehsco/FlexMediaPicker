@@ -39,43 +39,24 @@ enum MediaControlAction {
 }
 
 class MediaControlPanel: FlexFooterView {
-    var centerActionButton: FlexFlickButton?
-    
-    var centerActionButtonHeight: CGFloat = 80
-    var centerActionButtonStyle: FlexShapeStyle = FlexShapeStyle(style: .thumb)
-    var centerActionButtonStyleColor: UIColor = .black
-    var sizingType: ThumbSizingType = .relativeToSlider(min: 10, max: 32)
+    var centerActionItem: FlexMenuItem?
+   
+    var centerActionButtonWidth: CGFloat = FlexMediaPickerConfiguration.centerActionButtonWidth
+    var centerActionButtonHeight: CGFloat = FlexMediaPickerConfiguration.centerActionButtonHeight
+    var centerActionButtonStyle: FlexShapeStyle = FlexMediaPickerConfiguration.centerActionButtonStyle
+    var centerActionButtonStyleColor: UIColor = FlexMediaPickerConfiguration.centerActionButtonStyleColor
     
     var actionActivationHandler: ((MediaControlAction)->Void)?
+    var actionTriggered: MediaControlAction = .camera
+    var actionImageName: String = "cameraImage"
     
-    var upperActionItem = FlexFlickActionItem()
-    var primaryActionItem = FlexFlickActionItem()
-    
-    override func initView() {
-        super.initView()
-        self.centerActionButton = FlexFlickButton(frame: CGRect(origin: .zero, size: CGSize(width: self.centerActionButtonHeight, height: self.centerActionButtonHeight)))
-        if let fs = self.centerActionButton {
-            fs.style = self.centerActionButtonStyle
-            fs.styleColor = self.centerActionButtonStyleColor
-            fs.upperActionItem = self.upperActionItem
-            fs.primaryActionItem = self.primaryActionItem
-            fs.sizingType = self.sizingType
-            fs.direction = .vertical
-            fs.thumbFactory = {
-                index in
-                let thumb = MutableSliderThumbItem()
-                thumb.color = .clear
-                thumb.triggerEventAbove = 0.75
-                thumb.triggerEventBelow = 0.25
-                return thumb
-            }
-
-            self.addSubview(fs)
+    func setupMenu(in flexView: FlexView) {
+        let centerMenu = CommonIconViewMenu(size: CGSize(width: self.centerActionButtonWidth, height: self.centerActionButtonHeight), hPos: .center, vPos: .footer)
+        self.centerActionItem = centerMenu.createIconMenuItem(imageName: self.actionImageName, iconSize: 36) {
+            self.actionActivationHandler?(self.actionTriggered)
         }
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        self.centerActionButton?.frame = CGRect(x: (self.bounds.size.width - self.centerActionButtonHeight) * 0.5, y: (self.bounds.size.height - self.centerActionButtonHeight) * 0.5, width: self.centerActionButtonHeight, height: self.centerActionButtonHeight)
+        centerMenu.viewMenu?.style = self.centerActionButtonStyle
+        centerMenu.viewMenu?.styleColor = self.centerActionButtonStyleColor
+        flexView.addMenu(centerMenu)
     }
 }

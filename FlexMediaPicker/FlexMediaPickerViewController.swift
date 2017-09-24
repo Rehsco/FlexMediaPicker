@@ -137,9 +137,12 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         }
         
         // Media Control panel at the bottom of the view
-        self.contentView?.footerSize = 64
+        self.contentView?.footerSize = FlexMediaPickerConfiguration.footerHeight
         self.contentView?.footerText = " "
         if let mcp = self.contentView?.footer as? MediaControlPanel {
+            if let cv = self.contentView {
+                mcp.setupMenu(in: cv)
+            }
             mcp.actionActivationHandler = {
                 action in
                 switch action {
