@@ -38,7 +38,6 @@ class CameraMediaControlPanel: FlexFooterView {
     
     fileprivate var isVideoModeActive: Bool = false
     
-    var centerActionButtonHeight: CGFloat = FlexMediaPickerConfiguration.takeButtonRadius
     var camVidSwitchSize: CGSize = CGSize(width: 80, height: 40)
     
     var flashActionHandler: ((Bool)->Void)?
@@ -56,10 +55,10 @@ class CameraMediaControlPanel: FlexFooterView {
         let dcamIcon = UIImage(named: "cameraImage_36pt", in: Bundle(for: MediaControlPanel.self), compatibleWith: nil)?.tint(FlexMediaPickerConfiguration.disabledIconsColor)
         assert(vidIcon != nil && camIcon != nil)
         
-        self.backTriggerButton = FlexLabel(frame: CGRect(x: 0, y: 0, width: centerActionButtonHeight, height: centerActionButtonHeight))
+        self.backTriggerButton = FlexLabel(frame: CGRect(x: 0, y: 0, width: FlexMediaPickerConfiguration.takeButtonRadius, height: FlexMediaPickerConfiguration.takeButtonRadius))
         self.backTriggerButton?.style = FlexMediaPickerConfiguration.takeButtonStyle
         self.backTriggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonBorderColor
-        self.triggerButton = FlexLabel(frame: CGRect(x: 0, y: 0, width: centerActionButtonHeight-FlexMediaPickerConfiguration.takeButtonBorderWidth, height: centerActionButtonHeight-FlexMediaPickerConfiguration.takeButtonBorderWidth))
+        self.triggerButton = FlexLabel(frame: CGRect(x: 0, y: 0, width: FlexMediaPickerConfiguration.takeButtonRadius-FlexMediaPickerConfiguration.takeButtonBorderWidth, height: FlexMediaPickerConfiguration.takeButtonRadius-FlexMediaPickerConfiguration.takeButtonBorderWidth))
         self.triggerButton?.style = FlexMediaPickerConfiguration.takeButtonStyle
         self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonColor
         
@@ -111,8 +110,8 @@ class CameraMediaControlPanel: FlexFooterView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.backTriggerButton?.frame = CGRect(x: (self.bounds.size.width - self.centerActionButtonHeight) * 0.5, y: (self.bounds.size.height - self.centerActionButtonHeight) * 0.5, width: self.centerActionButtonHeight, height: self.centerActionButtonHeight)
-        let triggerDim = self.centerActionButtonHeight - FlexMediaPickerConfiguration.takeButtonBorderWidth
+        self.backTriggerButton?.frame = CGRect(x: (self.bounds.size.width - FlexMediaPickerConfiguration.takeButtonRadius) * 0.5, y: (self.bounds.size.height - FlexMediaPickerConfiguration.takeButtonRadius) * 0.5, width: FlexMediaPickerConfiguration.takeButtonRadius, height: FlexMediaPickerConfiguration.takeButtonRadius)
+        let triggerDim = FlexMediaPickerConfiguration.takeButtonRadius - FlexMediaPickerConfiguration.takeButtonBorderWidth
         self.triggerButton?.frame = CGRect(x: (self.bounds.size.width - triggerDim) * 0.5, y: (self.bounds.size.height - triggerDim) * 0.5, width: triggerDim, height: triggerDim)
         if self.bounds.size.width < self.bounds.size.height {
             self.camVidSwitch?.frame = CGRect(x: (self.bounds.size.width-self.camVidSwitchSize.height) * 0.5, y: (self.bounds.size.height - self.camVidSwitchSize.width) * 0.2, width: self.camVidSwitchSize.height, height: self.camVidSwitchSize.width)

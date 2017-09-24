@@ -41,22 +41,17 @@ enum MediaControlAction {
 class MediaControlPanel: FlexFooterView {
     var centerActionItem: FlexMenuItem?
    
-    var centerActionButtonWidth: CGFloat = FlexMediaPickerConfiguration.centerActionButtonWidth
-    var centerActionButtonHeight: CGFloat = FlexMediaPickerConfiguration.centerActionButtonHeight
-    var centerActionButtonStyle: FlexShapeStyle = FlexMediaPickerConfiguration.centerActionButtonStyle
-    var centerActionButtonStyleColor: UIColor = FlexMediaPickerConfiguration.centerActionButtonStyleColor
-    
     var actionActivationHandler: ((MediaControlAction)->Void)?
     var actionTriggered: MediaControlAction = .camera
     var actionImageName: String = "cameraImage"
     
     func setupMenu(in flexView: FlexView) {
-        let centerMenu = CommonIconViewMenu(size: CGSize(width: self.centerActionButtonWidth, height: self.centerActionButtonHeight), hPos: .center, vPos: .footer)
+        let centerMenu = CommonIconViewMenu(size: CGSize(width: FlexMediaPickerConfiguration.centerActionButtonWidth, height: FlexMediaPickerConfiguration.centerActionButtonHeight), hPos: .center, vPos: .footer)
         self.centerActionItem = centerMenu.createIconMenuItem(imageName: self.actionImageName, iconSize: 36) {
             self.actionActivationHandler?(self.actionTriggered)
         }
-        centerMenu.viewMenu?.style = self.centerActionButtonStyle
-        centerMenu.viewMenu?.styleColor = self.centerActionButtonStyleColor
+        centerMenu.viewMenu?.style = FlexMediaPickerConfiguration.centerActionButtonStyle
+        centerMenu.viewMenu?.styleColor = FlexMediaPickerConfiguration.centerActionButtonStyleColor
         flexView.addMenu(centerMenu)
     }
 }
