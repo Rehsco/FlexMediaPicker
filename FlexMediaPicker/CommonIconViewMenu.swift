@@ -82,7 +82,7 @@ public protocol CommonIconViewMenuDelegate {
 }
 
 public class CommonIconViewMenu: FlexViewMenu {
-    public var menuIconSize = 24
+    private let menuIconSize: CGFloat
     
     public var viewMenuItems: [FlexMenuItem] = []
     public var viewMenu: FlexMenu?
@@ -90,9 +90,10 @@ public class CommonIconViewMenu: FlexViewMenu {
     public var menuDelegate: CommonIconViewMenuDelegate?
     public var menuSelectionHandler: ((SCPMenuType) -> Void)?
 
-    public init(size: CGSize, hPos: FlexViewMenuHorizontalPosition, vPos: FlexViewMenuVerticalPosition) {
+    public init(size: CGSize, hPos: FlexViewMenuHorizontalPosition, vPos: FlexViewMenuVerticalPosition, menuIconSize: CGFloat) {
+        self.menuIconSize = menuIconSize
         let menu = FlexMenu(frame: CGRect(x: 0,y: 0,width: 10,height: 10))
-        menu.thumbSize = CGSize(width: CGFloat(menuIconSize), height: CGFloat(menuIconSize))
+        menu.thumbSize = CGSize(width: menuIconSize, height: menuIconSize)
         menu.menuItemStyle = .rounded
         menu.menuInterItemSpacing = 10.0
         menu.menuStyle = .equallySpaces(thumbPos: .right)
@@ -164,8 +165,8 @@ public class CommonIconViewMenu: FlexViewMenu {
         }
     }
     
-    public func createIconMenuItem(imageName: String, selectedImageName: String? = nil, iconSize: Int? = nil, selectionHandler: @escaping ((Void) -> Void)) -> FlexMenuItem {
-        let size = iconSize ?? menuIconSize
+    public func createIconMenuItem(imageName: String, selectedImageName: String? = nil, iconSize: Int? = nil, selectionHandler: @escaping (() -> Void)) -> FlexMenuItem {
+        let size = iconSize ?? Int(menuIconSize)
         let ti1 = self.getImage(named: "\(imageName)_\(size)pt")?.tint(FlexMediaPickerConfiguration.iconsColor)
         var si1: UIImage?
         if let sin = selectedImageName {

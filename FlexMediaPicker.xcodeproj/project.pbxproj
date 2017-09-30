@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5B3DB3221F7FB8D300D864DE /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3DB3211F7FB8D300D864DE /* UIViewExtensions.swift */; };
+		5B3DB3231F7FB8D300D864DE /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3DB3211F7FB8D300D864DE /* UIViewExtensions.swift */; };
 		5BBFFABB1F51796500C08350 /* FlexMediaPickerAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBFFABA1F51796500C08350 /* FlexMediaPickerAsset.swift */; };
 		5BBFFABC1F51796500C08350 /* FlexMediaPickerAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBFFABA1F51796500C08350 /* FlexMediaPickerAsset.swift */; };
 		5BBFFABE1F51DF7500C08350 /* MediaControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBFFABD1F51DF7500C08350 /* MediaControlPanel.swift */; };
@@ -51,12 +53,17 @@
 		5BDC841D1F52CE8B00BF45B5 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC841B1F52CE8B00BF45B5 /* CameraView.swift */; };
 		5BDC841F1F52CFFF00BF45B5 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC841E1F52CFFF00BF45B5 /* LocationManager.swift */; };
 		5BDC84201F52CFFF00BF45B5 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC841E1F52CFFF00BF45B5 /* LocationManager.swift */; };
+		5BDF22FA1F7F9A65000A6B7E /* ImageSlideShowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDF22F91F7F9A65000A6B7E /* ImageSlideShowView.swift */; };
+		5BDF22FB1F7F9A65000A6B7E /* ImageSlideShowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDF22F91F7F9A65000A6B7E /* ImageSlideShowView.swift */; };
+		5BE45C591F7C004000322FCC /* ImageAssetImageSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE45C581F7C004000322FCC /* ImageAssetImageSource.swift */; };
+		5BE45C5A1F7C004000322FCC /* ImageAssetImageSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE45C581F7C004000322FCC /* ImageAssetImageSource.swift */; };
 		903231DFC07DA9FD099D7C2D /* Pods_FlexMediaPicker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A355FF259B4BD6806377BAD5 /* Pods_FlexMediaPicker.framework */; };
 		A19CD1DD1C8C1335BEFBF9B7 /* Pods_FlexMediaPickerExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89B7DD93059BEE76E18453D9 /* Pods_FlexMediaPickerExample.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		19BFF1510DF1A710A8C8385C /* Pods-FlexMediaPicker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlexMediaPicker.release.xcconfig"; path = "Pods/Target Support Files/Pods-FlexMediaPicker/Pods-FlexMediaPicker.release.xcconfig"; sourceTree = "<group>"; };
+		5B3DB3211F7FB8D300D864DE /* UIViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtensions.swift; sourceTree = "<group>"; };
 		5BBFFABA1F51796500C08350 /* FlexMediaPickerAsset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlexMediaPickerAsset.swift; sourceTree = "<group>"; };
 		5BBFFABD1F51DF7500C08350 /* MediaControlPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaControlPanel.swift; sourceTree = "<group>"; };
 		5BC5625E1F50392D00A848F2 /* FlexMediaPicker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FlexMediaPicker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -86,6 +93,8 @@
 		5BDC84181F52CC8F00BF45B5 /* Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		5BDC841B1F52CE8B00BF45B5 /* CameraView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		5BDC841E1F52CFFF00BF45B5 /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		5BDF22F91F7F9A65000A6B7E /* ImageSlideShowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSlideShowView.swift; sourceTree = "<group>"; };
+		5BE45C581F7C004000322FCC /* ImageAssetImageSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAssetImageSource.swift; sourceTree = "<group>"; };
 		7F0A6406FB8E47035C90A29C /* Pods-FlexMediaPickerExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlexMediaPickerExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-FlexMediaPickerExample/Pods-FlexMediaPickerExample.release.xcconfig"; sourceTree = "<group>"; };
 		89B7DD93059BEE76E18453D9 /* Pods_FlexMediaPickerExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FlexMediaPickerExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A355FF259B4BD6806377BAD5 /* Pods_FlexMediaPicker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FlexMediaPicker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -186,6 +195,7 @@
 			children = (
 				5BDC84171F52CC8300BF45B5 /* Helper */,
 				5BDC84131F52CC2300BF45B5 /* Camera */,
+				5BDF22F81F7F9A3E000A6B7E /* Media Viewer */,
 				5BBFFAC01F51DF8000C08350 /* Control Panels */,
 				5BC5628D1F50435B00A848F2 /* Base UI */,
 				5BC562891F503B7300A848F2 /* Assets */,
@@ -198,6 +208,7 @@
 			isa = PBXGroup;
 			children = (
 				5BC562971F50599700A848F2 /* UIImageExtensions.swift */,
+				5B3DB3211F7FB8D300D864DE /* UIViewExtensions.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -214,6 +225,7 @@
 			isa = PBXGroup;
 			children = (
 				5BC562821F503A9A00A848F2 /* AssetManager.swift */,
+				5BE45C581F7C004000322FCC /* ImageAssetImageSource.swift */,
 				5BBFFABA1F51796500C08350 /* FlexMediaPickerAsset.swift */,
 			);
 			name = Assets;
@@ -247,6 +259,14 @@
 				5BDC84181F52CC8F00BF45B5 /* Helper.swift */,
 			);
 			name = Helper;
+			sourceTree = "<group>";
+		};
+		5BDF22F81F7F9A3E000A6B7E /* Media Viewer */ = {
+			isa = PBXGroup;
+			children = (
+				5BDF22F91F7F9A65000A6B7E /* ImageSlideShowView.swift */,
+			);
+			name = "Media Viewer";
 			sourceTree = "<group>";
 		};
 		EA7EB04CE10266DB550BF25F /* Frameworks */ = {
@@ -319,7 +339,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = "Martin Jacob Rehder";
 				TargetAttributes = {
 					5BC5625D1F50392D00A848F2 = {
@@ -404,6 +424,7 @@
 				"${SRCROOT}/Pods/Target Support Files/Pods-FlexMediaPickerExample/Pods-FlexMediaPickerExample-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/DateToolsSwift/DateToolsSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/DynamicColor/DynamicColor.framework",
+				"${BUILT_PRODUCTS_DIR}/ImageSlideshow/ImageSlideshow.framework",
 				"${BUILT_PRODUCTS_DIR}/MJRFlexStyleComponents/MJRFlexStyleComponents.framework",
 				"${BUILT_PRODUCTS_DIR}/StyledLabel/StyledLabel.framework",
 				"${BUILT_PRODUCTS_DIR}/StyledOverlay/StyledOverlay.framework",
@@ -412,6 +433,7 @@
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DateToolsSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DynamicColor.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ImageSlideshow.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MJRFlexStyleComponents.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/StyledLabel.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/StyledOverlay.framework",
@@ -477,6 +499,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5BDC84151F52CC3000BF45B5 /* CameraMan.swift in Sources */,
+				5B3DB3231F7FB8D300D864DE /* UIViewExtensions.swift in Sources */,
 				5BC562861F503ABB00A848F2 /* FlexMediaPickerConfiguration.swift in Sources */,
 				5BDC841C1F52CE8B00BF45B5 /* CameraView.swift in Sources */,
 				5BC6D94B1F763EB00051B0A3 /* CameraMediaControlPanel.swift in Sources */,
@@ -487,9 +510,11 @@
 				5BC5629B1F5059E400A848F2 /* ImagesCollectionView.swift in Sources */,
 				5BC562981F50599700A848F2 /* UIImageExtensions.swift in Sources */,
 				5BC5628F1F50436700A848F2 /* CommonFlexCollectionViewController.swift in Sources */,
+				5BDF22FA1F7F9A65000A6B7E /* ImageSlideShowView.swift in Sources */,
 				5BC5629E1F506EF300A848F2 /* BusyViewFactory.swift in Sources */,
 				5BDC841F1F52CFFF00BF45B5 /* LocationManager.swift in Sources */,
 				5BC6D9481F763E570051B0A3 /* MainMediaControlPanel.swift in Sources */,
+				5BE45C591F7C004000322FCC /* ImageAssetImageSource.swift in Sources */,
 				5BC5628B1F50412900A848F2 /* FlexMediaPickerViewController.swift in Sources */,
 				5BC6D94E1F763F190051B0A3 /* CamVidSwitch.swift in Sources */,
 				5BBFFABB1F51796500C08350 /* FlexMediaPickerAsset.swift in Sources */,
@@ -505,11 +530,13 @@
 				5BDC841A1F52CC8F00BF45B5 /* Helper.swift in Sources */,
 				5BC6D9491F763E570051B0A3 /* MainMediaControlPanel.swift in Sources */,
 				5BC562721F50394700A848F2 /* ViewController.swift in Sources */,
+				5B3DB3221F7FB8D300D864DE /* UIViewExtensions.swift in Sources */,
 				5BDC841D1F52CE8B00BF45B5 /* CameraView.swift in Sources */,
 				5BDC84201F52CFFF00BF45B5 /* LocationManager.swift in Sources */,
 				5BC5629F1F506EF300A848F2 /* BusyViewFactory.swift in Sources */,
 				5BC5629C1F5059E400A848F2 /* ImagesCollectionView.swift in Sources */,
 				5BC562841F503A9A00A848F2 /* AssetManager.swift in Sources */,
+				5BDF22FB1F7F9A65000A6B7E /* ImageSlideShowView.swift in Sources */,
 				5BC562991F50599700A848F2 /* UIImageExtensions.swift in Sources */,
 				5BC562871F503ABB00A848F2 /* FlexMediaPickerConfiguration.swift in Sources */,
 				5BC6D94C1F763EB00051B0A3 /* CameraMediaControlPanel.swift in Sources */,
@@ -520,6 +547,7 @@
 				5BC562701F50394700A848F2 /* AppDelegate.swift in Sources */,
 				5BDC84161F52CC3000BF45B5 /* CameraMan.swift in Sources */,
 				5BC562931F50437B00A848F2 /* CommonIconViewMenu.swift in Sources */,
+				5BE45C5A1F7C004000322FCC /* ImageAssetImageSource.swift in Sources */,
 				5BC6D94F1F763F190051B0A3 /* CamVidSwitch.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -556,7 +584,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -564,7 +594,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -610,7 +644,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -618,7 +654,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;

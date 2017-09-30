@@ -32,11 +32,11 @@ import UIKit
 import MJRFlexStyleComponents
 import DateToolsSwift
 import Photos
+import ImageSlideshow
 
 class SelectedAssetsCollectionView: ImagesCollectionView {}
 
 class ImageMediaCollectionView: ImagesCollectionView {
-    
     private var mediaControlPanel = MainMediaControlPanel(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
     override var footer: FlexFooterView {
         return self.mediaControlPanel
@@ -53,15 +53,22 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     private var smartAssetCollections: [PHAssetCollection] = []
     private var assetCache: [PHAsset] = []
     private var currentAssetCollection: PHAssetCollection?
-    
+
+    private var imageSlideshowView: ImageSlideShowView?
+
     private var cameraView: CameraView?
     
     // TODO: Introduce asset storage protocol and default store
     
     private var selectedAssets: [FlexMediaPickerAsset] = []
+    private var imageSources: [ImageAssetImageSource] = []
     private var selectedAssetsView: SelectedAssetsCollectionView?
     
     // MARK: - View Init
+    
+    open override var prefersStatusBarHidden: Bool {
+        return FlexMediaPickerConfiguration.statusBarHidden
+    }
     
     override open func setupView() {
         self.headerText = FlexMediaPickerConfiguration.mediaTitle
@@ -98,7 +105,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         self.contentView?.header.subCaption.labelFont = FlexMediaPickerConfiguration.headerSubCaptionFont
         self.contentView?.header.subCaption.labelTextColor = FlexMediaPickerConfiguration.headerTextColor
 
-        self.createIconMenu(width: 50)
+        self.createIconMenu(width: 50, menuIconSize: 24)
         self.rightViewMenu?.createAcceptIconMenuItem()
         self.rightViewMenu?.menuSelectionHandler = {
             type in
@@ -109,9 +116,9 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         self.contentView?.addMenu(self.rightViewMenu!)
         self.rightViewMenu?.viewMenuItems[0].enabled = false
  
-        self.createBackOrCloseLeftMenu()
+        self.createBackOrCloseLeftMenu(menuIconSize: 24)
         
-        self.backViewMenu = CommonIconViewMenu(size: CGSize(width: 50, height: 36), hPos: .left, vPos: .header)
+        self.backViewMenu = CommonIconViewMenu(size: CGSize(width: 50, height: 36), hPos: .left, vPos: .header, menuIconSize: 24)
         self.backViewMenu?.createBackIconMenuItem()
         self.backViewMenu?.menuSelectionHandler = {
             type in
@@ -157,6 +164,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                             let thImageSize = (self.contentView as? ImagesCollectionView)?.thumbnailSize() ?? CGSize(width: 120, height: 120)
                             let imageAsset = FlexMediaPickerAsset(thumbnail: image.scaleToSizeKeepAspect(size: thImageSize), image: image)
                             self.selectedAssets.append(imageAsset)
+                            self.imageSources.append(ImageAssetImageSource(asset: imageAsset))
                             self.populateSelectedAssetView()
                         }
                         self.cameraView?.cancelCameraViewHandler = {
@@ -173,6 +181,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                                 let thImageSize = (self.contentView as? ImagesCollectionView)?.thumbnailSize() ?? CGSize(width: 120, height: 120)
                                 let imageAsset = FlexMediaPickerAsset(thumbnail: image.scaleToSizeKeepAspect(size: thImageSize), videoURL: url)
                                 self.selectedAssets.append(imageAsset)
+                                self.imageSources.append(ImageAssetImageSource(asset: imageAsset))
                                 self.populateSelectedAssetView()
                             }
                         }
@@ -383,6 +392,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         }
         let sAsset = FlexMediaPickerAsset(thumbnail: thumbnail, asset: asset, collection: self.currentAssetCollection!)
         self.selectedAssets.append(sAsset)
+        self.imageSources.append(ImageAssetImageSource(asset: sAsset))
     }
     
     func removeSelectedAsset(_ asset: PHAsset) {
@@ -391,6 +401,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             if let selAsset = a.asset {
                 if selAsset.localIdentifier == asset.localIdentifier {
                     self.selectedAssets.remove(at: idx)
+                    self.imageSources.remove(at: idx)
                     return
                 }
             }
@@ -501,6 +512,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             if let sav = self.selectedAssetsView {
                 sav.removeAllSections()
                 let savSecRef = sav.addSection()
+                var idx = 0
                 for selAsset in self.selectedAssets {
                     let ref = selAsset.asset?.localIdentifier ?? UUID().uuidString
                     let fitem = ImagesCollectionItem(reference: ref, icon: selAsset.thumbnail)
@@ -508,10 +520,12 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                     fitem.imageViewFitting = .scaleToFit
                     fitem.contentInteractionWillSelectItem = true
                     fitem.autoDeselectCellAfter = .milliseconds(300)
+                    fitem.imageIndex = idx
                     fitem.itemSelectionActionHandler = {
-                        // TODO: Show full screen asset
+                        self.showImage(byIndex: fitem.imageIndex)
                     }
                     sav.addItem(savSecRef, item: fitem)
+                    idx += 1
                 }
                 sav.itemCollectionView.reloadData()
                 if self.selectedAssets.count > 0 && sav.isHidden == true {
@@ -546,6 +560,35 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         }) { _ in
             self.selectedAssetsView?.isHidden = true
             self.refreshView()
+        }
+    }
+    
+    // MARK: - Fullscreen Preview
+    
+    func showImage(byIndex idx: Int) {
+        if self.imageSlideshowView == nil {
+            self.createImageSlideShowView()
+        }
+        if let issv = self.imageSlideshowView {
+            issv.isHidden = false
+            issv.imageSlideshow?.setImageInputs(self.imageSources)
+            issv.imageSlideshow?.setCurrentPage(idx, animated: false)
+        }
+    }
+    
+    private func createImageSlideShowView() {
+        self.imageSlideshowView = ImageSlideShowView(frame: self.view.bounds)
+        if let issv = self.imageSlideshowView {
+            issv.styleColor = FlexMediaPickerConfiguration.styleColor
+            issv.imageSlideshow?.setImageInputs(self.imageSources)
+            self.view.insertSubview(issv, at: 1)
+            issv.closeHandler = {
+                self.imageSlideshowView?.isHidden = true
+            }
+            issv.hideViewElementsHandler = { forceHide in
+                self.selectedAssetsView?.showHide(forceHide: forceHide)
+            }
+            issv.hideViewElements(forceHide: true)
         }
     }
     

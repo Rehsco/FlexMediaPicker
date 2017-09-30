@@ -141,12 +141,12 @@ open class CommonFlexCollectionViewController: UIViewController {
     
     // MARK: - View Menu
     
-    open func createIconMenu(width: CGFloat = 50) {
-        self.rightViewMenu = CommonIconViewMenu(size: CGSize(width: width, height: 36), hPos: .right, vPos: .header)
+    open func createIconMenu(width: CGFloat = 50, menuIconSize: CGFloat = 36) {
+        self.rightViewMenu = CommonIconViewMenu(size: CGSize(width: width, height: 36), hPos: .right, vPos: .header, menuIconSize: menuIconSize)
     }
     
-    open func createBackOrCloseLeftMenu() {
-        self.leftViewMenu = CommonIconViewMenu(size: CGSize(width: 50, height: 36), hPos: .left, vPos: .header)
+    open func createBackOrCloseLeftMenu(menuIconSize: CGFloat = 36) {
+        self.leftViewMenu = CommonIconViewMenu(size: CGSize(width: 50, height: 36), hPos: .left, vPos: .header, menuIconSize: menuIconSize)
         if self.isModal() {
             self.leftViewMenu?.createCloseIconMenuItem()
             self.leftViewMenu?.menuSelectionHandler = {

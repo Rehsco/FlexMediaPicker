@@ -1,8 +1,8 @@
 //
-//  MainMediaControlPanel.swift
+//  ImageAssetImageSource.swift
 //  FlexMediaPicker
 //
-//  Created by Martin Rehder on 23.09.2017.
+//  Created by Martin Rehder on 13.07.2017.
 /*
  * Copyright 2017-present Martin Jacob Rehder.
  * http://www.rehsco.com
@@ -28,19 +28,40 @@
  */
 
 import UIKit
-import MJRFlexStyleComponents
+import ImageSlideshow
 
-class MainMediaControlPanel: MediaControlPanel {
-    private var micItem: FlexMenuItem?
+class ImageAssetImageSource: InputSource {
+    var hasFetchedImage: Bool = false
+    var imageViewRef: UIImageView?
+    var asset: FlexMediaPickerAsset
     
-    override func setupMenu(in flexView: FlexView) {
-        super.setupMenu(in: flexView)
-        if FlexMediaPickerConfiguration.allowVoiceRecording {
-            let leftMenu = CommonIconViewMenu(size: CGSize(width: 120, height: flexView.footerSize * 0.8), hPos: .left, vPos: .footer, menuIconSize: 36)
-            self.micItem = leftMenu.createIconMenuItem(imageName: "micImage", iconSize: 36) {
-                self.actionActivationHandler?(.microphone)
+    init(asset: FlexMediaPickerAsset) {
+        self.asset = asset
+    }
+    
+    func load(to imageView: UIImageView, with callback: @escaping (UIImage?) -> Void) {
+        self.imageViewRef = imageView
+        DispatchQueue.main.async {
+            imageView.image = self.asset.thumbnail
+        }
+        self.downloadOrFetchImage() {
+            image in
+            self.hasFetchedImage = true
+            DispatchQueue.main.async {
+                callback(image)
             }
-            flexView.addMenu(leftMenu)
+        }
+    }
+
+    private func downloadOrFetchImage(completionHandler: @escaping ((UIImage?)->Void)) {
+        DispatchQueue.main.async {
+            if let image = self.asset.image {
+                completionHandler(image)
+            }
+            else {
+                NSLog("There is no image")
+                completionHandler(self.asset.thumbnail)
+            }
         }
     }
 }

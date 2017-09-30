@@ -1,8 +1,8 @@
 //
-//  MainMediaControlPanel.swift
+//  UIViewExtensions.swift
 //  FlexMediaPicker
 //
-//  Created by Martin Rehder on 23.09.2017.
+//  Created by Martin Rehder on 30.09.2017.
 /*
  * Copyright 2017-present Martin Jacob Rehder.
  * http://www.rehsco.com
@@ -28,19 +28,28 @@
  */
 
 import UIKit
-import MJRFlexStyleComponents
 
-class MainMediaControlPanel: MediaControlPanel {
-    private var micItem: FlexMenuItem?
-    
-    override func setupMenu(in flexView: FlexView) {
-        super.setupMenu(in: flexView)
-        if FlexMediaPickerConfiguration.allowVoiceRecording {
-            let leftMenu = CommonIconViewMenu(size: CGSize(width: 120, height: flexView.footerSize * 0.8), hPos: .left, vPos: .footer, menuIconSize: 36)
-            self.micItem = leftMenu.createIconMenuItem(imageName: "micImage", iconSize: 36) {
-                self.actionActivationHandler?(.microphone)
-            }
-            flexView.addMenu(leftMenu)
+extension UIView {
+    func showHide(forceHide: Bool = false) {
+        if self.isHidden && forceHide {
+            return
+        }
+        if self.isHidden {
+            self.alpha = 0
+            self.isHidden = false
+            UIView.animate(withDuration: 0.5, animations: {
+                self.alpha = 1
+            }, completion: { _ in
+                // TODO
+            })
+        }
+        else {
+            self.alpha = 1
+            UIView.animate(withDuration: 0.5, animations: {
+                self.alpha = 0
+            }, completion: { _ in
+                self.isHidden = true
+            })
         }
     }
 }

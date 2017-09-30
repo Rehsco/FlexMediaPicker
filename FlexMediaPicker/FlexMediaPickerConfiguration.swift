@@ -95,6 +95,7 @@ public class FlexMediaPickerConfiguration {
     public static var allowPinchToZoom = true
     public static var storeTakenImagesToPhotos = false
     public static var storeRecordedVideosToAssetLibrary = true
+    public static var statusBarHidden = true
 
     // MARK: Limits
 

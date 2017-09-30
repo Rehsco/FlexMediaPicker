@@ -46,7 +46,7 @@ class MediaControlPanel: FlexFooterView {
     var actionImageName: String = "cameraImage"
     
     func setupMenu(in flexView: FlexView) {
-        let centerMenu = CommonIconViewMenu(size: CGSize(width: FlexMediaPickerConfiguration.centerActionButtonWidth, height: FlexMediaPickerConfiguration.centerActionButtonHeight), hPos: .center, vPos: .footer)
+        let centerMenu = CommonIconViewMenu(size: CGSize(width: FlexMediaPickerConfiguration.centerActionButtonWidth, height: FlexMediaPickerConfiguration.centerActionButtonHeight), hPos: .center, vPos: .footer, menuIconSize: 36)
         self.centerActionItem = centerMenu.createIconMenuItem(imageName: self.actionImageName, iconSize: 36) {
             self.actionActivationHandler?(self.actionTriggered)
         }

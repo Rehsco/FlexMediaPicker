@@ -46,5 +46,5 @@ struct Helper {
                 NSForegroundColorAttributeName: color
             ])
         return attributedString
-    }
+    }    
 }

@@ -84,7 +84,7 @@ class CameraMediaControlPanel: FlexFooterView {
     }
     
     func setupMenu(in flexView: FlexView) {
-        let leftMenu = CommonIconViewMenu(size: CGSize(width: 120, height: flexView.footerSize), hPos: .left, vPos: .footer)
+        let leftMenu = CommonIconViewMenu(size: CGSize(width: 120, height: flexView.footerSize), hPos: .left, vPos: .footer, menuIconSize: 36)
         if !FlexMediaPickerConfiguration.flashButtonAlwaysHidden {
             self.flashItem = leftMenu.createIconMenuItem(imageName: "flashOff", selectedImageName: "flashOn", iconSize: 36) {
                 if let fi = self.flashItem {
@@ -101,7 +101,7 @@ class CameraMediaControlPanel: FlexFooterView {
         }
         flexView.addMenu(leftMenu)
         
-        let rightMenu = CommonIconViewMenu(size: CGSize(width: 50, height: flexView.footerSize), hPos: .right, vPos: .footer)
+        let rightMenu = CommonIconViewMenu(size: CGSize(width: 50, height: flexView.footerSize), hPos: .right, vPos: .footer, menuIconSize: 36)
         _ = rightMenu.createIconMenuItem(imageName: "imageIcon", iconSize: 36) {
             self.backToImagesHandler?()
         }

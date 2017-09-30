@@ -4,6 +4,7 @@ use_frameworks!
 pod 'MJRFlexStyleComponents'
 pod 'DateToolsSwift'
 pod 'StyledOverlay'
+pod 'ImageSlideshow'
 
 target 'FlexMediaPicker' do
 end
