@@ -30,6 +30,7 @@
 import UIKit
 import MJRFlexStyleComponents
 import ImageSlideshow
+import AVFoundation
 
 class ImageSlideShowView: FlexView {
     private var closeViewMenu: CommonIconViewMenu?
@@ -64,6 +65,27 @@ class ImageSlideShowView: FlexView {
         
         let tgr = UITapGestureRecognizer(target: self, action: #selector(self.imageSlideshowTap(_:)))
         self.addGestureRecognizer(tgr)
+        
+        self.imageSlideshow?.currentPageChanged = {
+            index in
+            if let imageAssets = self.imageSlideshow?.images as? [ImageAssetImageSource] {
+                let imageAsset = imageAssets[index]
+                if let ass = imageAsset.asset.asset, ass.mediaType == .video {
+                    NSLog("Currently showing video asset at index \(index)")
+                }
+                else if imageAsset.asset.videoURL != nil {
+                    NSLog("Currently showing video asset at index \(index)")
+                }
+                else {
+                    NSLog("Currently showing image asset at index \(index)")
+                }
+            }
+        }
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.imageSlideshow?.frame = self.bounds
     }
     
     private func createBackOrCloseLeftMenu() {

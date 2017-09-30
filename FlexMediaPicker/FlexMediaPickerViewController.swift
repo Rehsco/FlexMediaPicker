@@ -266,10 +266,13 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         var resBounds = self.view.bounds.offsetBy(dx: 0, dy: UIApplication.shared.statusBarFrame.height * 0.5).insetBy(dx: 0, dy: UIApplication.shared.statusBarFrame.height * 0.5)
         resBounds = CGRect(origin: resBounds.origin, size: CGSize(width: resBounds.size.width, height: resBounds.size.height-tabbarSize))
         self.contentView?.frame = resBounds
-
+        
         let camRect = self.view.bounds
         self.cameraView?.frame = camRect
         self.cameraView?.setNeedsLayout()
+        
+        self.imageSlideshowView?.frame = self.view.bounds
+        
         super.refreshView()
     }
     
