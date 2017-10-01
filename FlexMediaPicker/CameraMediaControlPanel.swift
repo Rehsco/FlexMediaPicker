@@ -41,11 +41,11 @@ class CameraMediaControlPanel: FlexFooterView {
     var camVidSwitchSize: CGSize = CGSize(width: 80, height: 40)
     
     var flashActionHandler: ((Bool)->Void)?
-    var cameraSwitchActionHandler: ((Void)->Void)?
-    var backToImagesHandler: ((Void)->Void)?
+    var cameraSwitchActionHandler: (()->Void)?
+    var backToImagesHandler: (()->Void)?
     
-    var takePhotoActionHandler: ((Void)->Void)?
-    var recVideoActionHandler: ((Void)->Void)?
+    var takePhotoActionHandler: (()->Void)?
+    var recVideoActionHandler: (()->Void)?
     
     override func initView() {
         super.initView()

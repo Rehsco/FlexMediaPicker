@@ -130,4 +130,11 @@ open class AssetManager {
         }
         return images
     }
+    
+    open static func resolveVideoAsset(_ asset: PHAsset, resolvedURLHandler: @escaping ((URL)->Void)) {
+        PHCachingImageManager().requestAVAsset(forVideo: asset, options: nil) { (asset, audioMix, args) in
+            let asset = asset as! AVURLAsset
+            resolvedURLHandler(asset.url)
+        }
+    }
 }

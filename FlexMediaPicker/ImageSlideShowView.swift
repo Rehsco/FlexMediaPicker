@@ -31,10 +31,14 @@ import UIKit
 import MJRFlexStyleComponents
 import ImageSlideshow
 import AVFoundation
+import Player
 
-class ImageSlideShowView: FlexView {
+class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
+    private var player: Player?
     private var closeViewMenu: CommonIconViewMenu?
 
+    private var startPlayFromStart: Bool = true
+    
     var imageSlideshow: ImageSlideshow?
     
     var closeHandler: (()->Void)?
@@ -50,6 +54,11 @@ class ImageSlideShowView: FlexView {
         self.setupView()
     }
     
+    private var videoControlPanel = VideoPlaybackControlPanel(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+    override var footer: FlexFooterView {
+        return self.videoControlPanel
+    }
+    
     private func setupView() {
         self.imageSlideshow = ImageSlideshow(frame: self.bounds)
         self.imageSlideshow?.zoomEnabled = true
@@ -63,24 +72,52 @@ class ImageSlideShowView: FlexView {
         self.header.styleColor = FlexMediaPickerConfiguration.headerColor
         self.createBackOrCloseLeftMenu()
         
+        self.footerSize = FlexMediaPickerConfiguration.footerHeight
+        
         let tgr = UITapGestureRecognizer(target: self, action: #selector(self.imageSlideshowTap(_:)))
         self.addGestureRecognizer(tgr)
         
         self.imageSlideshow?.currentPageChanged = {
             index in
-            if let imageAssets = self.imageSlideshow?.images as? [ImageAssetImageSource] {
-                let imageAsset = imageAssets[index]
-                if let ass = imageAsset.asset.asset, ass.mediaType == .video {
-                    NSLog("Currently showing video asset at index \(index)")
-                }
-                else if imageAsset.asset.videoURL != nil {
-                    NSLog("Currently showing video asset at index \(index)")
+            self.player?.stop()
+            self.startPlayFromStart = true
+            self.assignFooterPanel(forAssetIndex: index)
+        }
+        
+        // Video Playback
+        
+        if let tvc = (UIApplication.shared.delegate as? AppDelegate)?.getTopViewController() {
+            self.player = Player()
+            self.player?.playerDelegate = self
+            self.player?.playbackDelegate = self
+            self.player?.view.frame = self.bounds
+            self.player?.view.isHidden = true
+            
+            tvc.addChildViewController(self.player!)
+            self.addSubview(self.player!.view)
+            self.player?.didMove(toParentViewController: tvc)
+        }
+        
+        if let fv = self.footer as? VideoPlaybackControlPanel {
+            fv.playPressedHandler = {
+                shouldPlay in
+                if shouldPlay {
+                    if self.startPlayFromStart {
+                        self.player?.playFromBeginning()
+                        self.startPlayFromStart = false
+                    }
+                    else {
+                        self.player?.playFromCurrentTime()
+                    }
                 }
                 else {
-                    NSLog("Currently showing image asset at index \(index)")
+                    self.player?.pause()
                 }
             }
+            
+            fv.setupMenu(in: self)
         }
+
     }
     
     override func layoutSubviews() {
@@ -104,9 +141,64 @@ class ImageSlideShowView: FlexView {
         self.hideViewElements()
     }
     
+    func setCurrentPage(_ idx: Int, animated: Bool) {
+        self.imageSlideshow?.setCurrentPage(idx, animated: animated)
+        self.assignFooterPanel(forAssetIndex: idx)
+    }
+    
     func hideViewElements(forceHide: Bool = false) {
         self.header.showHide(forceHide: forceHide)
         self.closeViewMenu?.viewMenu?.showHide(forceHide: forceHide)
         self.hideViewElementsHandler?(forceHide)
+    }
+    
+    private func assignFooterPanel(forAssetIndex index: Int) {
+        if let imageAssets = self.imageSlideshow?.images as? [ImageAssetImageSource] {
+            let imageAsset = imageAssets[index]
+            if let ass = imageAsset.asset.asset, ass.mediaType == .video {
+                self.videoControlPanel.isHidden = false
+                self.footerText = " "
+                AssetManager.resolveVideoAsset(ass, resolvedURLHandler: { url in
+                    self.player?.url = url
+                })
+            }
+            else if let url = imageAsset.asset.videoURL {
+                self.videoControlPanel.isHidden = false
+                self.footerText = " "
+                self.player?.url = url
+            }
+            else {
+                self.videoControlPanel.isHidden = true
+                self.footerText = nil
+            }
+        }
+    }
+    
+    // MARK: - PlayerDelegate
+    
+    func playerReady(_ player: Player) {
+    }
+    
+    func playerPlaybackStateDidChange(_ player: Player) {
+    }
+    
+    func playerBufferingStateDidChange(_ player: Player) {
+    }
+    
+    func playerBufferTimeDidChange(_ bufferTime: Double) {
+    }
+    
+    // MARK: - PlayerPlaybackDelegate
+    
+    func playerCurrentTimeDidChange(_ player: Player) {
+    }
+    
+    func playerPlaybackWillStartFromBeginning(_ player: Player) {
+    }
+    
+    func playerPlaybackDidEnd(_ player: Player) {
+    }
+    
+    func playerPlaybackWillLoop(_ player: Player) {
     }
 }

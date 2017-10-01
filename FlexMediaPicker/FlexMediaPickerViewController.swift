@@ -575,7 +575,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         if let issv = self.imageSlideshowView {
             issv.isHidden = false
             issv.imageSlideshow?.setImageInputs(self.imageSources)
-            issv.imageSlideshow?.setCurrentPage(idx, animated: false)
+            issv.setCurrentPage(idx, animated: false)
         }
     }
     
