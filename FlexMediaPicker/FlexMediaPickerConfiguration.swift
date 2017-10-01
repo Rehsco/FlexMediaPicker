@@ -93,7 +93,7 @@ public class FlexMediaPickerConfiguration {
     public static var flashButtonAlwaysHidden = false
     public static var managesAudioSession = true
     public static var allowPinchToZoom = true
-    public static var storeTakenImagesToPhotos = false
+    public static var storeTakenImagesToPhotos = true
     public static var storeRecordedVideosToAssetLibrary = true
     public static var statusBarHidden = true
 

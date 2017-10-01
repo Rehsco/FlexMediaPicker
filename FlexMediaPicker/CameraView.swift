@@ -101,7 +101,7 @@ class CameraView: FlexView, CLLocationManagerDelegate, CameraManDelegate {
     
     var didGetPhoto: ((UIImage)->Void)?
     var didRecordVideo: ((URL)->Void)?
-    var cancelCameraViewHandler: ((Void)->Void)?
+    var cancelCameraViewHandler: (()->Void)?
     
     private let minimumZoomFactor: CGFloat = 1.0
     private let maximumZoomFactor: CGFloat = 3.0

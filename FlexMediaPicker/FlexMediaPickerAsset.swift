@@ -14,7 +14,10 @@ class FlexMediaPickerAsset {
     var image: UIImage?
     var asset: PHAsset?
     var collection: PHAssetCollection?
+    
+    /// Video
     var videoURL: URL?
+    var currentFrame: Float64 = 1
     
     init(thumbnail: UIImage, asset: PHAsset, collection: PHAssetCollection) {
         self.thumbnail = thumbnail

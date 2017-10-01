@@ -161,11 +161,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                         self.cameraView?.displayView()
                         self.cameraView?.didGetPhoto = {
                             image in
-                            let thImageSize = (self.contentView as? ImagesCollectionView)?.thumbnailSize() ?? CGSize(width: 120, height: 120)
-                            let imageAsset = FlexMediaPickerAsset(thumbnail: image.scaleToSizeKeepAspect(size: thImageSize), image: image)
-                            self.selectedAssets.append(imageAsset)
-                            self.imageSources.append(ImageAssetImageSource(asset: imageAsset))
-                            self.populateSelectedAssetView()
+                            self.addNewImage(image)
                         }
                         self.cameraView?.cancelCameraViewHandler = {
                             self.cameraView?.removeFromSuperview()
@@ -349,6 +345,11 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     }
     
     private func addNewImage(_ image: UIImage) {
+        let thImageSize = (self.contentView as? ImagesCollectionView)?.thumbnailSize() ?? CGSize(width: 120, height: 120)
+        let imageAsset = FlexMediaPickerAsset(thumbnail: image.scaleToSizeKeepAspect(size: thImageSize), image: image)
+        self.selectedAssets.append(imageAsset)
+        self.imageSources.append(ImageAssetImageSource(asset: imageAsset))
+        self.populateSelectedAssetView()
     }
     
     private func applyThumbnailSize() {
@@ -590,6 +591,10 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             }
             issv.hideViewElementsHandler = { forceHide in
                 self.selectedAssetsView?.showHide(forceHide: forceHide)
+            }
+            issv.didGetPhoto = {
+                image in
+                self.addNewImage(image)
             }
             issv.hideViewElements(forceHide: true)
         }

@@ -226,7 +226,7 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
                         return
                 }
                 
-                self.savePhoto(image.fixOrientation(), location: location, completion: completion)
+                AssetManager.savePhoto(image.fixOrientation(), location: location, completion: completion)
             }
         }
     }
@@ -405,23 +405,6 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
         var out: CMSampleBuffer?
         CMSampleBufferCreateCopyWithNewTiming(nil, sample, count, &info, &out);
         return out!
-    }
-
-    func savePhoto(_ image: UIImage, location: CLLocation?, completion: ((UIImage?) -> Void)? = nil) {
-        if FlexMediaPickerConfiguration.storeTakenImagesToPhotos {
-            PHPhotoLibrary.shared().performChanges({
-                let request = PHAssetChangeRequest.creationRequestForAsset(from: image)
-                request.creationDate = Date()
-                request.location = location
-            }, completionHandler: { _ in
-                DispatchQueue.main.async {
-                    completion?(image)
-                }
-            })
-        }
-        else {
-            completion?(image)
-        }
     }
     
     func storeVideo(completion: ((URL?) -> Void)? = nil) {

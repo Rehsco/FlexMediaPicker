@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		5B3DB3221F7FB8D300D864DE /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3DB3211F7FB8D300D864DE /* UIViewExtensions.swift */; };
 		5B3DB3231F7FB8D300D864DE /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3DB3211F7FB8D300D864DE /* UIViewExtensions.swift */; };
-		5B3DB3251F7FF90400D864DE /* AppDelegate+RootViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3DB3241F7FF90400D864DE /* AppDelegate+RootViews.swift */; };
-		5B3DB3261F7FF90400D864DE /* AppDelegate+RootViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3DB3241F7FF90400D864DE /* AppDelegate+RootViews.swift */; };
 		5B3DB3281F7FFB1200D864DE /* VideoPlaybackControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3DB3271F7FFB1200D864DE /* VideoPlaybackControlPanel.swift */; };
 		5B3DB3291F7FFB1200D864DE /* VideoPlaybackControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3DB3271F7FFB1200D864DE /* VideoPlaybackControlPanel.swift */; };
 		5BBFFABB1F51796500C08350 /* FlexMediaPickerAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBFFABA1F51796500C08350 /* FlexMediaPickerAsset.swift */; };
@@ -68,7 +66,6 @@
 /* Begin PBXFileReference section */
 		19BFF1510DF1A710A8C8385C /* Pods-FlexMediaPicker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlexMediaPicker.release.xcconfig"; path = "Pods/Target Support Files/Pods-FlexMediaPicker/Pods-FlexMediaPicker.release.xcconfig"; sourceTree = "<group>"; };
 		5B3DB3211F7FB8D300D864DE /* UIViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtensions.swift; sourceTree = "<group>"; };
-		5B3DB3241F7FF90400D864DE /* AppDelegate+RootViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+RootViews.swift"; sourceTree = "<group>"; };
 		5B3DB3271F7FFB1200D864DE /* VideoPlaybackControlPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlaybackControlPanel.swift; sourceTree = "<group>"; };
 		5BBFFABA1F51796500C08350 /* FlexMediaPickerAsset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlexMediaPickerAsset.swift; sourceTree = "<group>"; };
 		5BBFFABD1F51DF7500C08350 /* MediaControlPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaControlPanel.swift; sourceTree = "<group>"; };
@@ -214,7 +211,6 @@
 		5BC562811F503A8700A848F2 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				5B3DB3241F7FF90400D864DE /* AppDelegate+RootViews.swift */,
 				5BC562971F50599700A848F2 /* UIImageExtensions.swift */,
 				5B3DB3211F7FB8D300D864DE /* UIViewExtensions.swift */,
 			);
@@ -528,7 +524,6 @@
 				5BE45C591F7C004000322FCC /* ImageAssetImageSource.swift in Sources */,
 				5BC5628B1F50412900A848F2 /* FlexMediaPickerViewController.swift in Sources */,
 				5BC6D94E1F763F190051B0A3 /* CamVidSwitch.swift in Sources */,
-				5B3DB3251F7FF90400D864DE /* AppDelegate+RootViews.swift in Sources */,
 				5BBFFABB1F51796500C08350 /* FlexMediaPickerAsset.swift in Sources */,
 				5BDC84191F52CC8F00BF45B5 /* Helper.swift in Sources */,
 			);
@@ -562,7 +557,6 @@
 				5BC562931F50437B00A848F2 /* CommonIconViewMenu.swift in Sources */,
 				5BE45C5A1F7C004000322FCC /* ImageAssetImageSource.swift in Sources */,
 				5BC6D94F1F763F190051B0A3 /* CamVidSwitch.swift in Sources */,
-				5B3DB3261F7FF90400D864DE /* AppDelegate+RootViews.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

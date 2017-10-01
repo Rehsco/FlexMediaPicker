@@ -29,11 +29,14 @@
 
 import UIKit
 import ImageSlideshow
+import AVFoundation
 
 class ImageAssetImageSource: InputSource {
     var hasFetchedImage: Bool = false
     var imageViewRef: UIImageView?
     var asset: FlexMediaPickerAsset
+    
+    var imageFromVideoLoadedHandler: ((FlexMediaPickerAsset)->Void)?
     
     init(asset: FlexMediaPickerAsset) {
         self.asset = asset
@@ -58,10 +61,68 @@ class ImageAssetImageSource: InputSource {
             if let image = self.asset.image {
                 completionHandler(image)
             }
+            else if let ass = self.asset.asset, ass.mediaType == .video {
+                AssetManager.resolveVideoAsset(ass, resolvedURLHandler: { url in
+                    self.frameImageFromVideo(url: url, completionHandler: completionHandler)
+                })
+            }
+            else if let url = self.asset.videoURL {
+                self.frameImageFromVideo(url: url, completionHandler: completionHandler)
+            }
+            else if let ass = self.asset.asset {
+                let images = AssetManager.resolveAssets([ass])
+                if let image = images.first {
+                    completionHandler(image)
+                }
+            }
             else {
                 NSLog("There is no image")
                 completionHandler(self.asset.thumbnail)
             }
         }
     }
+    
+    func getVideoURL(completionHandler: @escaping ((URL?)->Void)) {
+        if let ass = self.asset.asset, ass.mediaType == .video {
+            AssetManager.resolveVideoAsset(ass, resolvedURLHandler: { url in
+                completionHandler(url)
+            })
+        }
+        else if let url = self.asset.videoURL {
+            completionHandler(url)
+        }
+        completionHandler(nil)
+    }
+    
+    private func frameImageFromVideo(url: URL, completionHandler: @escaping ((UIImage?)->Void)) {
+        if let image = self.imageFromVideo(url: url) {
+            completionHandler(image)
+            self.imageFromVideoLoadedHandler?(self.asset)
+        }
+    }
+    
+    func imageFromVideo(url: URL) -> UIImage? {
+        do {
+            let asset = AVURLAsset(url: url, options: nil)
+            let movieTracks = asset.tracks(withMediaType: AVMediaTypeVideo)
+            if let movieTrack = movieTracks.first {
+                let durationSeconds = CMTimeGetSeconds(asset.duration)
+                let totalFrames: Float64 = durationSeconds * Float64(movieTrack.nominalFrameRate)
+                
+                let secondsIn: Float64 = (self.asset.currentFrame/totalFrames)*durationSeconds
+                let imageTimeEstimate: CMTime = CMTimeMakeWithSeconds(secondsIn, 600)
+                NSLog("Getting image frame at time \(imageTimeEstimate)")
+                
+                let imgGenerator = AVAssetImageGenerator(asset: asset)
+                imgGenerator.appliesPreferredTrackTransform = true
+                let cgImage = try imgGenerator.copyCGImage(at: imageTimeEstimate, actualTime: nil)
+                let image = UIImage(cgImage: cgImage)
+                return image
+            }
+        } catch let error as NSError {
+            print("Error generating video image: \(error)")
+        }
+        return nil
+    }
+    
 }

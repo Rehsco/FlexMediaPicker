@@ -133,8 +133,26 @@ open class AssetManager {
     
     open static func resolveVideoAsset(_ asset: PHAsset, resolvedURLHandler: @escaping ((URL)->Void)) {
         PHCachingImageManager().requestAVAsset(forVideo: asset, options: nil) { (asset, audioMix, args) in
-            let asset = asset as! AVURLAsset
-            resolvedURLHandler(asset.url)
+            if let asset = asset as? AVURLAsset {
+                resolvedURLHandler(asset.url)
+            }
+        }
+    }
+    
+    open static func savePhoto(_ image: UIImage, location: CLLocation?, completion: ((UIImage?) -> Void)? = nil) {
+        if FlexMediaPickerConfiguration.storeTakenImagesToPhotos {
+            PHPhotoLibrary.shared().performChanges({
+                let request = PHAssetChangeRequest.creationRequestForAsset(from: image)
+                request.creationDate = Date()
+                request.location = location
+            }, completionHandler: { _ in
+                DispatchQueue.main.async {
+                    completion?(image)
+                }
+            })
+        }
+        else {
+            completion?(image)
         }
     }
 }

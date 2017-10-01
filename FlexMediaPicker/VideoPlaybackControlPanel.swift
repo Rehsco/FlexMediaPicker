@@ -30,20 +30,64 @@
 import UIKit
 import MJRFlexStyleComponents
 
+enum VideoPlaybackPanelState {
+    case videoFrameStep
+    case videoTimeSlider
+    case noVideo
+}
+
 class VideoPlaybackControlPanel: FlexFooterView {
     private var playPauseItem: FlexMenuItem?
+    private var cameraItem: FlexMenuItem?
+    private var playMenu: CommonIconViewMenu?
     
-    var isPlaying: Bool = false
+    var panelState: VideoPlaybackPanelState = .noVideo
+    
+    var isPlaying: Bool = false {
+        didSet {
+            DispatchQueue.main.async {
+                self.playPauseItem?.selected = self.isPlaying
+                self.playMenu?.viewMenu?.setNeedsLayout()
+            }
+        }
+    }
     var playPressedHandler: ((Bool)->Void)?
+    var snapshotPressedHandler: (()->Void)?
+
+    override func showHide(forceHide: Bool) {
+        super.showHide(forceHide: forceHide)
+        if self.panelState == .noVideo {
+            self.playMenu?.viewMenu?.showHide(forceHide: true)
+        }
+        else {
+            self.playMenu?.viewMenu?.showHide(forceHide: forceHide)
+        }
+    }
+    
+    func showMenu() {
+        DispatchQueue.main.async {
+            if self.panelState == .noVideo {
+                self.playMenu?.viewMenu?.isHidden = true
+                self.playMenu?.viewMenu?.alpha = 0
+            }
+            else if !self.isHidden {
+                self.playMenu?.viewMenu?.isHidden = false
+                self.playMenu?.viewMenu?.alpha = 1
+            }
+        }
+    }
     
     func setupMenu(in flexView: FlexView) {
-        let leftMenu = CommonIconViewMenu(size: CGSize(width: 120, height: flexView.footerSize * 0.8), hPos: .center, vPos: .footer, menuIconSize: 36)
-        self.playPauseItem = leftMenu.createIconMenuItem(imageName: "playIcon", selectedImageName: "pauseIcon" , iconSize: 36) {
+        self.playMenu = CommonIconViewMenu(size: CGSize(width: 120, height: flexView.footerSize * 0.8), hPos: .center, vPos: .footer, menuIconSize: 36)
+        self.cameraItem = self.playMenu?.createIconMenuItem(imageName: "cameraImage" , iconSize: 36) {
+            self.snapshotPressedHandler?()
+        }
+        self.playPauseItem = self.playMenu?.createIconMenuItem(imageName: "playIcon", selectedImageName: "pauseIcon" , iconSize: 36) {
             self.isPlaying = !self.isPlaying
             self.playPressedHandler?(self.isPlaying)
             self.playPauseItem?.selected = self.isPlaying
         }
-        flexView.addMenu(leftMenu)
+        flexView.addMenu(self.playMenu!)
     }
 
 }
