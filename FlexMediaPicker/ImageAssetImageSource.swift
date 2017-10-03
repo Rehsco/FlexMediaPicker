@@ -63,10 +63,12 @@ class ImageAssetImageSource: InputSource {
             }
             else if let ass = self.asset.asset, ass.mediaType == .video {
                 AssetManager.resolveVideoAsset(ass, resolvedURLHandler: { url in
+                    NSLog("Get video URL \(url.path)")
                     self.frameImageFromVideo(url: url, completionHandler: completionHandler)
                 })
             }
             else if let url = self.asset.videoURL {
+                NSLog("Get video URL \(url.path)")
                 self.frameImageFromVideo(url: url, completionHandler: completionHandler)
             }
             else if let ass = self.asset.asset {
@@ -101,6 +103,18 @@ class ImageAssetImageSource: InputSource {
         }
     }
     
+    func imageFromVideoURL(completionHandler: @escaping ((UIImage?)->Void)) {
+        self.getVideoURL { url in
+            if let url = url {
+                let image = self.imageFromVideo(url: url)
+                completionHandler(image)
+            }
+            else {
+                completionHandler(nil)
+            }
+        }
+    }
+    
     func imageFromVideo(url: URL) -> UIImage? {
         do {
             let asset = AVURLAsset(url: url, options: nil)
@@ -111,7 +125,6 @@ class ImageAssetImageSource: InputSource {
                 
                 let secondsIn: Float64 = (self.asset.currentFrame/totalFrames)*durationSeconds
                 let imageTimeEstimate: CMTime = CMTimeMakeWithSeconds(secondsIn, 600)
-                NSLog("Getting image frame at time \(imageTimeEstimate)")
                 
                 let imgGenerator = AVAssetImageGenerator(asset: asset)
                 imgGenerator.appliesPreferredTrackTransform = true

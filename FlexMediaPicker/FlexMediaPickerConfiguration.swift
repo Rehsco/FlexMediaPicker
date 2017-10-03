@@ -32,6 +32,10 @@ public class FlexMediaPickerConfiguration {
     public static var takeButtonBorderColor = UIColor(white: 0.75, alpha: 1.0)
 
     public static var footerPanelColor = UIColor(red: 0.05, green: 0.07, blue: 0.09, alpha: 0.85)
+    public static var timeSliderPanelColor = UIColor(red: 0.05, green: 0.07, blue: 0.09, alpha: 0.85)
+    public static var timeSliderThumbColor = UIColor(red: 0.25, green: 0.29, blue: 0.34, alpha: 1)
+    public static var timeSliderSeparatorColor = UIColor(red: 0.15, green: 0.19, blue: 0.24, alpha: 1)
+    public static var timeSliderBorderColor = UIColor(red: 0.25, green: 0.29, blue: 0.34, alpha: 1)
 
     public static var camVidSwitchThumbColor = UIColor(red: 0.25, green: 0.29, blue: 0.34, alpha: 1)
     public static var camVidSwitchBorderColor = UIColor(red: 0.25, green: 0.29, blue: 0.34, alpha: 1)
@@ -43,7 +47,10 @@ public class FlexMediaPickerConfiguration {
 
     public static var takeButtonStyle: FlexShapeStyle = FlexShapeStyle(style: .thumb)
     public static var takeButtonRecordingStyle: FlexShapeStyle = FlexShapeStyle(style: .rounded)
-    
+
+    public static var timeSliderStyle: FlexShapeStyle = FlexShapeStyle(style: .rounded)
+    public static var timeSliderThumbStyle: FlexShapeStyle = FlexShapeStyle(style: .rounded)
+
     // MARK: Fonts
     
     public static var headerFont = UIFont.systemFont(ofSize: 19, weight: UIFontWeightMedium)
@@ -75,11 +82,16 @@ public class FlexMediaPickerConfiguration {
     public static var indicatorHeight: CGFloat = 8
     public static var headerHeight: CGFloat = 44
     public static var footerHeight: CGFloat = 64
+    public static var timeSliderPanelHeight: CGFloat = 54
     public static var takeButtonRadius: CGFloat = 54
     public static var takeButtonBorderWidth: CGFloat = 8
     public static var camVidSwitchBorderWidth: CGFloat = 1.5
     public static var centerActionButtonWidth: CGFloat = 80
     public static var centerActionButtonHeight: CGFloat = footerHeight * 0.8
+    public static var timeSliderBorderWidth: CGFloat = 1.5
+    public static var timeSliderThumbSize: CGSize = CGSize(width: 44, height: 44)
+    public static var timeSliderBeginEndThumbSize: CGSize = CGSize(width: 22, height: 44)
+    public static var timeSliderBarInsets: UIEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0) // Need to update this later
 
     // MARK: Custom behaviour
     

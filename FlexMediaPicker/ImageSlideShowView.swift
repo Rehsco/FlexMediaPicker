@@ -38,17 +38,23 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
     private var currentImageSource: ImageAssetImageSource?
     private var currentAsset: FlexMediaPickerAsset?
     private var movieAsset: AVURLAsset?
-
+    private var assetInfoLabel: FlexLabel?
+    private var timeSliderPanel: VideoTimeSliderView?
+    private let posUpdateTimer = PositionUpdateTimer()
+    private var shouldUpdateTimeOffset: Bool = false
+    
     private var closeViewMenu: CommonIconViewMenu?
 
-    private var startPlayFromStart: Bool = true
-    
     var imageSlideshow: ImageSlideshow?
     
     var closeHandler: (()->Void)?
     var hideViewElementsHandler: ((Bool)->Void)?
     var didGetPhoto: ((UIImage)->Void)?
 
+    deinit {
+        self.posUpdateTimer.stop()
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setupView()
@@ -72,9 +78,23 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
         self.imageSlideshow?.pageControlPosition = .hidden
         self.addSubview(self.imageSlideshow!)
         
+        self.timeSliderPanel = VideoTimeSliderView(frame: CGRect(x: 0, y: FlexMediaPickerConfiguration.headerHeight, width: self.bounds.size.width, height: FlexMediaPickerConfiguration.timeSliderPanelHeight))
+        self.timeSliderPanel?.videoTimeOffsetChangeHandler = {
+            offset in
+            self.updateVideoTime(toOffset: offset)
+        }
+        self.addSubview(self.timeSliderPanel!)
+        
         self.headerText = " "
         self.headerSize = FlexMediaPickerConfiguration.headerHeight
         self.header.styleColor = FlexMediaPickerConfiguration.headerColor
+
+        self.assetInfoLabel = FlexLabel(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        self.assetInfoLabel?.labelTextColor = FlexMediaPickerConfiguration.headerTextColor
+        self.assetInfoLabel?.labelFont = FlexMediaPickerConfiguration.headerFont
+        self.assetInfoLabel?.labelTextAlignment = .center
+        self.header.addSubview(self.assetInfoLabel!)
+        
         self.createBackOrCloseLeftMenu()
         
         self.footerSize = FlexMediaPickerConfiguration.footerHeight
@@ -86,7 +106,6 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
         self.imageSlideshow?.currentPageChanged = {
             index in
             self.player?.stop()
-            self.startPlayFromStart = true
             self.assignFooterPanel(forAssetIndex: index)
         }
         
@@ -113,13 +132,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
                         }
                         self.player?.view.isHidden = false
                         self.imageSlideshow?.isHidden = true
-                        if self.startPlayFromStart {
-                            self.player?.playFromBeginning()
-                            self.startPlayFromStart = false
-                        }
-                        else {
-                            self.player?.playFromCurrentTime()
-                        }
+                        self.player?.playFromCurrentTime()
                     }
                     else {
                         self.updateImageToVideoFrame()
@@ -128,19 +141,19 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
                 }
             }
             fv.snapshotPressedHandler = {
-                self.currentImageSource?.getVideoURL(completionHandler: { videoUrl in
-                    if let url = videoUrl {
-                        if let image = self.currentImageSource?.imageFromVideo(url: url) {
-                            AssetManager.savePhoto(image, location: nil, completion: {
-                                _ in
-                                self.didGetPhoto?(image)
-                            })
-                        }
+                self.currentImageSource?.imageFromVideoURL() { image in
+                    if let image = image {
+                        AssetManager.savePhoto(image, location: nil, completion: {
+                            _ in
+                            self.didGetPhoto?(image)
+                        })
                     }
-                })
+                }
             }
             fv.setupMenu(in: self)
         }
+        
+        self.startPositionUpdateNotification()
     }
     
     private func getTopViewController() -> UIViewController? {
@@ -159,6 +172,8 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
         super.layoutSubviews()
         self.imageSlideshow?.frame = self.bounds
         self.player?.view.frame = self.bounds
+        self.assetInfoLabel?.frame = self.header.bounds
+        self.timeSliderPanel?.frame = CGRect(x: 0, y: FlexMediaPickerConfiguration.headerHeight, width: self.bounds.size.width, height: FlexMediaPickerConfiguration.timeSliderPanelHeight)
     }
     
     private func createBackOrCloseLeftMenu() {
@@ -191,7 +206,18 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
         self.header.showHide(forceHide: forceHide)
         self.footer.showHide(forceHide: forceHide)
         self.closeViewMenu?.viewMenu?.showHide(forceHide: forceHide)
+        self.timeSliderPanel?.showHide(forceHide: forceHide)
         self.hideViewElementsHandler?(forceHide)
+    }
+    
+    private func hidePlayerView() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(250), execute: {
+            if let p = self.player, !p.view.isHidden {
+                self.imageSlideshow?.isHidden = false
+                p.view.isHidden = true
+                p.view.removeFromSuperview()
+            }
+        })
     }
     
     private func assignFooterPanel(forAssetIndex index: Int) {
@@ -202,20 +228,16 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
             imageAsset.imageFromVideoLoadedHandler = {
                 asset in
                 // Hide player view when the image slideshow has loaded the image (again)
-                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(250), execute: {
-                    if let p = self.player, !p.view.isHidden {
-                        self.imageSlideshow?.isHidden = false
-                        p.view.isHidden = true
-                        p.view.removeFromSuperview()
-                    }
-                })
+                self.hidePlayerView()
             }
             self.player?.url = nil
             if let ass = imageAsset.asset.asset, ass.mediaType == .video {
                 self.videoControlPanel.isHidden = self.header.isHidden
+                self.timeSliderPanel?.isHidden = self.header.isHidden
                 self.videoControlPanel.panelState = .videoTimeSlider
                 self.videoControlPanel.showMenu()
                 self.footerText = " "
+                self.assetInfoLabel?.label.text = Helper.stringFromTimeInterval(interval: 0)
                 AssetManager.resolveVideoAsset(ass, resolvedURLHandler: { url in
                     self.player?.url = url
                     self.movieAsset = AVURLAsset(url: url, options: nil)
@@ -223,20 +245,59 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
             }
             else if let url = imageAsset.asset.videoURL {
                 self.videoControlPanel.isHidden = self.header.isHidden
+                self.timeSliderPanel?.isHidden = self.header.isHidden
                 self.videoControlPanel.panelState = .videoTimeSlider
                 self.videoControlPanel.showMenu()
                 self.footerText = " "
+                self.assetInfoLabel?.label.text = Helper.stringFromTimeInterval(interval: 0)
                 self.player?.url = url
                 self.movieAsset = AVURLAsset(url: url, options: nil)
             }
             else {
                 self.videoControlPanel.isHidden = true
+                self.timeSliderPanel?.isHidden = true
                 self.videoControlPanel.panelState = .noVideo
                 self.videoControlPanel.showMenu()
                 self.footerText = nil
+                self.assetInfoLabel?.label.text = nil
                 self.player?.view.isHidden = true
             }
         }
+    }
+    
+    func startPositionUpdateNotification() {
+        self.posUpdateTimer.start(0.25) { [weak self] in
+            if let weakSelf = self {
+                if weakSelf.shouldUpdateTimeOffset {
+                    weakSelf.shouldUpdateTimeOffset = false
+                    DispatchQueue.main.async {
+                        weakSelf.updateImageToVideoFrame()
+                    }
+                }
+            }
+        }
+    }
+    
+    private func updateVideoTime(toOffset offset: Double) {
+        if let asset = self.movieAsset {
+            let durationSeconds = CMTimeGetSeconds(asset.duration)
+            let timeOffset = CMTimeMakeWithSeconds(Float64(offset) * durationSeconds, 600)
+            let movieTracks = asset.tracks(withMediaType: AVMediaTypeVideo)
+            if let movieTrack = movieTracks.first {
+                let totalFrames: Float64 = durationSeconds * Float64(movieTrack.nominalFrameRate)
+                let frame: Float64 = Float64(offset) * totalFrames
+                self.currentAsset?.currentFrame = frame
+            }
+            DispatchQueue.main.async {
+                if let player = self.player {
+                    player.seek(to: timeOffset) {
+                        self.videoControlPanel.isPlaying = player.playbackState == .playing
+                    }
+                    self.assetInfoLabel?.label.text = Helper.stringFromTimeInterval(interval: player.currentTime)
+                }
+            }
+        }
+        self.shouldUpdateTimeOffset = true
     }
     
     private func getVideoFrameForTime(time: TimeInterval) -> Float64 {
@@ -253,9 +314,12 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
     }
     
     private func updateImageToVideoFrame() {
-        if let iss = self.imageSlideshow {
-            // Hack to reload
-            iss.setImageInputs(iss.images)
+        if let imgSource = self.currentImageSource, let iv = imgSource.imageViewRef {
+            imgSource.imageFromVideoURL() { image in
+                DispatchQueue.main.async {
+                    iv.image = image
+                }
+            }
         }
     }
     
@@ -282,6 +346,13 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
     func playerCurrentTimeDidChange(_ player: Player) {
         let frame = self.getVideoFrameForTime(time: player.currentTime)
         self.currentAsset?.currentFrame = frame
+
+        let fraction = Double(player.currentTime) / Double(player.maximumDuration)
+        self.timeSliderPanel?.currentTimeOffset = fraction
+        
+        DispatchQueue.main.async {
+            self.assetInfoLabel?.label.text = Helper.stringFromTimeInterval(interval: player.currentTime)
+        }
     }
     
     func playerPlaybackWillStartFromBeginning(_ player: Player) {

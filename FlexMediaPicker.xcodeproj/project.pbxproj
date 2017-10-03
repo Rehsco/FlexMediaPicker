@@ -45,6 +45,10 @@
 		5BC6D94C1F763EB00051B0A3 /* CameraMediaControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6D94A1F763EB00051B0A3 /* CameraMediaControlPanel.swift */; };
 		5BC6D94E1F763F190051B0A3 /* CamVidSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6D94D1F763F190051B0A3 /* CamVidSwitch.swift */; };
 		5BC6D94F1F763F190051B0A3 /* CamVidSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6D94D1F763F190051B0A3 /* CamVidSwitch.swift */; };
+		5BCB66451F81549800AB9F4E /* VideoTimeSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCB66441F81549800AB9F4E /* VideoTimeSliderView.swift */; };
+		5BCB66461F81549800AB9F4E /* VideoTimeSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCB66441F81549800AB9F4E /* VideoTimeSliderView.swift */; };
+		5BCCDEC41F82A44A00914DC1 /* PositionUpdateTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCCDEC31F82A44A00914DC1 /* PositionUpdateTimer.swift */; };
+		5BCCDEC51F82A44A00914DC1 /* PositionUpdateTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCCDEC31F82A44A00914DC1 /* PositionUpdateTimer.swift */; };
 		5BD79AB91F66879A0023CE21 /* VideoWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD79AB81F66879A0023CE21 /* VideoWriter.swift */; };
 		5BD79ABA1F66879A0023CE21 /* VideoWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD79AB81F66879A0023CE21 /* VideoWriter.swift */; };
 		5BDC84151F52CC3000BF45B5 /* CameraMan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC84141F52CC3000BF45B5 /* CameraMan.swift */; };
@@ -91,6 +95,8 @@
 		5BC6D9471F763E570051B0A3 /* MainMediaControlPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMediaControlPanel.swift; sourceTree = "<group>"; };
 		5BC6D94A1F763EB00051B0A3 /* CameraMediaControlPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraMediaControlPanel.swift; sourceTree = "<group>"; };
 		5BC6D94D1F763F190051B0A3 /* CamVidSwitch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CamVidSwitch.swift; sourceTree = "<group>"; };
+		5BCB66441F81549800AB9F4E /* VideoTimeSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTimeSliderView.swift; sourceTree = "<group>"; };
+		5BCCDEC31F82A44A00914DC1 /* PositionUpdateTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionUpdateTimer.swift; sourceTree = "<group>"; };
 		5BD79AB81F66879A0023CE21 /* VideoWriter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoWriter.swift; sourceTree = "<group>"; };
 		5BDC84141F52CC3000BF45B5 /* CameraMan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraMan.swift; sourceTree = "<group>"; };
 		5BDC84181F52CC8F00BF45B5 /* Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
@@ -260,6 +266,7 @@
 		5BDC84171F52CC8300BF45B5 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				5BCCDEC31F82A44A00914DC1 /* PositionUpdateTimer.swift */,
 				5BDC84181F52CC8F00BF45B5 /* Helper.swift */,
 			);
 			name = Helper;
@@ -268,6 +275,7 @@
 		5BDF22F81F7F9A3E000A6B7E /* Media Viewer */ = {
 			isa = PBXGroup;
 			children = (
+				5BCB66441F81549800AB9F4E /* VideoTimeSliderView.swift */,
 				5BDF22F91F7F9A65000A6B7E /* ImageSlideShowView.swift */,
 			);
 			name = "Media Viewer";
@@ -509,6 +517,7 @@
 				5B3DB3231F7FB8D300D864DE /* UIViewExtensions.swift in Sources */,
 				5BC562861F503ABB00A848F2 /* FlexMediaPickerConfiguration.swift in Sources */,
 				5BDC841C1F52CE8B00BF45B5 /* CameraView.swift in Sources */,
+				5BCB66451F81549800AB9F4E /* VideoTimeSliderView.swift in Sources */,
 				5BC6D94B1F763EB00051B0A3 /* CameraMediaControlPanel.swift in Sources */,
 				5BBFFABE1F51DF7500C08350 /* MediaControlPanel.swift in Sources */,
 				5BC562831F503A9A00A848F2 /* AssetManager.swift in Sources */,
@@ -524,6 +533,7 @@
 				5BE45C591F7C004000322FCC /* ImageAssetImageSource.swift in Sources */,
 				5BC5628B1F50412900A848F2 /* FlexMediaPickerViewController.swift in Sources */,
 				5BC6D94E1F763F190051B0A3 /* CamVidSwitch.swift in Sources */,
+				5BCCDEC41F82A44A00914DC1 /* PositionUpdateTimer.swift in Sources */,
 				5BBFFABB1F51796500C08350 /* FlexMediaPickerAsset.swift in Sources */,
 				5BDC84191F52CC8F00BF45B5 /* Helper.swift in Sources */,
 			);
@@ -535,6 +545,7 @@
 			files = (
 				5BC562901F50436700A848F2 /* CommonFlexCollectionViewController.swift in Sources */,
 				5B3DB3291F7FFB1200D864DE /* VideoPlaybackControlPanel.swift in Sources */,
+				5BCB66461F81549800AB9F4E /* VideoTimeSliderView.swift in Sources */,
 				5BDC841A1F52CC8F00BF45B5 /* Helper.swift in Sources */,
 				5BC6D9491F763E570051B0A3 /* MainMediaControlPanel.swift in Sources */,
 				5BC562721F50394700A848F2 /* ViewController.swift in Sources */,
@@ -547,6 +558,7 @@
 				5BDF22FB1F7F9A65000A6B7E /* ImageSlideShowView.swift in Sources */,
 				5BC562991F50599700A848F2 /* UIImageExtensions.swift in Sources */,
 				5BC562871F503ABB00A848F2 /* FlexMediaPickerConfiguration.swift in Sources */,
+				5BCCDEC51F82A44A00914DC1 /* PositionUpdateTimer.swift in Sources */,
 				5BC6D94C1F763EB00051B0A3 /* CameraMediaControlPanel.swift in Sources */,
 				5BBFFABF1F51DF7500C08350 /* MediaControlPanel.swift in Sources */,
 				5BBFFABC1F51796500C08350 /* FlexMediaPickerAsset.swift in Sources */,

@@ -1,10 +1,10 @@
 //
-//  FlexMediaPickerAsset.swift
-//  FlexMediaPicker
+//  PositionUpdateTimer.swift
+//  MJRFlexStyleComponents
 //
-//  Created by Martin Rehder on 26.08.2017.
+//  Created by Martin Rehder on 22.07.16.
 /*
- * Copyright 2017-present Martin Jacob Rehder.
+ * Copyright 2016-present Martin Jacob Rehder.
  * http://www.rehsco.com
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,32 +27,36 @@
  *
  */
 
-import UIKit
-import Photos
+import Foundation
 
-class FlexMediaPickerAsset {
-    let thumbnail: UIImage
-    var image: UIImage?
-    var asset: PHAsset?
-    var collection: PHAssetCollection?
+class PositionUpdateTimer {
+    fileprivate var timer: Timer?
+    fileprivate var updateBlock: (() -> Void)?
     
-    /// Video
-    var videoURL: URL?
-    var currentFrame: Float64 = 1
+    deinit {
+        stop()
+    }
     
-    init(thumbnail: UIImage, asset: PHAsset, collection: PHAssetCollection) {
-        self.thumbnail = thumbnail
-        self.asset = asset
-        self.collection = collection
+    // MARK: - Managing Autorepeat
+    
+    func stop() {
+        timer?.invalidate()
     }
-
-    init(thumbnail: UIImage, image: UIImage) {
-        self.thumbnail = thumbnail
-        self.image = image
+    
+    func start(_ frequency: TimeInterval, updateBlock block: @escaping () -> Void) {
+        if let _timer = timer, _timer.isValid {
+            return
+        }
+        
+        self.updateBlock = block
+        repeatTick(nil)
+        
+        let newTimer = Timer(timeInterval: frequency, target: self, selector: #selector(PositionUpdateTimer.repeatTick), userInfo: nil, repeats: true)
+        self.timer   = newTimer
+        RunLoop.current.add(newTimer, forMode: RunLoopMode.commonModes)
     }
-
-    init(thumbnail: UIImage, videoURL: URL) {
-        self.thumbnail = thumbnail
-        self.videoURL = videoURL
+    
+    @objc func repeatTick(_ sender: AnyObject?) {
+        self.updateBlock?()
     }
 }

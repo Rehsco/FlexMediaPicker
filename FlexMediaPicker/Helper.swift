@@ -46,5 +46,13 @@ struct Helper {
                 NSForegroundColorAttributeName: color
             ])
         return attributedString
-    }    
+    }
+    
+    static func stringFromTimeInterval(interval: TimeInterval) -> String {
+        let ti = NSInteger(interval.isNaN ? 0 : interval)
+        let seconds = ti % 60
+        let minutes = (ti / 60) % 60
+        let hours = (ti / 3600)
+        return NSString(format: "%0.2d:%0.2d:%0.2d",hours,minutes,seconds) as String
+    }
 }
