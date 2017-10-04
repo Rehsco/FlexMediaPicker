@@ -47,6 +47,9 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
 
     var imageSlideshow: ImageSlideshow?
     
+    var minimumVideoOffset: Double = 0
+    var maximumVideoOffset: Double = 1
+
     var closeHandler: (()->Void)?
     var hideViewElementsHandler: ((Bool)->Void)?
     var didGetPhoto: ((UIImage)->Void)?
@@ -83,6 +86,16 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
             offset in
             self.updateVideoTime(toOffset: offset)
         }
+        self.timeSliderPanel?.videoTimeMinOffsetChangeHandler = {
+            offset in
+            self.minimumVideoOffset = offset
+            self.updateFrameStepper()
+        }
+        self.timeSliderPanel?.videoTimeMaxOffsetChangeHandler = {
+            offset in
+            self.maximumVideoOffset = offset
+            self.updateFrameStepper()
+        }
         self.addSubview(self.timeSliderPanel!)
         
         self.headerText = " "
@@ -106,6 +119,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
         self.imageSlideshow?.currentPageChanged = {
             index in
             self.player?.stop()
+            self.imageSlideshow?.isHidden = false
             self.assignFooterPanel(forAssetIndex: index)
         }
         
@@ -119,9 +133,22 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
             
             tvc.addChildViewController(self.player!)
             self.player?.didMove(toParentViewController: tvc)
+            
+            let nextGR = UISwipeGestureRecognizer(target: self, action: #selector(self.playerSwipeNext(_:)))
+            nextGR.direction = .left
+            let prevGR = UISwipeGestureRecognizer(target: self, action: #selector(self.playerSwipePrev(_:)))
+            prevGR.direction = .right
+            self.player?.view.addGestureRecognizer(nextGR)
+            self.player?.view.addGestureRecognizer(prevGR)
         }
         
         if let fv = self.footer as? VideoPlaybackControlPanel {
+            fv.frameStepperChangeHandler = {
+                newFrame in
+                self.currentAsset?.currentFrame = newFrame
+                let offset = newFrame / self.getMaxFrame()
+                self.updateVideoTime(toOffset: offset, shouldUpdateFrameStepper: false)
+            }
             fv.playPressedHandler = {
                 shouldPlay in
                 if let pp = self.player {
@@ -168,6 +195,11 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
         return appDelegate?.window??.rootViewController
     }
     
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        self.imageSlideshow?.isHidden = false
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         self.imageSlideshow?.frame = self.bounds
@@ -197,6 +229,29 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
         self.hideViewElements()
     }
     
+    @objc private func playerSwipeNext(_ gesture: UISwipeGestureRecognizer) {
+        if let iss = self.imageSlideshow {
+            if iss.images.count > 1 {
+                DispatchQueue.main.async {
+                    self.player?.view.isHidden = true
+                    iss.setCurrentPage((iss.currentPage + 1) % iss.images.count, animated: true)
+                }
+            }
+        }
+    }
+
+    @objc private func playerSwipePrev(_ gesture: UISwipeGestureRecognizer) {
+        if let iss = self.imageSlideshow {
+            if iss.images.count > 1 {
+                DispatchQueue.main.async {
+                    self.player?.view.isHidden = true
+                    let prevPage = iss.currentPage == 0 ? iss.images.count - 1 : iss.currentPage - 1
+                    iss.setCurrentPage(prevPage, animated: true)
+                }
+            }
+        }
+    }
+
     func setCurrentPage(_ idx: Int, animated: Bool) {
         self.imageSlideshow?.setCurrentPage(idx, animated: animated)
         self.assignFooterPanel(forAssetIndex: idx)
@@ -265,7 +320,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
         }
     }
     
-    func startPositionUpdateNotification() {
+    private func startPositionUpdateNotification() {
         self.posUpdateTimer.start(0.25) { [weak self] in
             if let weakSelf = self {
                 if weakSelf.shouldUpdateTimeOffset {
@@ -278,7 +333,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
         }
     }
     
-    private func updateVideoTime(toOffset offset: Double) {
+    private func updateVideoTime(toOffset offset: Double, shouldUpdateFrameStepper: Bool = true) {
         if let asset = self.movieAsset {
             let durationSeconds = CMTimeGetSeconds(asset.duration)
             let timeOffset = CMTimeMakeWithSeconds(Float64(offset) * durationSeconds, 600)
@@ -287,6 +342,9 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
                 let totalFrames: Float64 = durationSeconds * Float64(movieTrack.nominalFrameRate)
                 let frame: Float64 = Float64(offset) * totalFrames
                 self.currentAsset?.currentFrame = frame
+                if shouldUpdateFrameStepper {
+                    self.updateFrameStepper()
+                }
             }
             DispatchQueue.main.async {
                 if let player = self.player {
@@ -300,6 +358,18 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
         self.shouldUpdateTimeOffset = true
     }
     
+    private func getMaxFrame() -> Float64 {
+        if let asset = self.movieAsset {
+            let movieTracks = asset.tracks(withMediaType: AVMediaTypeVideo)
+            if let movieTrack = movieTracks.first {
+                let durationSeconds = CMTimeGetSeconds(asset.duration)
+                let totalFrames: Float64 = durationSeconds * Float64(movieTrack.nominalFrameRate)
+                return totalFrames
+            }
+        }
+        return 1
+    }
+    
     private func getVideoFrameForTime(time: TimeInterval) -> Float64 {
         if let asset = self.movieAsset {
             let movieTracks = asset.tracks(withMediaType: AVMediaTypeVideo)
@@ -311,6 +381,21 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
             }
         }
         return 0
+    }
+    
+    private func updateFrameStepper() {
+        if let asset = self.movieAsset {
+            let movieTracks = asset.tracks(withMediaType: AVMediaTypeVideo)
+            if let movieTrack = movieTracks.first {
+                let durationSeconds = CMTimeGetSeconds(asset.duration)
+                let totalFrames = Double(durationSeconds * Float64(movieTrack.nominalFrameRate))
+                let minFrame = self.minimumVideoOffset * totalFrames
+                let maxFrame = self.maximumVideoOffset * totalFrames
+                if let curFrame = self.currentAsset?.currentFrame {
+                    self.videoControlPanel.setFrameValues(min: minFrame, current: floor(Double(curFrame)), max: maxFrame)
+                }
+            }
+        }
     }
     
     private func updateImageToVideoFrame() {
@@ -328,7 +413,12 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
     func playerReady(_ player: Player) {
         // After player has been initialized, make sure it stays hidden until "play" is tapped
         DispatchQueue.main.async {
-            self.player?.view.isHidden = true
+            if let player = self.player {
+                player.view.isHidden = true
+                self.timeSliderPanel?.maxDuration = player.maximumDuration
+                self.timeSliderPanel?.setMinMaxVideoTime(min: 0, max: player.maximumDuration)
+                self.updateFrameStepper()
+            }
         }
     }
     
@@ -344,14 +434,23 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
     // MARK: - PlayerPlaybackDelegate
     
     func playerCurrentTimeDidChange(_ player: Player) {
-        let frame = self.getVideoFrameForTime(time: player.currentTime)
-        self.currentAsset?.currentFrame = frame
-
         let fraction = Double(player.currentTime) / Double(player.maximumDuration)
-        self.timeSliderPanel?.currentTimeOffset = fraction
-        
-        DispatchQueue.main.async {
-            self.assetInfoLabel?.label.text = Helper.stringFromTimeInterval(interval: player.currentTime)
+        if !fraction.isNaN {
+            if fraction >= self.maximumVideoOffset {
+                self.player?.pause()
+                self.videoControlPanel.isPlaying = false
+            }
+            self.timeSliderPanel?.currentTimeOffset = min(max(fraction, self.minimumVideoOffset), self.maximumVideoOffset)
+            
+            if player.playbackState == .playing {
+                let frame = self.getVideoFrameForTime(time: player.currentTime)
+                self.currentAsset?.currentFrame = frame
+                self.updateFrameStepper()
+            }
+            
+            DispatchQueue.main.async {
+                self.assetInfoLabel?.label.text = Helper.stringFromTimeInterval(interval: player.currentTime)
+            }
         }
     }
     
@@ -359,8 +458,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
     }
     
     func playerPlaybackDidEnd(_ player: Player) {
-        self.currentAsset?.currentFrame = 1
-        self.videoControlPanel.isPlaying = false
+        self.updateVideoTime(toOffset: self.minimumVideoOffset)
         self.updateImageToVideoFrame()
     }
     

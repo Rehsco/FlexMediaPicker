@@ -40,6 +40,9 @@ class VideoPlaybackControlPanel: FlexFooterView {
     private var playPauseItem: FlexMenuItem?
     private var cameraItem: FlexMenuItem?
     private var playMenu: CommonIconViewMenu?
+    private var cameraMenu: CommonIconViewMenu?
+
+    private var frameStepper: FlexSnapStepper?
     
     var panelState: VideoPlaybackPanelState = .noVideo
     
@@ -53,14 +56,17 @@ class VideoPlaybackControlPanel: FlexFooterView {
     }
     var playPressedHandler: ((Bool)->Void)?
     var snapshotPressedHandler: (()->Void)?
+    var frameStepperChangeHandler: ((Double)->Void)?
 
     override func showHide(forceHide: Bool) {
         super.showHide(forceHide: forceHide)
         if self.panelState == .noVideo {
             self.playMenu?.viewMenu?.showHide(forceHide: true)
+            self.cameraMenu?.viewMenu?.showHide(forceHide: true)
         }
         else {
             self.playMenu?.viewMenu?.showHide(forceHide: forceHide)
+            self.cameraMenu?.viewMenu?.showHide(forceHide: forceHide)
         }
     }
     
@@ -69,25 +75,67 @@ class VideoPlaybackControlPanel: FlexFooterView {
             if self.panelState == .noVideo {
                 self.playMenu?.viewMenu?.isHidden = true
                 self.playMenu?.viewMenu?.alpha = 0
+                self.cameraMenu?.viewMenu?.isHidden = true
+                self.cameraMenu?.viewMenu?.alpha = 0
             }
             else if !self.isHidden {
                 self.playMenu?.viewMenu?.isHidden = false
                 self.playMenu?.viewMenu?.alpha = 1
+                self.cameraMenu?.viewMenu?.isHidden = false
+                self.cameraMenu?.viewMenu?.alpha = 1
             }
         }
     }
     
+    func setFrameValues(min: Double, current: Double, max: Double) {
+        DispatchQueue.main.async {
+            self.frameStepper?.minStepperValue = min
+            self.frameStepper?.maxStepperValue = max
+            self.frameStepper?.value = current
+            self.frameStepper?.valueSteps = max-min
+        }
+    }
+    
     func setupMenu(in flexView: FlexView) {
-        self.playMenu = CommonIconViewMenu(size: CGSize(width: 120, height: flexView.footerSize * 0.8), hPos: .center, vPos: .footer, menuIconSize: 36)
-        self.cameraItem = self.playMenu?.createIconMenuItem(imageName: "cameraImage" , iconSize: 36) {
+        self.cameraMenu = CommonIconViewMenu(size: CGSize(width: 50, height: flexView.footerSize * 0.8), hPos: .left, vPos: .footer, menuIconSize: 36)
+        self.cameraItem = self.cameraMenu?.createIconMenuItem(imageName: "cameraImage" , iconSize: 36) {
             self.snapshotPressedHandler?()
         }
+        flexView.addMenu(self.cameraMenu!)
+        self.playMenu = CommonIconViewMenu(size: CGSize(width: 50, height: flexView.footerSize * 0.8), hPos: .right, vPos: .footer, menuIconSize: 36)
         self.playPauseItem = self.playMenu?.createIconMenuItem(imageName: "playIcon", selectedImageName: "pauseIcon" , iconSize: 36) {
             self.isPlaying = !self.isPlaying
             self.playPressedHandler?(self.isPlaying)
             self.playPauseItem?.selected = self.isPlaying
         }
         flexView.addMenu(self.playMenu!)
+        
+        self.frameStepper = FlexSnapStepper(frame: .zero)
+        self.frameStepper?.stepValueChangeHandler = {
+            newValue in
+            self.frameStepperChangeHandler?(newValue)
+        }
+        self.frameStepper?.thumbFactory = { index in
+            let thumb = MutableSliderThumbItem()
+            thumb.color = FlexMediaPickerConfiguration.frameStepperThumbColor
+            return thumb
+        }
+        self.frameStepper?.style = FlexMediaPickerConfiguration.frameStepperStyle
+        self.frameStepper?.borderColor = FlexMediaPickerConfiguration.frameStepperBorderColor
+        self.frameStepper?.borderWidth = FlexMediaPickerConfiguration.frameStepperBorderWidth
+        self.frameStepper?.separatorTintColor = FlexMediaPickerConfiguration.frameStepperSeparatorColor
+        self.frameStepper?.thumbStyle = FlexMediaPickerConfiguration.frameStepperThumbStyle
+        self.frameStepper?.numberFormatString = "%.0f"
+        self.frameStepper?.thumbTextColor = FlexMediaPickerConfiguration.frameStepperThumbTextColor
+        self.frameStepper?.separatorTextColor = FlexMediaPickerConfiguration.frameStepperSeparatorTextColor
+        
+        self.addSubview(self.frameStepper!)
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        let fsSize = FlexMediaPickerConfiguration.frameStepperSize
+        let fsRect = CGRect(x: (self.bounds.width - fsSize.width) * 0.5, y: (self.bounds.height - fsSize.height) * 0.5, width: fsSize.width, height: fsSize.height)
+        self.frameStepper?.frame = fsRect
+    }
 }

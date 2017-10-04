@@ -63,6 +63,8 @@
 		5BDF22FB1F7F9A65000A6B7E /* ImageSlideShowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDF22F91F7F9A65000A6B7E /* ImageSlideShowView.swift */; };
 		5BE45C591F7C004000322FCC /* ImageAssetImageSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE45C581F7C004000322FCC /* ImageAssetImageSource.swift */; };
 		5BE45C5A1F7C004000322FCC /* ImageAssetImageSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE45C581F7C004000322FCC /* ImageAssetImageSource.swift */; };
+		5BE57D151F83AE340037D4EF /* TimeSliderInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE57D141F83AE340037D4EF /* TimeSliderInfoView.swift */; };
+		5BE57D161F83AE340037D4EF /* TimeSliderInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE57D141F83AE340037D4EF /* TimeSliderInfoView.swift */; };
 		903231DFC07DA9FD099D7C2D /* Pods_FlexMediaPicker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A355FF259B4BD6806377BAD5 /* Pods_FlexMediaPicker.framework */; };
 		A19CD1DD1C8C1335BEFBF9B7 /* Pods_FlexMediaPickerExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89B7DD93059BEE76E18453D9 /* Pods_FlexMediaPickerExample.framework */; };
 /* End PBXBuildFile section */
@@ -104,6 +106,7 @@
 		5BDC841E1F52CFFF00BF45B5 /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		5BDF22F91F7F9A65000A6B7E /* ImageSlideShowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSlideShowView.swift; sourceTree = "<group>"; };
 		5BE45C581F7C004000322FCC /* ImageAssetImageSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAssetImageSource.swift; sourceTree = "<group>"; };
+		5BE57D141F83AE340037D4EF /* TimeSliderInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSliderInfoView.swift; sourceTree = "<group>"; };
 		7F0A6406FB8E47035C90A29C /* Pods-FlexMediaPickerExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlexMediaPickerExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-FlexMediaPickerExample/Pods-FlexMediaPickerExample.release.xcconfig"; sourceTree = "<group>"; };
 		89B7DD93059BEE76E18453D9 /* Pods_FlexMediaPickerExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FlexMediaPickerExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A355FF259B4BD6806377BAD5 /* Pods_FlexMediaPicker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FlexMediaPicker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -275,6 +278,7 @@
 		5BDF22F81F7F9A3E000A6B7E /* Media Viewer */ = {
 			isa = PBXGroup;
 			children = (
+				5BE57D141F83AE340037D4EF /* TimeSliderInfoView.swift */,
 				5BCB66441F81549800AB9F4E /* VideoTimeSliderView.swift */,
 				5BDF22F91F7F9A65000A6B7E /* ImageSlideShowView.swift */,
 			);
@@ -522,6 +526,7 @@
 				5BBFFABE1F51DF7500C08350 /* MediaControlPanel.swift in Sources */,
 				5BC562831F503A9A00A848F2 /* AssetManager.swift in Sources */,
 				5BD79AB91F66879A0023CE21 /* VideoWriter.swift in Sources */,
+				5BE57D151F83AE340037D4EF /* TimeSliderInfoView.swift in Sources */,
 				5BC562921F50437B00A848F2 /* CommonIconViewMenu.swift in Sources */,
 				5BC5629B1F5059E400A848F2 /* ImagesCollectionView.swift in Sources */,
 				5BC562981F50599700A848F2 /* UIImageExtensions.swift in Sources */,
@@ -554,6 +559,7 @@
 				5BDC84201F52CFFF00BF45B5 /* LocationManager.swift in Sources */,
 				5BC5629F1F506EF300A848F2 /* BusyViewFactory.swift in Sources */,
 				5BC5629C1F5059E400A848F2 /* ImagesCollectionView.swift in Sources */,
+				5BE57D161F83AE340037D4EF /* TimeSliderInfoView.swift in Sources */,
 				5BC562841F503A9A00A848F2 /* AssetManager.swift in Sources */,
 				5BDF22FB1F7F9A65000A6B7E /* ImageSlideShowView.swift in Sources */,
 				5BC562991F50599700A848F2 /* UIImageExtensions.swift in Sources */,

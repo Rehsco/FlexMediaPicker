@@ -34,7 +34,7 @@ open class BusyViewFactory {
     private static var overlayBusyView: StyledActionOverlay?
     private static var isBusy = false
 
-    open class func showBusyOverlay(onView view: UIView? = nil, autoHideAfter: Int = 12, completionHandler: ((Void) -> Void)? = nil) {
+    open class func showBusyOverlay(onView view: UIView? = nil, autoHideAfter: Int = 12, completionHandler: (() -> Void)? = nil) {
         if self.isBusy {
             return // already busy
         }
@@ -71,7 +71,7 @@ open class BusyViewFactory {
         }
     }
     
-    open class func hideBusyOverlay(completionHandler: ((Void) -> Void)? = nil) {
+    open class func hideBusyOverlay(completionHandler: (() -> Void)? = nil) {
         DispatchQueue.main.async {
             if self.overlayBusyView == nil {
                 return

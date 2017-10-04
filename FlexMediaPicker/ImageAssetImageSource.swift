@@ -63,12 +63,10 @@ class ImageAssetImageSource: InputSource {
             }
             else if let ass = self.asset.asset, ass.mediaType == .video {
                 AssetManager.resolveVideoAsset(ass, resolvedURLHandler: { url in
-                    NSLog("Get video URL \(url.path)")
                     self.frameImageFromVideo(url: url, completionHandler: completionHandler)
                 })
             }
             else if let url = self.asset.videoURL {
-                NSLog("Get video URL \(url.path)")
                 self.frameImageFromVideo(url: url, completionHandler: completionHandler)
             }
             else if let ass = self.asset.asset {
@@ -127,8 +125,11 @@ class ImageAssetImageSource: InputSource {
                 let imageTimeEstimate: CMTime = CMTimeMakeWithSeconds(secondsIn, 600)
                 
                 let imgGenerator = AVAssetImageGenerator(asset: asset)
+                imgGenerator.requestedTimeToleranceBefore = kCMTimeZero
+                imgGenerator.requestedTimeToleranceAfter = kCMTimeZero
                 imgGenerator.appliesPreferredTrackTransform = true
-                let cgImage = try imgGenerator.copyCGImage(at: imageTimeEstimate, actualTime: nil)
+                var actTime: CMTime = CMTimeMake(0, 1)
+                let cgImage = try imgGenerator.copyCGImage(at: imageTimeEstimate, actualTime: &actTime)
                 let image = UIImage(cgImage: cgImage)
                 return image
             }

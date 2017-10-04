@@ -32,6 +32,7 @@ import MJRFlexStyleComponents
 
 class VideoTimeSliderView: FlexView {
     private var timeSlider: FlexMutableSlider?
+    private var infoView: TimeSliderInfoView?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -49,11 +50,20 @@ class VideoTimeSliderView: FlexView {
         }
     }
     
-    var videoTimeOffsetChangeHandler: ((Double)->Void)?
+    var maxDuration: TimeInterval = 1
     
+    var videoTimeOffsetChangeHandler: ((Double)->Void)?
+    var videoTimeMinOffsetChangeHandler: ((Double)->Void)?
+    var videoTimeMaxOffsetChangeHandler: ((Double)->Void)?
+
     private func setupView() {
         self.styleColor = FlexMediaPickerConfiguration.timeSliderPanelColor
-
+        self.footerSize = FlexMediaPickerConfiguration.timeSliderCaptionPanelHeight
+        self.footerText = " "
+        
+        self.infoView = TimeSliderInfoView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        self.footer.addSubview(self.infoView!)
+        
         self.timeSlider = FlexMutableSlider(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         self.timeSlider?.style = FlexMediaPickerConfiguration.timeSliderStyle
         self.timeSlider?.borderColor = FlexMediaPickerConfiguration.timeSliderBorderColor
@@ -62,7 +72,18 @@ class VideoTimeSliderView: FlexView {
         self.timeSlider?.backgroundInsets = FlexMediaPickerConfiguration.timeSliderBarInsets
         self.timeSlider?.valueChangedBlockWhileSliding = {
             value, index in
-            if index == 1 {
+            switch index {
+            case 0:
+                self.videoTimeMinOffsetChangeHandler?(value)
+                DispatchQueue.main.async {
+                    self.infoView?.minimumTime = value * self.maxDuration
+                }
+            case 2:
+                self.videoTimeMaxOffsetChangeHandler?(value)
+                DispatchQueue.main.async {
+                    self.infoView?.maximumTime = value * self.maxDuration
+                }
+            default:
                 // Time offset for video playback change
                 self.videoTimeOffsetChangeHandler?(value)
             }
@@ -115,8 +136,14 @@ class VideoTimeSliderView: FlexView {
         self.timeSlider?.addThumb(stopOffsetThumbItem, separator: stopOffsetSepItem)
     }
     
+    func setMinMaxVideoTime(min: TimeInterval, max: TimeInterval) {
+        self.infoView?.minimumTime = min
+        self.infoView?.maximumTime = max
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         self.timeSlider?.frame = UIEdgeInsetsInsetRect(self.bounds, UIEdgeInsetsMake(5, 20, 5, 20))
+        self.infoView?.frame = UIEdgeInsetsInsetRect(self.footer.bounds, FlexMediaPickerConfiguration.timeSliderCaptionPanelInsets)
     }
 }

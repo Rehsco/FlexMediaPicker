@@ -38,8 +38,6 @@ class CameraMediaControlPanel: FlexFooterView {
     
     fileprivate var isVideoModeActive: Bool = false
     
-    var camVidSwitchSize: CGSize = CGSize(width: 80, height: 40)
-    
     var flashActionHandler: ((Bool)->Void)?
     var cameraSwitchActionHandler: (()->Void)?
     var backToImagesHandler: (()->Void)?
@@ -62,7 +60,7 @@ class CameraMediaControlPanel: FlexFooterView {
         self.triggerButton?.style = FlexMediaPickerConfiguration.takeButtonStyle
         self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonColor
         
-        self.camVidSwitch = CamVidSwitch(frame: CGRect(origin: .zero, size: self.camVidSwitchSize), thumbIcon: camIcon!, sepIcon: vidIcon!, disabledThumbIcon: dcamIcon!, disabledSepIcon: dvidIcon!)
+        self.camVidSwitch = CamVidSwitch(frame: CGRect(origin: .zero, size: FlexMediaPickerConfiguration.camVidSwitchSize), thumbIcon: camIcon!, sepIcon: vidIcon!, disabledThumbIcon: dcamIcon!, disabledSepIcon: dvidIcon!)
         self.camVidSwitch?.onTintColor = .clear
         self.camVidSwitch?.thumbTintColor = FlexMediaPickerConfiguration.camVidSwitchThumbColor
         self.camVidSwitch?.borderColor = FlexMediaPickerConfiguration.camVidSwitchBorderColor
@@ -110,15 +108,18 @@ class CameraMediaControlPanel: FlexFooterView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        let camVidSwitchSize = FlexMediaPickerConfiguration.camVidSwitchSize
         self.backTriggerButton?.frame = CGRect(x: (self.bounds.size.width - FlexMediaPickerConfiguration.takeButtonRadius) * 0.5, y: (self.bounds.size.height - FlexMediaPickerConfiguration.takeButtonRadius) * 0.5, width: FlexMediaPickerConfiguration.takeButtonRadius, height: FlexMediaPickerConfiguration.takeButtonRadius)
         let triggerDim = FlexMediaPickerConfiguration.takeButtonRadius - FlexMediaPickerConfiguration.takeButtonBorderWidth
         self.triggerButton?.frame = CGRect(x: (self.bounds.size.width - triggerDim) * 0.5, y: (self.bounds.size.height - triggerDim) * 0.5, width: triggerDim, height: triggerDim)
+        
+        // TODO: Only adapt when iPhone!
         if self.bounds.size.width < self.bounds.size.height {
-            self.camVidSwitch?.frame = CGRect(x: (self.bounds.size.width-self.camVidSwitchSize.height) * 0.5, y: (self.bounds.size.height - self.camVidSwitchSize.width) * 0.2, width: self.camVidSwitchSize.height, height: self.camVidSwitchSize.width)
+            self.camVidSwitch?.frame = CGRect(x: (self.bounds.size.width-camVidSwitchSize.height) * 0.5, y: (self.bounds.size.height - camVidSwitchSize.width) * 0.2, width: camVidSwitchSize.height, height: camVidSwitchSize.width)
             self.camVidSwitch?.direction = .vertical
         }
         else {
-            self.camVidSwitch?.frame = CGRect(x: (self.bounds.size.width - self.camVidSwitchSize.width) * 0.8, y: (self.bounds.size.height - self.camVidSwitchSize.height) * 0.5, width: self.camVidSwitchSize.width, height: self.camVidSwitchSize.height)
+            self.camVidSwitch?.frame = CGRect(x: (self.bounds.size.width - camVidSwitchSize.width) * 0.8, y: (self.bounds.size.height - camVidSwitchSize.height) * 0.5, width: camVidSwitchSize.width, height: camVidSwitchSize.height)
             self.camVidSwitch?.direction = .horizontal
         }
     }

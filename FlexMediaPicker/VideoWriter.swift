@@ -62,7 +62,7 @@ class VideoWriter {
         }
     }
     
-    func finish(callback: @escaping (Void) -> Void){
+    func finish(callback: @escaping () -> Void){
         fileWriter.finishWriting(completionHandler: callback)
     }
 }

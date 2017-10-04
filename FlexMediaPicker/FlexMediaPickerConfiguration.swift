@@ -36,6 +36,13 @@ public class FlexMediaPickerConfiguration {
     public static var timeSliderThumbColor = UIColor(red: 0.25, green: 0.29, blue: 0.34, alpha: 1)
     public static var timeSliderSeparatorColor = UIColor(red: 0.15, green: 0.19, blue: 0.24, alpha: 1)
     public static var timeSliderBorderColor = UIColor(red: 0.25, green: 0.29, blue: 0.34, alpha: 1)
+    public static var timeSliderCaptionTextColor = UIColor(red: 0.25, green: 0.29, blue: 0.34, alpha: 1)
+
+    public static var frameStepperThumbColor = UIColor(red: 0.25, green: 0.29, blue: 0.34, alpha: 1)
+    public static var frameStepperSeparatorColor = UIColor(red: 0.15, green: 0.19, blue: 0.24, alpha: 1)
+    public static var frameStepperBorderColor = UIColor(red: 0.25, green: 0.29, blue: 0.34, alpha: 1)
+    public static var frameStepperThumbTextColor = UIColor.white
+    public static var frameStepperSeparatorTextColor = UIColor(red: 0.25, green: 0.29, blue: 0.34, alpha: 1)
 
     public static var camVidSwitchThumbColor = UIColor(red: 0.25, green: 0.29, blue: 0.34, alpha: 1)
     public static var camVidSwitchBorderColor = UIColor(red: 0.25, green: 0.29, blue: 0.34, alpha: 1)
@@ -51,6 +58,9 @@ public class FlexMediaPickerConfiguration {
     public static var timeSliderStyle: FlexShapeStyle = FlexShapeStyle(style: .rounded)
     public static var timeSliderThumbStyle: FlexShapeStyle = FlexShapeStyle(style: .rounded)
 
+    public static var frameStepperStyle: FlexShapeStyle = FlexShapeStyle(style: .rounded)
+    public static var frameStepperThumbStyle: FlexShapeStyle = FlexShapeStyle(style: .rounded)
+
     // MARK: Fonts
     
     public static var headerFont = UIFont.systemFont(ofSize: 19, weight: UIFontWeightMedium)
@@ -62,7 +72,8 @@ public class FlexMediaPickerConfiguration {
     public static var noImagesFont = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium)
     public static var noCameraFont = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium)
     public static var settingsFont = UIFont.systemFont(ofSize: 16, weight: UIFontWeightMedium)
-    
+    public static var timeSliderCaptionFont = UIFont.systemFont(ofSize: 12, weight: UIFontWeightRegular)
+
     // MARK: Titles
 
     public static var mediaTitle = "Media Library"
@@ -82,16 +93,21 @@ public class FlexMediaPickerConfiguration {
     public static var indicatorHeight: CGFloat = 8
     public static var headerHeight: CGFloat = 44
     public static var footerHeight: CGFloat = 64
-    public static var timeSliderPanelHeight: CGFloat = 54
     public static var takeButtonRadius: CGFloat = 54
     public static var takeButtonBorderWidth: CGFloat = 8
     public static var camVidSwitchBorderWidth: CGFloat = 1.5
+    public static var camVidSwitchSize: CGSize = CGSize(width: 80, height: 40)
     public static var centerActionButtonWidth: CGFloat = 80
     public static var centerActionButtonHeight: CGFloat = footerHeight * 0.8
+    public static var timeSliderPanelHeight: CGFloat = 72
     public static var timeSliderBorderWidth: CGFloat = 1.5
-    public static var timeSliderThumbSize: CGSize = CGSize(width: 44, height: 44)
-    public static var timeSliderBeginEndThumbSize: CGSize = CGSize(width: 22, height: 44)
-    public static var timeSliderBarInsets: UIEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0) // Need to update this later
+    public static var timeSliderThumbSize: CGSize = CGSize(width: 25, height: 25)
+    public static var timeSliderBeginEndThumbSize: CGSize = CGSize(width: 18, height: 32)
+    public static var timeSliderBarInsets: UIEdgeInsets = UIEdgeInsets(top: 26, left: 0, bottom: 26, right: 0)
+    public static var timeSliderCaptionPanelHeight: CGFloat = 20
+    public static var timeSliderCaptionPanelInsets: UIEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+    public static var frameStepperBorderWidth: CGFloat = 1.5
+    public static var frameStepperSize: CGSize = CGSize(width: 200, height: 40)
 
     // MARK: Custom behaviour
     
