@@ -261,7 +261,12 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
         self.header.showHide(forceHide: forceHide)
         self.footer.showHide(forceHide: forceHide)
         self.closeViewMenu?.viewMenu?.showHide(forceHide: forceHide)
-        self.timeSliderPanel?.showHide(forceHide: forceHide)
+        if let ass = self.currentAsset, ass.isVideo() {
+            self.timeSliderPanel?.showHide(forceHide: forceHide)
+        }
+        else {
+            self.timeSliderPanel?.showHide(forceHide: true)
+        }
         self.hideViewElementsHandler?(forceHide)
     }
     

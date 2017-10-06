@@ -113,7 +113,6 @@ class CameraMediaControlPanel: FlexFooterView {
         let triggerDim = FlexMediaPickerConfiguration.takeButtonRadius - FlexMediaPickerConfiguration.takeButtonBorderWidth
         self.triggerButton?.frame = CGRect(x: (self.bounds.size.width - triggerDim) * 0.5, y: (self.bounds.size.height - triggerDim) * 0.5, width: triggerDim, height: triggerDim)
         
-        // TODO: Only adapt when iPhone!
         if self.bounds.size.width < self.bounds.size.height {
             self.camVidSwitch?.frame = CGRect(x: (self.bounds.size.width-camVidSwitchSize.height) * 0.5, y: (self.bounds.size.height - camVidSwitchSize.width) * 0.2, width: camVidSwitchSize.height, height: camVidSwitchSize.width)
             self.camVidSwitch?.direction = .vertical

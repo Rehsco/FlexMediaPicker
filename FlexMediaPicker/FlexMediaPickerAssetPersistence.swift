@@ -1,8 +1,8 @@
 //
-//  FlexMediaPickerAsset.swift
+//  FlexMediaPickerAssetPersistence.swift
 //  FlexMediaPicker
 //
-//  Created by Martin Rehder on 26.08.2017.
+//  Created by Martin Rehder on 04.10.2017.
 /*
  * Copyright 2017-present Martin Jacob Rehder.
  * http://www.rehsco.com
@@ -29,45 +29,15 @@
 
 import UIKit
 import Photos
-import AVFoundation
 
-open class FlexMediaPickerAsset {
-    var uuid: String
-    let thumbnail: UIImage
-    var image: UIImage?
-    var asset: PHAsset?
-    var collection: PHAssetCollection?
-    
-    /// Video
-    var videoURL: URL?
-    var currentFrame: Float64 = 1
-    
-    init(thumbnail: UIImage, asset: PHAsset, collection: PHAssetCollection) {
-        self.uuid = UUID().uuidString
-        self.thumbnail = thumbnail
-        self.asset = asset
-        self.collection = collection
-    }
+public protocol FlexMediaPickerAssetPersistence {
 
-    init(thumbnail: UIImage, image: UIImage) {
-        self.uuid = UUID().uuidString
-        self.thumbnail = thumbnail
-        self.image = image
-    }
-
-    init(thumbnail: UIImage, videoURL: URL) {
-        self.uuid = UUID().uuidString
-        self.thumbnail = thumbnail
-        self.videoURL = videoURL
-    }
+    func createVideoRecordAsset(thumbnail: UIImage, videoUrl: URL) -> FlexMediaPickerAsset
+    func createImageAsset(thumbnail: UIImage, image: UIImage) -> FlexMediaPickerAsset
+    func createAssetCollectionAsset(thumbnail: UIImage, asset: PHAsset, collection: PHAssetCollection) -> FlexMediaPickerAsset
     
-    func isVideo() -> Bool {
-        if self.videoURL != nil {
-            return true
-        }
-        if let ass = self.asset, ass.mediaType == .video {
-            return true
-        }
-        return false
-    }
+    func isVideoRecorderCreated() -> Bool
+    func startRecordVideo(height:Int, width:Int, channels:Int, samples:Float64)
+    func writeVideoData(sample: CMSampleBuffer, isVideo: Bool)
+    func stopRecordVideo(finishedHandler: @escaping ((URL?)->Void))
 }

@@ -7,6 +7,8 @@ import UIKit
 import Photos
 
 open class AssetManager {
+    /// Replace this with own persistence management, if required
+    public static var persistence: FlexMediaPickerAssetPersistence = FlexMediaPickerAssetPersistenceImpl()
     
     open static func getImage(_ name: String) -> UIImage {
         return UIImage(named: name, in: Bundle(for: AssetManager.self), compatibleWith: nil) ?? UIImage()

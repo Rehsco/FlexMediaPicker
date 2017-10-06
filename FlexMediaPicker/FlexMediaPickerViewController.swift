@@ -175,12 +175,13 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                             if let cgImage = try? imgGenerator.copyCGImage(at: CMTimeMake(5, 1), actualTime: nil) {
                                 let image = UIImage(cgImage: cgImage)
                                 let thImageSize = (self.contentView as? ImagesCollectionView)?.thumbnailSize() ?? CGSize(width: 120, height: 120)
-                                let imageAsset = FlexMediaPickerAsset(thumbnail: image.scaleToSizeKeepAspect(size: thImageSize), videoURL: url)
+                                let imageAsset = AssetManager.persistence.createVideoRecordAsset(thumbnail: image.scaleToSizeKeepAspect(size: thImageSize), videoUrl: url)
                                 self.selectedAssets.append(imageAsset)
                                 self.imageSources.append(ImageAssetImageSource(asset: imageAsset))
                                 self.populateSelectedAssetView()
                             }
                         }
+                        self.layoutSupplementaryViews(to: self.view.bounds.size)
                     }
                 case .microphone:
                     break
@@ -214,6 +215,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     open override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.checkStatus()
+        self.layoutSupplementaryViews(to: self.view.bounds.size)
     }
     
     open override func viewWillDisappear(_ animated: Bool) {
@@ -224,7 +226,10 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     override open func whenTransition(to size: CGSize) {
         super.whenTransition(to: size)
         self.contentView?.setNeedsDisplay()
-        
+        self.layoutSupplementaryViews(to: size)
+    }
+    
+    func layoutSupplementaryViews(to size: CGSize) {
         if size.width > size.height {
             self.cameraView?.headerPosition = .left
             if self.cameraView != nil {
@@ -346,7 +351,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     
     private func addNewImage(_ image: UIImage) {
         let thImageSize = (self.contentView as? ImagesCollectionView)?.thumbnailSize() ?? CGSize(width: 120, height: 120)
-        let imageAsset = FlexMediaPickerAsset(thumbnail: image.scaleToSizeKeepAspect(size: thImageSize), image: image)
+        let imageAsset = AssetManager.persistence.createImageAsset(thumbnail: image.scaleToSizeKeepAspect(size: thImageSize), image: image)
         self.selectedAssets.append(imageAsset)
         self.imageSources.append(ImageAssetImageSource(asset: imageAsset))
         self.populateSelectedAssetView()
@@ -394,7 +399,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                 }
             }
         }
-        let sAsset = FlexMediaPickerAsset(thumbnail: thumbnail, asset: asset, collection: self.currentAssetCollection!)
+        let sAsset = AssetManager.persistence.createAssetCollectionAsset(thumbnail: thumbnail, asset: asset, collection: self.currentAssetCollection!)
         self.selectedAssets.append(sAsset)
         self.imageSources.append(ImageAssetImageSource(asset: sAsset))
     }

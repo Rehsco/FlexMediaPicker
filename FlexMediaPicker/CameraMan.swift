@@ -32,15 +32,12 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
     var startOnFrontCamera: Bool = false
     
     // Video
-    var videoWriter : VideoWriter?
-    
     var height:Int?
     var width:Int?
     
     var isCapturing = false
     var isPaused = false
     var isDiscontinue = false
-    var fileIndex = 0
     
     var timeOffset = CMTimeMake(0, 0)
     var lastAudioPts: CMTime?
@@ -252,19 +249,15 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
         self.lockQueue.sync() {
             if self.isCapturing{
                 self.isCapturing = false
-                DispatchQueue.main.async(execute: { () -> Void in
-                    self.videoWriter!.finish { () -> Void in
+                DispatchQueue.main.async {
+                    AssetManager.persistence.stopRecordVideo() {
+                        url in
                         NSLog("Recording finished.")
-                        self.videoWriter = nil
-                        self.storeVideo(completion: { url in
-                            if let url = url {
-                                self.videoRecordedEventHandler?(url)
-                                NSLog("Transfer video to library finished.")
-                            }
-                            self.fileIndex += 1
-                        })
+                        if let url = url {
+                            self.videoRecordedEventHandler?(url)
+                        }
                     }
-                })
+                }
             }
         }
     }
@@ -308,21 +301,11 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
             
             let isVideo = captureOutput is AVCaptureVideoDataOutput
             
-            if self.videoWriter == nil && !isVideo {
-                let fileManager = FileManager()
-                if fileManager.fileExists(atPath: self.filePath()) {
-                    do {
-                        try fileManager.removeItem(atPath: self.filePath())
-                    } catch _ {
-                    }
-                }
-                
+            if !AssetManager.persistence.isVideoRecorderCreated() && !isVideo {
                 let fmt = CMSampleBufferGetFormatDescription(sampleBuffer)
                 let asbd = CMAudioFormatDescriptionGetStreamBasicDescription(fmt!)
                 
-                NSLog("setup video writer with \(self.width), \(self.height)")
-                self.videoWriter = VideoWriter(
-                    fileUrl: self.filePathUrl() as URL!,
+                AssetManager.persistence.startRecordVideo(
                     height: self.height!, width: self.width!,
                     channels: Int((asbd?.pointee.mChannelsPerFrame)!),
                     samples: (asbd?.pointee.mSampleRate)!
@@ -369,26 +352,16 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
             if !isVideo {
                 var pts = CMSampleBufferGetPresentationTimeStamp(buffer!)
                 let dur = CMSampleBufferGetDuration(buffer!)
-                if (dur.value > 0)
-                {
+                if (dur.value > 0) {
                     pts = CMTimeAdd(pts, dur)
                 }
                 self.lastAudioPts = pts
             }
-            
-            self.videoWriter?.write(sample: buffer!, isVideo: isVideo)
+
+            if let buf = buffer {
+                AssetManager.persistence.writeVideoData(sample: buf, isVideo: isVideo)
+            }
         }
-    }
-    
-    func filePath() -> String {
-        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-        let documentsDirectory = paths[0] as String
-        let filePath : String = "\(documentsDirectory)/video\(self.fileIndex).mp4"
-        return filePath
-    }
-    
-    func filePathUrl() -> URL! {
-        return URL(fileURLWithPath: self.filePath())
     }
     
     func ajustTimeStamp(sample: CMSampleBuffer, offset: CMTime) -> CMSampleBuffer {
@@ -405,25 +378,6 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
         var out: CMSampleBuffer?
         CMSampleBufferCreateCopyWithNewTiming(nil, sample, count, &info, &out);
         return out!
-    }
-    
-    func storeVideo(completion: ((URL?) -> Void)? = nil) {
-        if FlexMediaPickerConfiguration.storeRecordedVideosToAssetLibrary {
-            PHPhotoLibrary.shared().performChanges({
-                PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: self.filePathUrl())
-            }) { saved, error in
-                if saved {
-                    completion?(self.filePathUrl())
-                }
-                else {
-                    NSLog("Could not store video")
-                    completion?(nil)
-                }
-            }
-        }
-        else {
-            completion?(self.filePathUrl())
-        }
     }
     
     func flash(_ mode: AVCaptureFlashMode) {
