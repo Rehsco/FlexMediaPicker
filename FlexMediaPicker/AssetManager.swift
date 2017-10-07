@@ -77,7 +77,7 @@ open class AssetManager {
             }
         }
     }
-
+/*
     open static func fetch(allowsVideo: Bool = false, fetchLimit: Int = 0, _ completion: @escaping (_ assets: [PHAsset]) -> Void) {
         guard PHPhotoLibrary.authorizationStatus() == .authorized else { return }
         
@@ -101,7 +101,7 @@ open class AssetManager {
             }
         }
     }
-
+*/
     open static func resolveAsset(_ asset: PHAsset, size: CGSize = CGSize(width: 720, height: 1280), completion: @escaping (_ image: UIImage?) -> Void) {
         let imageManager = PHImageManager.default()
         let requestOptions = PHImageRequestOptions()
@@ -141,20 +141,41 @@ open class AssetManager {
         }
     }
     
-    open static func savePhoto(_ image: UIImage, location: CLLocation?, completion: ((UIImage?) -> Void)? = nil) {
-        if FlexMediaPickerConfiguration.storeTakenImagesToPhotos {
-            PHPhotoLibrary.shared().performChanges({
-                let request = PHAssetChangeRequest.creationRequestForAsset(from: image)
-                request.creationDate = Date()
-                request.location = location
-            }, completionHandler: { _ in
-                DispatchQueue.main.async {
-                    completion?(image)
+    open static func savePhoto(_ image: UIImage, location: CLLocation?, completion: ((PHAsset?) -> Void)? = nil) {
+        func retrieveImageWithIdentifer(localIdentifier:String, completion: (PHAsset?) -> Void) {
+            let fetchOptions = PHFetchOptions()
+            fetchOptions.predicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.image.rawValue)
+            let fetchResults = PHAsset.fetchAssets(withLocalIdentifiers: [localIdentifier], options: fetchOptions)
+            
+            if fetchResults.count > 0 {
+                if let imageAsset = fetchResults.firstObject {
+                    completion(imageAsset)
+                } else {
+                    completion(nil)
                 }
-            })
+            } else {
+                completion(nil)
+            }
         }
-        else {
-            completion?(image)
-        }
+        
+        var imageIdentifier: String?
+        PHPhotoLibrary.shared().performChanges({
+            let request = PHAssetChangeRequest.creationRequestForAsset(from: image)
+            request.creationDate = Date()
+            request.location = location
+            let placeholder = request.placeholderForCreatedAsset
+            imageIdentifier = placeholder?.localIdentifier
+        }, completionHandler: { success, error in
+            if success, let locId = imageIdentifier  {
+                DispatchQueue.main.async {
+                    retrieveImageWithIdentifer(localIdentifier: locId, completion: { asset in
+                        completion?(asset)
+                    })
+                }
+            }
+            else {
+                NSLog("\(#function): Could not store image to photos. \(error.debugDescription)")
+            }
+        })
     }
 }

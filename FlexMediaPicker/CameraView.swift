@@ -6,6 +6,7 @@ import UIKit
 import AVFoundation
 import PhotosUI
 import MJRFlexStyleComponents
+import CoreLocation
 
 protocol CameraViewDelegate: class {
     
@@ -99,7 +100,7 @@ class CameraView: FlexView, CLLocationManagerDelegate, CameraManDelegate {
     var locationManager: LocationManager?
     var startOnFrontCamera: Bool = false
     
-    var didGetPhoto: ((UIImage)->Void)?
+    var didGetPhoto: ((UIImage, CLLocation?)->Void)?
     var didRecordVideo: ((URL)->Void)?
     var cancelCameraViewHandler: (()->Void)?
     
@@ -152,9 +153,9 @@ class CameraView: FlexView, CLLocationManagerDelegate, CameraManDelegate {
             ccp.setupMenu(in: self)
             
             ccp.takePhotoActionHandler = {
-                self.takePicture { image in
+                self.takePicture { image, location in
                     if let img = image {
-                        self.didGetPhoto?(img)
+                        self.didGetPhoto?(img, location)
                     }
                     
                     // TODO: do some effects when making a photo
@@ -261,7 +262,7 @@ class CameraView: FlexView, CLLocationManagerDelegate, CameraManDelegate {
         cameraMan.flash(mode)
     }
     
-    private func takePicture(_ completion: @escaping (UIImage?) -> Void) {
+    private func takePicture(_ completion: @escaping (UIImage?, CLLocation?) -> Void) {
         guard let previewLayer = previewLayer else { return }
         
         UIView.animate(withDuration: 0.1, animations: {
@@ -272,8 +273,8 @@ class CameraView: FlexView, CLLocationManagerDelegate, CameraManDelegate {
             })
         })
         
-        cameraMan.takePhoto(previewLayer, location: locationManager?.latestLocation) { image in
-            completion(image)
+        cameraMan.takePhoto(previewLayer) { image in
+            completion(image, self.locationManager?.latestLocation)
         }
     }
     

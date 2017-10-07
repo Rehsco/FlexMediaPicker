@@ -33,8 +33,11 @@ import Photos
 public protocol FlexMediaPickerAssetPersistence {
 
     func createVideoRecordAsset(thumbnail: UIImage, videoUrl: URL) -> FlexMediaPickerAsset
+    
     func createImageAsset(thumbnail: UIImage, image: UIImage) -> FlexMediaPickerAsset
-    func createAssetCollectionAsset(thumbnail: UIImage, asset: PHAsset, collection: PHAssetCollection) -> FlexMediaPickerAsset
+    func createAssetCollectionAsset(thumbnail: UIImage, asset: PHAsset) -> FlexMediaPickerAsset
+    
+    func imageFromAsset(withID id: String) -> UIImage?
     
     func isVideoRecorderCreated() -> Bool
     func startRecordVideo(height:Int, width:Int, channels:Int, samples:Float64)

@@ -49,6 +49,8 @@
 		5BCB66461F81549800AB9F4E /* VideoTimeSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCB66441F81549800AB9F4E /* VideoTimeSliderView.swift */; };
 		5BCCDEC41F82A44A00914DC1 /* PositionUpdateTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCCDEC31F82A44A00914DC1 /* PositionUpdateTimer.swift */; };
 		5BCCDEC51F82A44A00914DC1 /* PositionUpdateTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCCDEC31F82A44A00914DC1 /* PositionUpdateTimer.swift */; };
+		5BD1E6E61F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD1E6E51F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift */; };
+		5BD1E6E71F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD1E6E51F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift */; };
 		5BD6281C1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD6281B1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift */; };
 		5BD6281D1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD6281B1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift */; };
 		5BD6281F1F84C57F001DB4BA /* FlexMediaPickerAssetPersistenceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD6281E1F84C57F001DB4BA /* FlexMediaPickerAssetPersistenceImpl.swift */; };
@@ -103,6 +105,7 @@
 		5BC6D94D1F763F190051B0A3 /* CamVidSwitch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CamVidSwitch.swift; sourceTree = "<group>"; };
 		5BCB66441F81549800AB9F4E /* VideoTimeSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTimeSliderView.swift; sourceTree = "<group>"; };
 		5BCCDEC31F82A44A00914DC1 /* PositionUpdateTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionUpdateTimer.swift; sourceTree = "<group>"; };
+		5BD1E6E51F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexMediaPickerImagePersistenceImpl.swift; sourceTree = "<group>"; };
 		5BD6281B1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexMediaPickerAssetPersistence.swift; sourceTree = "<group>"; };
 		5BD6281E1F84C57F001DB4BA /* FlexMediaPickerAssetPersistenceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexMediaPickerAssetPersistenceImpl.swift; sourceTree = "<group>"; };
 		5BD79AB81F66879A0023CE21 /* VideoWriter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoWriter.swift; sourceTree = "<group>"; };
@@ -247,6 +250,7 @@
 				5BC562821F503A9A00A848F2 /* AssetManager.swift */,
 				5BD6281B1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift */,
 				5BD6281E1F84C57F001DB4BA /* FlexMediaPickerAssetPersistenceImpl.swift */,
+				5BD1E6E51F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift */,
 			);
 			name = Assets;
 			sourceTree = "<group>";
@@ -265,8 +269,8 @@
 		5BD628211F84C5C4001DB4BA /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				5BE45C581F7C004000322FCC /* ImageAssetImageSource.swift */,
 				5BBFFABA1F51796500C08350 /* FlexMediaPickerAsset.swift */,
+				5BE45C581F7C004000322FCC /* ImageAssetImageSource.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -456,6 +460,7 @@
 				"${SRCROOT}/Pods/Target Support Files/Pods-FlexMediaPickerExample/Pods-FlexMediaPickerExample-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/DateToolsSwift/DateToolsSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/DynamicColor/DynamicColor.framework",
+				"${BUILT_PRODUCTS_DIR}/ImagePersistence/ImagePersistence.framework",
 				"${BUILT_PRODUCTS_DIR}/ImageSlideshow/ImageSlideshow.framework",
 				"${BUILT_PRODUCTS_DIR}/MJRFlexStyleComponents/MJRFlexStyleComponents.framework",
 				"${BUILT_PRODUCTS_DIR}/Player/Player.framework",
@@ -466,6 +471,7 @@
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DateToolsSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DynamicColor.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ImagePersistence.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ImageSlideshow.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MJRFlexStyleComponents.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Player.framework",
@@ -543,6 +549,7 @@
 				5BC6D94B1F763EB00051B0A3 /* CameraMediaControlPanel.swift in Sources */,
 				5BBFFABE1F51DF7500C08350 /* MediaControlPanel.swift in Sources */,
 				5BC562831F503A9A00A848F2 /* AssetManager.swift in Sources */,
+				5BD1E6E61F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift in Sources */,
 				5BD79AB91F66879A0023CE21 /* VideoWriter.swift in Sources */,
 				5BE57D151F83AE340037D4EF /* TimeSliderInfoView.swift in Sources */,
 				5BC562921F50437B00A848F2 /* CommonIconViewMenu.swift in Sources */,
@@ -595,6 +602,7 @@
 				5BC562931F50437B00A848F2 /* CommonIconViewMenu.swift in Sources */,
 				5BE45C5A1F7C004000322FCC /* ImageAssetImageSource.swift in Sources */,
 				5BC6D94F1F763F190051B0A3 /* CamVidSwitch.swift in Sources */,
+				5BD1E6E71F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

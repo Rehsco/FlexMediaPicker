@@ -29,6 +29,7 @@
 
 import UIKit
 import Photos
+import ImagePersistence
 
 open class FlexMediaPickerAssetPersistenceImpl: FlexMediaPickerAssetPersistence {
     private var assetMap: [String: FlexMediaPickerAsset] = [:]
@@ -36,25 +37,42 @@ open class FlexMediaPickerAssetPersistenceImpl: FlexMediaPickerAssetPersistence 
     private var fileIndex = 0
     private var exportSession: AVAssetExportSession?
     
+    open var imagePersistence: ImagePersistenceInterface = FlexMediaPickerImagePersistenceImpl()!
+    
     open func createVideoRecordAsset(thumbnail: UIImage, videoUrl: URL) -> FlexMediaPickerAsset {
         let asset = FlexMediaPickerAsset(thumbnail: thumbnail, videoURL: videoUrl)
         assetMap[asset.uuid] = asset
         return asset
     }
 
-    /// TODO: Should store image in the persistence in order to avoid memory issues
     open func createImageAsset(thumbnail: UIImage, image: UIImage) -> FlexMediaPickerAsset {
-        let asset = FlexMediaPickerAsset(thumbnail: thumbnail, image: image)
+        let asset = FlexMediaPickerAsset(thumbnail: thumbnail)
+        assetMap[asset.uuid] = asset
+        self.imagePersistence.saveImage(image, imageID: asset.uuid)
+        return asset
+    }
+    
+    open func createAssetCollectionAsset(thumbnail: UIImage, asset: PHAsset) -> FlexMediaPickerAsset {
+        let asset = FlexMediaPickerAsset(thumbnail: thumbnail, asset: asset)
         assetMap[asset.uuid] = asset
         return asset
     }
     
-    open func createAssetCollectionAsset(thumbnail: UIImage, asset: PHAsset, collection: PHAssetCollection) -> FlexMediaPickerAsset {
-        let asset = FlexMediaPickerAsset(thumbnail: thumbnail, asset: asset, collection: collection)
-        assetMap[asset.uuid] = asset
-        return asset
+    open func imageFromAsset(withID id: String) -> UIImage? {
+        if let asset = self.assetMap[id] {
+            if asset.isAssetBased() {
+                let images = AssetManager.resolveAssets([asset.asset!])
+                NSLog("\(#function): Asset based image for \(asset.uuid)")
+                return images.first
+            }
+            else {
+                NSLog("\(#function): persisted image for \(asset.uuid)")
+                return self.imagePersistence.getImage(asset.uuid)
+            }
+        }
+        return nil
     }
-    
+
     open func isVideoRecorderCreated() -> Bool {
         return self.videoWriter != nil
     }

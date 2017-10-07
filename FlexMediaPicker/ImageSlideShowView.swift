@@ -170,10 +170,15 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
             fv.snapshotPressedHandler = {
                 self.currentImageSource?.imageFromVideoURL() { image in
                     if let image = image {
-                        AssetManager.savePhoto(image, location: nil, completion: {
-                            _ in
+                        if FlexMediaPickerConfiguration.storeTakenImagesToPhotos {
+                            AssetManager.savePhoto(image, location: nil, completion: {
+                                _ in
+                                self.didGetPhoto?(image)
+                            })
+                        }
+                        else {
                             self.didGetPhoto?(image)
-                        })
+                        }
                     }
                 }
             }

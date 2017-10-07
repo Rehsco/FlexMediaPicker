@@ -1,8 +1,8 @@
 //
-//  FlexMediaPickerAsset.swift
+//  FlexMediaPickerImagePersistenceImpl.swift
 //  FlexMediaPicker
 //
-//  Created by Martin Rehder on 26.08.2017.
+//  Created by Martin Rehder on 07.10.2017.
 /*
  * Copyright 2017-present Martin Jacob Rehder.
  * http://www.rehsco.com
@@ -28,46 +28,16 @@
  */
 
 import UIKit
-import Photos
-import AVFoundation
+import ImagePersistence
 
-open class FlexMediaPickerAsset {
-    var uuid: String
-    let thumbnail: UIImage
-    var asset: PHAsset?
-    
-    /// Video
-    var videoURL: URL?
-    var currentFrame: Float64 = 1
-    
-    init(thumbnail: UIImage, asset: PHAsset) {
-        self.uuid = UUID().uuidString
-        self.thumbnail = thumbnail
-        self.asset = asset
-    }
-
-    init(thumbnail: UIImage) {
-        self.uuid = UUID().uuidString
-        self.thumbnail = thumbnail
-    }
-
-    init(thumbnail: UIImage, videoURL: URL) {
-        self.uuid = UUID().uuidString
-        self.thumbnail = thumbnail
-        self.videoURL = videoURL
-    }
-
-    func isAssetBased() -> Bool {
-        return self.asset != nil
-    }
-    
-    func isVideo() -> Bool {
-        if self.videoURL != nil {
-            return true
+open class FlexMediaPickerImagePersistenceImpl: ImagePersistence {
+    var _imageCache = ImageCache(maxNumImages: 10, maxImageMemoryThreshold: 128)
+    open override var imageCache: ImageCache {
+        get {
+            return self._imageCache
         }
-        if let ass = self.asset, ass.mediaType == .video {
-            return true
+        set {
+            self._imageCache = newValue
         }
-        return false
-    }
+    }    
 }

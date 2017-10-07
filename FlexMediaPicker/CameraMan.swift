@@ -206,7 +206,7 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
         }
     }
     
-    func takePhoto(_ previewLayer: AVCaptureVideoPreviewLayer, location: CLLocation?, completion: ((UIImage?) -> Void)? = nil) {
+    func takePhoto(_ previewLayer: AVCaptureVideoPreviewLayer, completion: ((UIImage?) -> Void)? = nil) {
         guard let connection = stillImageOutput?.connection(withMediaType: AVMediaTypeVideo) else { return }
         
         connection.videoOrientation = Helper.videoOrientation()
@@ -222,8 +222,7 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
                         }
                         return
                 }
-                
-                AssetManager.savePhoto(image.fixOrientation(), location: location, completion: completion)
+                completion?(image)
             }
         }
     }

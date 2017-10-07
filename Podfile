@@ -5,6 +5,7 @@ pod 'MJRFlexStyleComponents'
 pod 'DateToolsSwift'
 pod 'StyledOverlay'
 pod 'ImageSlideshow'
+pod 'ImagePersistence'
 pod 'Player', '~> 0.7.0' ## Swift 4: 0.8.0+
 
 target 'FlexMediaPicker' do

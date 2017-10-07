@@ -10,6 +10,7 @@ Pod::Spec.new do |s|
 
   s.dependency 'DynamicColor'
   s.dependency 'StyledLabel'
+  s.dependency 'ImagePersistence'
 
   s.framework    = 'UIKit'
   s.source_files = 'MJRFlexStyleComponents/*.swift'

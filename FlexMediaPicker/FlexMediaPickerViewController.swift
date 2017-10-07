@@ -33,6 +33,8 @@ import MJRFlexStyleComponents
 import DateToolsSwift
 import Photos
 import ImageSlideshow
+import CoreLocation
+import ImagePersistence
 
 class SelectedAssetsCollectionView: ImagesCollectionView {}
 
@@ -49,6 +51,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     open var closeViewMenu: CommonIconViewMenu?
     open var backViewMenu: CommonIconViewMenu?
 
+    private var assetThumbnailCache = ImageCache()
     private var assetCollections: [PHAssetCollection] = []
     private var smartAssetCollections: [PHAssetCollection] = []
     private var assetCache: [PHAsset] = []
@@ -160,8 +163,8 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                         self.cameraView?.headerFooterAdaptToMenu = false
                         self.cameraView?.displayView()
                         self.cameraView?.didGetPhoto = {
-                            image in
-                            self.addNewImage(image)
+                            image, location in
+                            self.addNewImage(image, location: location)
                         }
                         self.cameraView?.cancelCameraViewHandler = {
                             self.cameraView?.removeFromSuperview()
@@ -176,9 +179,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                                 let image = UIImage(cgImage: cgImage)
                                 let thImageSize = (self.contentView as? ImagesCollectionView)?.thumbnailSize() ?? CGSize(width: 120, height: 120)
                                 let imageAsset = AssetManager.persistence.createVideoRecordAsset(thumbnail: image.scaleToSizeKeepAspect(size: thImageSize), videoUrl: url)
-                                self.selectedAssets.append(imageAsset)
-                                self.imageSources.append(ImageAssetImageSource(asset: imageAsset))
-                                self.populateSelectedAssetView()
+                                self.addSelectedAsset(imageAsset)
                             }
                         }
                         self.layoutSupplementaryViews(to: self.view.bounds.size)
@@ -349,14 +350,29 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         }
     }
     
-    private func addNewImage(_ image: UIImage) {
+    private func addNewImage(_ image: UIImage, location: CLLocation?) {
         let thImageSize = (self.contentView as? ImagesCollectionView)?.thumbnailSize() ?? CGSize(width: 120, height: 120)
-        let imageAsset = AssetManager.persistence.createImageAsset(thumbnail: image.scaleToSizeKeepAspect(size: thImageSize), image: image)
-        self.selectedAssets.append(imageAsset)
-        self.imageSources.append(ImageAssetImageSource(asset: imageAsset))
-        self.populateSelectedAssetView()
+        if FlexMediaPickerConfiguration.storeTakenImagesToPhotos {
+            let img = image.fixOrientation()
+            AssetManager.savePhoto(img, location: location) {
+                newAsset in
+                if let imageAsset = newAsset {
+                    self.addSelectedAsset(imageAsset, thumbnail: img.scaleToSizeKeepAspect(size: thImageSize))
+                }
+            }
+        }
+        else {
+            let imageAsset = AssetManager.persistence.createImageAsset(thumbnail: image.scaleToSizeKeepAspect(size: thImageSize), image: image)
+            self.addSelectedAsset(imageAsset)
+        }
     }
     
+    private func addSelectedAsset(_ asset: FlexMediaPickerAsset) {
+        self.selectedAssets.append(asset)
+        self.imageSources.append(ImageAssetImageSource(asset: asset))
+        self.populateSelectedAssetView()
+    }
+
     private func applyThumbnailSize() {
         if let icv = self.contentView as? ImagesCollectionView {
             let currentSize = icv.thumbnailSize().width + 10
@@ -391,7 +407,6 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     }
     
     func addSelectedAsset(_ asset: PHAsset, thumbnail: UIImage) {
-        guard self.currentAssetCollection != nil else { return }
         for a in self.selectedAssets {
             if let selAsset = a.asset {
                 if selAsset.localIdentifier == asset.localIdentifier {
@@ -399,9 +414,8 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                 }
             }
         }
-        let sAsset = AssetManager.persistence.createAssetCollectionAsset(thumbnail: thumbnail, asset: asset, collection: self.currentAssetCollection!)
-        self.selectedAssets.append(sAsset)
-        self.imageSources.append(ImageAssetImageSource(asset: sAsset))
+        let sAsset = AssetManager.persistence.createAssetCollectionAsset(thumbnail: thumbnail, asset: asset)
+        self.addSelectedAsset(sAsset)
     }
     
     func removeSelectedAsset(_ asset: PHAsset) {
@@ -411,6 +425,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                 if selAsset.localIdentifier == asset.localIdentifier {
                     self.selectedAssets.remove(at: idx)
                     self.imageSources.remove(at: idx)
+                    self.populateSelectedAssetView()
                     return
                 }
             }
@@ -453,13 +468,22 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     func populateWithAssets() {
         if let secRef = self.mainSecRef, let iconView = self.contentView as? ImagesCollectionView {
             for imageAsset in self.assetCache {
-                let fitem = ImagesCollectionItem(reference: imageAsset.localIdentifier, icon: nil)
-                let phi = UIImage(named: "imagePlaceholder")?.tint(FlexMediaPickerConfiguration.imagePlaceholderColor)
-                fitem.placeholderIcon = phi
-                fitem.imageViewLazyImageProvider = {
-                    reference in
-                    let thumbnail = AssetManager.resolveAssets([imageAsset], size: iconView.thumbnailSize()).first
-                    return thumbnail
+                let thumb = self.assetThumbnailCache.getImage(id: imageAsset.localIdentifier)
+                let fitem = ImagesCollectionItem(reference: imageAsset.localIdentifier, icon: thumb)
+                if thumb == nil {
+                    let phi = UIImage(named: "imagePlaceholder")?.tint(FlexMediaPickerConfiguration.imagePlaceholderColor)
+                    fitem.placeholderIcon = phi
+                    fitem.imageViewLazyImageProvider = {
+                        reference in
+                        if let thumbnail = self.assetThumbnailCache.getImage(id: imageAsset.localIdentifier) {
+                            return thumbnail
+                        }
+                        let thumbnail = AssetManager.resolveAssets([imageAsset], size: iconView.thumbnailSize()).first
+                        if let th = thumbnail {
+                            self.assetThumbnailCache.addImage(id: imageAsset.localIdentifier, image: th)
+                        }
+                        return thumbnail
+                    }
                 }
                 fitem.canMoveItem = false
                 fitem.imageViewFitting = .scaleToFit
@@ -467,12 +491,10 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                 fitem.itemSelectionActionHandler = {
                     if let icon = fitem.icon {
                         self.addSelectedAsset(imageAsset, thumbnail: icon)
-                        self.populateSelectedAssetView()
                     }
                 }
                 fitem.itemDeselectionActionHandler = {
                     self.removeSelectedAsset(imageAsset)
-                    self.populateSelectedAssetView()
                 }
                 self.contentView?.addItem(secRef, item: fitem)
             }
@@ -482,34 +504,26 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     func populateWithAssetCollections(_ collections: [PHAssetCollection]) {
         if let secRef = self.mainSecRef, let iconView = self.contentView as? ImagesCollectionView {
             for collection in collections {
-                let fitem = ImagesCollectionItem(reference: collection.localIdentifier, icon: nil)
-                fitem.isGroup = true
-                let phi = UIImage(named: "imagePlaceholder")?.tint(FlexMediaPickerConfiguration.imagePlaceholderColor)
-                fitem.subTitle = Helper.applyFontAndColorToString(FlexMediaPickerConfiguration.collectionCaptionFont, color: FlexMediaPickerConfiguration.collectionCaptionColor, text: collection.localizedTitle ?? "")
-                fitem.placeholderIcon = phi
-                fitem.imageViewLazyImageProvider = {
-                    reference in
-                    AssetManager.fetch(in: collection, fetchLimit: 1, { imageAssets in
-                        if let imageAsset = imageAssets.first {
-                            let thumbnail = AssetManager.resolveAssets([imageAsset], size: iconView.thumbnailSize()).first
-                            fitem.icon = thumbnail
-                            fitem.imageIndex = 1
-                            self.updateCellForItem(uuid: fitem.reference)
+                AssetManager.fetch(in: collection, fetchLimit: 1, { imageAssets in
+                    if let imageAsset = imageAssets.first {
+                        if let thumbnail = AssetManager.resolveAssets([imageAsset], size: iconView.thumbnailSize()).first {
+                            let fitem = ImagesCollectionItem(reference: collection.localIdentifier, icon: thumbnail)
+                            fitem.isGroup = true
+                            fitem.subTitle = Helper.applyFontAndColorToString(FlexMediaPickerConfiguration.collectionCaptionFont, color: FlexMediaPickerConfiguration.collectionCaptionColor, text: collection.localizedTitle ?? "")
+                            fitem.canMoveItem = false
+                            fitem.imageViewFitting = .scaleToFit
+                            fitem.contentInteractionWillSelectItem = true
+                            fitem.autoDeselectCellAfter = .milliseconds(300)
+                            fitem.itemSelectionActionHandler = {
+                                self.fetchAssets(in: collection)
+                            }
+                            self.contentView?.addItem(secRef, item: fitem)
+                            DispatchQueue.main.async {
+                                self.contentView?.itemCollectionView.reloadData()
+                            }
                         }
-                    })
-                    return phi
-                }
-                
-                fitem.canMoveItem = false
-                fitem.imageViewFitting = .scaleToFit
-                fitem.contentInteractionWillSelectItem = true
-                fitem.autoDeselectCellAfter = .milliseconds(300)
-                fitem.itemSelectionActionHandler = {
-                    if fitem.imageIndex > 0 {
-                        self.fetchAssets(in: collection)
                     }
-                }
-                self.contentView?.addItem(secRef, item: fitem)
+                })
             }
         }
     }
@@ -599,7 +613,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             }
             issv.didGetPhoto = {
                 image in
-                self.addNewImage(image)
+                self.addNewImage(image, location: nil)
             }
             issv.hideViewElements(forceHide: true)
         }
