@@ -13,6 +13,38 @@ protocol CameraManDelegate: class {
     func cameraMan(_ cameraMan: CameraMan, didChangeInput input: AVCaptureDeviceInput)
 }
 
+class CameraPhotoCapturer: NSObject, AVCapturePhotoCaptureDelegate {
+    var didCaptureWithImageData: ((_ imageData: Data) -> Void)?
+    var didFinish: (() -> Void)?
+    
+    func capture(_ output: AVCapturePhotoOutput,
+                 didFinishProcessingPhotoSampleBuffer photoSampleBuffer: CMSampleBuffer?,
+                 previewPhotoSampleBuffer: CMSampleBuffer?,
+                     resolvedSettings: AVCaptureResolvedPhotoSettings,
+                     bracketSettings: AVCaptureBracketedStillImageSettings?,
+                     error: Error?) {
+        guard let photoSampleBuffer = photoSampleBuffer else {
+            if let error = error {
+                NSLog("\(#function): \(error)")
+            }
+            return
+        }
+        
+        if let didCaptureWithImageData = self.didCaptureWithImageData {
+            let imageData = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: photoSampleBuffer, previewPhotoSampleBuffer: previewPhotoSampleBuffer)!
+            didCaptureWithImageData(imageData)
+        }
+    }
+    
+    func capture(_ output: AVCapturePhotoOutput, didFinishCaptureForResolvedSettings resolvedSettings: AVCaptureResolvedPhotoSettings, error: Error?) {
+        if let error = error {
+            NSLog("\(#function): \(error)")
+        } else if let didFinish = self.didFinish {
+            didFinish()
+        }
+    }
+}
+
 class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
     weak var delegate: CameraManDelegate?
     
@@ -25,11 +57,23 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
     let audioDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeAudio)
     
     // Outputs
-    var stillImageOutput: AVCaptureStillImageOutput?
+    var stillImageOutput: AVCapturePhotoOutput?
     var videoOutput: AVCaptureVideoDataOutput?
+    fileprivate var currentCapturer: Any?
 
     // Settings
     var startOnFrontCamera: Bool = false
+    fileprivate var _defaultPhotoSettings: Any?
+    fileprivate var defaultPhotoSettings: AVCapturePhotoSettings {
+        get {
+            if _defaultPhotoSettings == nil {
+                let photoSettings = AVCapturePhotoSettings()
+                photoSettings.isHighResolutionPhotoEnabled = true
+                _defaultPhotoSettings = photoSettings
+            }
+            return _defaultPhotoSettings as! AVCapturePhotoSettings
+        }
+    }
     
     // Video
     var height:Int?
@@ -62,25 +106,14 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
     
     func setupDevices() {
         // Input
-        AVCaptureDevice
-            .devices().flatMap {
-                return $0 as? AVCaptureDevice
-            }.filter {
-                return $0.hasMediaType(AVMediaTypeVideo)
-            }.forEach {
-                switch $0.position {
-                case .front:
-                    self.frontCamera = try? AVCaptureDeviceInput(device: $0)
-                case .back:
-                    self.backCamera = try? AVCaptureDeviceInput(device: $0)
-                default:
-                    break
-                }
-        }
+        self.frontCamera = try? AVCaptureDeviceInput(device: AVCaptureDevice.defaultDevice(withDeviceType: .builtInWideAngleCamera, mediaType: AVMediaTypeVideo, position: .front))
+        self.backCamera = try? AVCaptureDeviceInput(device: AVCaptureDevice.defaultDevice(withDeviceType: .builtInWideAngleCamera, mediaType: AVMediaTypeVideo, position: .back))
+        self.currentInput = startOnFrontCamera ? self.frontCamera : self.backCamera
         
         // Output for Photo
-        stillImageOutput = AVCaptureStillImageOutput()
-        stillImageOutput?.outputSettings = [AVVideoCodecKey: AVVideoCodecJPEG]
+        let photoOutput = AVCapturePhotoOutput()
+        photoOutput.isHighResolutionCaptureEnabled = true
+        stillImageOutput = photoOutput
         
         // Output for Video
         videoOutput = AVCaptureVideoDataOutput()
@@ -140,9 +173,7 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
     
     // MARK: - Session
     
-    var currentInput: AVCaptureDeviceInput? {
-        return session.inputs.first as? AVCaptureDeviceInput
-    }
+    var currentInput: AVCaptureDeviceInput?
     
     fileprivate func start() {
         // Devices
@@ -211,18 +242,20 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
         
         connection.videoOrientation = Helper.videoOrientation()
         
-        queue.async {
-            self.stillImageOutput?.captureStillImageAsynchronously(from: connection) { buffer, error in
-                guard let buffer = buffer, error == nil && CMSampleBufferIsValid(buffer),
-                    let imageData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(buffer),
+        if let photoOutput = self.stillImageOutput, self.currentCapturer == nil {
+            self.queue.async {
+                let capturer = CameraPhotoCapturer()
+                capturer.didCaptureWithImageData = { (imageData) in
                     let image = UIImage(data: imageData)
-                    else {
-                        DispatchQueue.main.async {
-                            completion?(nil)
-                        }
-                        return
+                    completion?(image)
                 }
-                completion?(image)
+                capturer.didFinish = { [unowned self] in
+                    self.currentCapturer = nil
+                }
+                let settings = AVCapturePhotoSettings(from: self.defaultPhotoSettings)
+                photoOutput.capturePhoto(with: settings, delegate: capturer)
+                
+                self.currentCapturer = capturer
             }
         }
     }
@@ -380,11 +413,10 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
     }
     
     func flash(_ mode: AVCaptureFlashMode) {
-        guard let device = currentInput?.device, device.isFlashModeSupported(mode) else { return }
-        
-        queue.async {
-            self.lock {
-                device.flashMode = mode
+        if let currentDevice = self.currentInput?.device, let captureOutput = self.stillImageOutput, currentDevice.isFlashAvailable  {
+            let isFlashModeSupported = captureOutput.__supportedFlashModes.contains(NSNumber(value: mode.rawValue))
+            if isFlashModeSupported {
+                self.defaultPhotoSettings.flashMode = mode
             }
         }
     }

@@ -239,7 +239,7 @@ class CameraView: FlexView, CLLocationManagerDelegate, CameraManDelegate {
     func settingsButtonDidTap() {
         DispatchQueue.main.async {
             if let settingsURL = URL(string: UIApplicationOpenSettingsURLString) {
-                UIApplication.shared.openURL(settingsURL)
+                UIApplication.shared.open(settingsURL, options: [:], completionHandler: nil)
             }
         }
     }

@@ -312,7 +312,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         
         let alertAction = UIAlertAction(title: FlexMediaPickerConfiguration.OKButtonTitle, style: .default) { _ in
             if let settingsURL = URL(string: UIApplicationOpenSettingsURLString) {
-                UIApplication.shared.openURL(settingsURL)
+                UIApplication.shared.open(settingsURL, options: [:], completionHandler: nil)
             }
         }
         
@@ -532,6 +532,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     
     func populateSelectedAssetView() {
         DispatchQueue.main.async {
+            self.applyAcceptEnabling()
             if let sav = self.selectedAssetsView {
                 sav.removeAllSections()
                 let savSecRef = sav.addSection()
@@ -559,6 +560,23 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                 }
             }
         }
+    }
+    
+    private func applyAcceptEnabling() {
+        var numApplicableSelected = 0
+        // TODO: must be extended to allow VoiceRecordings
+        for sa in self.selectedAssets {
+            if sa.isVideo() {
+                if FlexMediaPickerConfiguration.allowVideoSelection {
+                    numApplicableSelected += 1
+                }
+            }
+            else {
+                numApplicableSelected += 1
+            }
+        }
+        self.rightViewMenu?.viewMenuItems[0].enabled = (numApplicableSelected > 0)
+        self.rightViewMenu?.viewMenu?.setNeedsLayout()
     }
     
     func showSelectedAssetView() {
