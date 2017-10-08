@@ -39,6 +39,8 @@ open class FlexMediaPickerAsset {
     /// Video
     var videoURL: URL?
     var currentFrame: Float64 = 1
+    var minFrame: Float64 = 1
+    var maxFrame: Float64 = Float64.greatestFiniteMagnitude
     
     init(thumbnail: UIImage, asset: PHAsset) {
         self.uuid = UUID().uuidString

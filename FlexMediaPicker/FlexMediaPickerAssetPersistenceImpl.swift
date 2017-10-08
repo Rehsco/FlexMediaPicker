@@ -164,17 +164,17 @@ open class FlexMediaPickerAssetPersistenceImpl: FlexMediaPickerAssetPersistence 
         exportSession!.exportAsynchronously(completionHandler: {() -> Void in
             switch self.exportSession!.status {
             case .failed:
-                NSLog("\(self.exportSession!.error)")
+                NSLog("\(String(describing: self.exportSession!.error))")
             case .cancelled:
-                print("Export canceled")
+                NSLog("Export canceled")
             case .completed:
                 //Video conversion finished
                 let endDate = Foundation.Date()
                 
                 let time = endDate.timeIntervalSince(startDate)
-                print(time)
-                print("Successful!")
-                print(self.exportSession!.outputURL)
+                NSLog("\(time)")
+                NSLog("Successful!")
+                NSLog(self.exportSession!.outputURL!.absoluteString)
                 exportFinishedHandler(self.exportSession?.outputURL)
             default:
                 break

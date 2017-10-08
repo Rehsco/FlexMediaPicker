@@ -48,8 +48,8 @@ class ImageMediaCollectionView: ImagesCollectionView {
 open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     private var viewInitiating = true
     
-    open var closeViewMenu: CommonIconViewMenu?
-    open var backViewMenu: CommonIconViewMenu?
+    private var closeViewMenu: CommonIconViewMenu?
+    private var backViewMenu: CommonIconViewMenu?
 
     private var assetThumbnailCache = ImageCache()
     private var assetCollections: [PHAssetCollection] = []
@@ -61,11 +61,13 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
 
     private var cameraView: CameraView?
     
-    // TODO: Introduce asset storage protocol and default store
-    
     private var selectedAssets: [FlexMediaPickerAsset] = []
     private var imageSources: [ImageAssetImageSource] = []
     private var selectedAssetsView: SelectedAssetsCollectionView?
+    
+    // MARK: - Public accessors
+    
+    public var mediaAcceptedHandler: (([FlexMediaPickerAsset])->Void)?
     
     // MARK: - View Init
     
@@ -113,7 +115,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         self.rightViewMenu?.menuSelectionHandler = {
             type in
             if type == .accept {
-                // TODO
+                self.mediaAcceptedHandler?(self.getAcceptedAssets())
             }
         }
         self.contentView?.addMenu(self.rightViewMenu!)
@@ -257,6 +259,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             tabbarSize = tbc.tabBar.isHidden ? 0 : tbc.tabBar.bounds.size.height - 3
         }
 
+        /// TODO: This must change for SafeAreaInsets and iPhone X
         if let sav = self.selectedAssetsView, !sav.isHidden {
             self.contentView?.viewMargins = UIEdgeInsetsMake(0, 0, 120, 0)
             sav.frame = self.selectedAssetsViewRect()
@@ -577,6 +580,21 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         }
         self.rightViewMenu?.viewMenuItems[0].enabled = (numApplicableSelected > 0)
         self.rightViewMenu?.viewMenu?.setNeedsLayout()
+    }
+    
+    private func getAcceptedAssets() -> [FlexMediaPickerAsset] {
+        var returnableAssets: [FlexMediaPickerAsset] = []
+        for sa in self.selectedAssets {
+            if sa.isVideo() {
+                if FlexMediaPickerConfiguration.allowVideoSelection {
+                    returnableAssets.append(sa)
+                }
+            }
+            else {
+                returnableAssets.append(sa)
+            }
+        }
+        return returnableAssets
     }
     
     func showSelectedAssetView() {
