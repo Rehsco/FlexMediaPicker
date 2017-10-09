@@ -27,9 +27,10 @@ public class FlexMediaPickerConfiguration {
     public static var centerActionButtonStyleColor = UIColor(red: 0.25, green: 0.29, blue: 0.34, alpha: 1)
     
     public static var takeButtonColor = UIColor(white: 0.95, alpha: 1.0)
-    public static var takeButtonRecordingColor = UIColor(white: 0.95, alpha: 1.0)
-    public static var takeButtonNotRecordingColor = UIColor(red: 0.95, green: 0.19, blue: 0.14, alpha: 1)
-    public static var takeButtonBorderColor = UIColor(white: 0.75, alpha: 1.0)
+    public static var takeButtonRecordingColor = UIColor(red: 0.95, green: 0.19, blue: 0.14, alpha: 1)
+    public static var takeButtonNotRecordingColor = UIColor(white: 0.95, alpha: 1.0)
+    public static var takeButtonBorderColor = UIColor(white: 0.95, alpha: 1.0)
+    public static var takeButtonRingColor = UIColor(white: 0.85, alpha: 1.0)
 
     public static var footerPanelColor = UIColor(red: 0.05, green: 0.07, blue: 0.09, alpha: 0.85)
     public static var timeSliderPanelColor = UIColor(red: 0.05, green: 0.07, blue: 0.09, alpha: 0.85)
@@ -53,7 +54,6 @@ public class FlexMediaPickerConfiguration {
     public static var centerActionButtonStyle: FlexShapeStyle = FlexShapeStyle(style: .rounded)
 
     public static var takeButtonStyle: FlexShapeStyle = FlexShapeStyle(style: .thumb)
-    public static var takeButtonRecordingStyle: FlexShapeStyle = FlexShapeStyle(style: .rounded)
 
     public static var timeSliderStyle: FlexShapeStyle = FlexShapeStyle(style: .rounded)
     public static var timeSliderThumbStyle: FlexShapeStyle = FlexShapeStyle(style: .rounded)
@@ -95,6 +95,7 @@ public class FlexMediaPickerConfiguration {
     public static var footerHeight: CGFloat = 64
     public static var takeButtonRadius: CGFloat = 54
     public static var takeButtonBorderWidth: CGFloat = 8
+    public static var takeButtonRingWidth: CGFloat = 1.5
     public static var camVidSwitchBorderWidth: CGFloat = 1.5
     public static var camVidSwitchSize: CGSize = CGSize(width: 80, height: 40)
     public static var centerActionButtonWidth: CGFloat = 80

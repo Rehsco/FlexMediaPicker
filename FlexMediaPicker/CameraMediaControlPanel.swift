@@ -33,6 +33,7 @@ import MJRFlexStyleComponents
 class CameraMediaControlPanel: FlexFooterView {
     private var flashItem: FlexMenuItem?
     private var backTriggerButton: FlexLabel?
+    private var ringTriggerButton: FlexLabel?
     fileprivate var triggerButton: FlexLabel?
     fileprivate var camVidSwitch: CamVidSwitch?
     
@@ -56,7 +57,12 @@ class CameraMediaControlPanel: FlexFooterView {
         self.backTriggerButton = FlexLabel(frame: CGRect(x: 0, y: 0, width: FlexMediaPickerConfiguration.takeButtonRadius, height: FlexMediaPickerConfiguration.takeButtonRadius))
         self.backTriggerButton?.style = FlexMediaPickerConfiguration.takeButtonStyle
         self.backTriggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonBorderColor
-        self.triggerButton = FlexLabel(frame: CGRect(x: 0, y: 0, width: FlexMediaPickerConfiguration.takeButtonRadius-FlexMediaPickerConfiguration.takeButtonBorderWidth, height: FlexMediaPickerConfiguration.takeButtonRadius-FlexMediaPickerConfiguration.takeButtonBorderWidth))
+        self.ringTriggerButton = FlexLabel(frame: CGRect(x: 0, y: 0, width: FlexMediaPickerConfiguration.takeButtonRadius - FlexMediaPickerConfiguration.takeButtonRingWidth, height: FlexMediaPickerConfiguration.takeButtonRadius - FlexMediaPickerConfiguration.takeButtonRingWidth))
+        self.ringTriggerButton?.style = FlexMediaPickerConfiguration.takeButtonStyle
+        self.ringTriggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonRingColor
+        self.triggerButton = FlexLabel(frame: CGRect(x: 0, y: 0,
+                                                     width: FlexMediaPickerConfiguration.takeButtonRadius-(FlexMediaPickerConfiguration.takeButtonBorderWidth + FlexMediaPickerConfiguration.takeButtonRingWidth),
+                                                     height: FlexMediaPickerConfiguration.takeButtonRadius-(FlexMediaPickerConfiguration.takeButtonBorderWidth + FlexMediaPickerConfiguration.takeButtonRingWidth)))
         self.triggerButton?.style = FlexMediaPickerConfiguration.takeButtonStyle
         self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonColor
         
@@ -78,6 +84,7 @@ class CameraMediaControlPanel: FlexFooterView {
         self.triggerButton?.addGestureRecognizer(tgr)
         
         self.addSubview(self.backTriggerButton!)
+        self.addSubview(self.ringTriggerButton!)
         self.addSubview(self.triggerButton!)
     }
     
@@ -110,11 +117,15 @@ class CameraMediaControlPanel: FlexFooterView {
         super.layoutSubviews()
         let camVidSwitchSize = FlexMediaPickerConfiguration.camVidSwitchSize
         self.backTriggerButton?.frame = CGRect(x: (self.bounds.size.width - FlexMediaPickerConfiguration.takeButtonRadius) * 0.5, y: (self.bounds.size.height - FlexMediaPickerConfiguration.takeButtonRadius) * 0.5, width: FlexMediaPickerConfiguration.takeButtonRadius, height: FlexMediaPickerConfiguration.takeButtonRadius)
-        let triggerDim = FlexMediaPickerConfiguration.takeButtonRadius - FlexMediaPickerConfiguration.takeButtonBorderWidth
+        let ringSize = (FlexMediaPickerConfiguration.takeButtonRadius - FlexMediaPickerConfiguration.takeButtonBorderWidth) + FlexMediaPickerConfiguration.takeButtonRingWidth
+        self.ringTriggerButton?.frame = CGRect(x: (self.bounds.size.width - ringSize) * 0.5,
+                                               y: (self.bounds.size.height - ringSize) * 0.5,
+                                               width: ringSize, height: ringSize)
+        let triggerDim = FlexMediaPickerConfiguration.takeButtonRadius - (FlexMediaPickerConfiguration.takeButtonBorderWidth + FlexMediaPickerConfiguration.takeButtonRingWidth)
         self.triggerButton?.frame = CGRect(x: (self.bounds.size.width - triggerDim) * 0.5, y: (self.bounds.size.height - triggerDim) * 0.5, width: triggerDim, height: triggerDim)
         
         if self.bounds.size.width < self.bounds.size.height {
-            self.camVidSwitch?.frame = CGRect(x: (self.bounds.size.width-camVidSwitchSize.height) * 0.5, y: (self.bounds.size.height - camVidSwitchSize.width) * 0.2, width: camVidSwitchSize.height, height: camVidSwitchSize.width)
+            self.camVidSwitch?.frame = CGRect(x: (self.bounds.size.width - camVidSwitchSize.height) * 0.5, y: (self.bounds.size.height - camVidSwitchSize.width) * 0.2, width: camVidSwitchSize.height, height: camVidSwitchSize.width)
             self.camVidSwitch?.direction = .vertical
         }
         else {
@@ -142,16 +153,13 @@ extension CameraMediaControlPanel {
         if cvs.on {
             if self.isVideoModeActive {
                 self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonRecordingColor
-                self.triggerButton?.style = FlexMediaPickerConfiguration.takeButtonRecordingStyle
             }
             else {
                 self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonNotRecordingColor
-                self.triggerButton?.style = FlexMediaPickerConfiguration.takeButtonStyle
             }
         }
         else {
             self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonColor
-            self.triggerButton?.style = FlexMediaPickerConfiguration.takeButtonStyle
         }
     }
 }

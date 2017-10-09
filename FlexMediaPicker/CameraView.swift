@@ -15,6 +15,7 @@ protocol CameraViewDelegate: class {
 
 class CameraView: FlexView, CLLocationManagerDelegate, CameraManDelegate {
     private var videoCamRecording: Bool = false
+    private var recordingInfoLabel: FlexLabel?
 
     var cameraControlPanel = CameraMediaControlPanel(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
     override var footer: FlexFooterView {
@@ -146,7 +147,24 @@ class CameraView: FlexView, CLLocationManagerDelegate, CameraManDelegate {
             url in
             self.didRecordVideo?(url)
         }
+        cameraMan.recordingTimeUpdated = {
+            timeElapsed in
+            DispatchQueue.main.async {
+                self.recordingInfoLabel?.label.text = Helper.stringFromTimeInterval(interval: timeElapsed)
+                self.recordingInfoLabel?.setNeedsLayout()
+            }
+        }
+
+        self.headerSize = FlexMediaPickerConfiguration.headerHeight
+        self.header.styleColor = .clear
         
+        self.recordingInfoLabel = FlexLabel(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        self.recordingInfoLabel?.labelTextColor = FlexMediaPickerConfiguration.headerTextColor
+        self.recordingInfoLabel?.labelFont = FlexMediaPickerConfiguration.headerFont
+        self.recordingInfoLabel?.labelTextAlignment = .center
+        self.recordingInfoLabel?.isHidden = true
+        self.addSubview(self.recordingInfoLabel!)
+
         self.footerSize = FlexMediaPickerConfiguration.footerHeight
         self.footerText = " "
         if let ccp = self.footer as? CameraMediaControlPanel {
@@ -164,10 +182,12 @@ class CameraView: FlexView, CLLocationManagerDelegate, CameraManDelegate {
             ccp.recVideoActionHandler = {
                 if self.videoCamRecording {
                     self.videoCamRecording = false
+                    self.recordingInfoLabel?.isHidden = true
                     self.stopVideoRecording()
                 }
                 else {
                     self.videoCamRecording = true
+                    self.recordingInfoLabel?.isHidden = false
                     self.startVideoRecording()
                 }
 
@@ -231,7 +251,7 @@ class CameraView: FlexView, CLLocationManagerDelegate, CameraManDelegate {
         self.previewLayer?.frame = bb
         
         previewLayer?.connection.videoOrientation = Helper.videoOrientation()
-
+        self.recordingInfoLabel?.frame = CGRect(x: 0, y: 0, width: self.bounds.size.width, height: FlexMediaPickerConfiguration.headerHeight)
     }
     
     // MARK: - Actions

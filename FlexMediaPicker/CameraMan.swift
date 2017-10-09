@@ -47,7 +47,10 @@ class CameraPhotoCapturer: NSObject, AVCapturePhotoCaptureDelegate {
 
 class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
     weak var delegate: CameraManDelegate?
+    var recordingTimeUpdated: ((TimeInterval)->Void)?
     
+    private var startRecordingTime = Date()
+
     let session = AVCaptureSession()
     let queue = DispatchQueue(label: "org.cocoapods.FlexMediaPicker.Camera.SessionQueue")
     
@@ -264,6 +267,9 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
         guard let connection = videoOutput?.connection(withMediaType: AVMediaTypeVideo) else { return }
         connection.videoOrientation = Helper.videoOrientation()
 
+        self.startRecordingTime = Date()
+        self.recordingTimeUpdated?(self.startRecordingTime.timeIntervalSinceNow)
+        
         height = videoOutput?.videoSettings["Height"] as! Int!
         width = videoOutput?.videoSettings["Width"] as! Int!
 
@@ -330,7 +336,8 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
             if !self.isCapturing || self.isPaused {
                 return
             }
-            
+            self.recordingTimeUpdated?(Date().timeIntervalSinceNow - self.startRecordingTime.timeIntervalSinceNow)
+
             let isVideo = captureOutput is AVCaptureVideoDataOutput
             
             if !AssetManager.persistence.isVideoRecorderCreated() && !isVideo {
