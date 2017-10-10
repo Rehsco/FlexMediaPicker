@@ -73,6 +73,20 @@ open class FlexMediaPickerAssetPersistenceImpl: FlexMediaPickerAssetPersistence 
         return nil
     }
 
+    open func deleteImageAsset(withID id: String) {
+        if let asset = self.assetMap[id] {
+            if asset.isVideo(), let url = asset.videoURL {
+                NSLog("Deleting video. Deleting file \(url.absoluteString)")
+                self.deleteFile(url)
+            }
+            else {
+                NSLog("Deleting image")
+                self.imagePersistence.deleteImage(id)
+            }
+            self.assetMap.removeValue(forKey: id)
+        }
+    }
+
     open func isVideoRecorderCreated() -> Bool {
         return self.videoWriter != nil
     }
@@ -103,6 +117,7 @@ open class FlexMediaPickerAssetPersistenceImpl: FlexMediaPickerAssetPersistence 
         }
     }
     
+    // TODO: must use asset reference instead of URL!!!
     open func storeVideo(completion: ((URL?) -> Void)? = nil) {
         if FlexMediaPickerConfiguration.storeRecordedVideosToAssetLibrary {
             PHPhotoLibrary.shared().performChanges({

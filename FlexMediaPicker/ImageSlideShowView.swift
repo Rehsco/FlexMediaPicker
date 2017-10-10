@@ -44,6 +44,8 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
     private var shouldUpdateTimeOffset: Bool = false
     
     private var closeViewMenu: CommonIconViewMenu?
+    private var removeOrTrashViewMenu: CommonIconViewMenu?
+    private var removeMI: FlexMenuItem?
 
     var imageSlideshow: ImageSlideshow?
     
@@ -53,6 +55,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
     var closeHandler: (()->Void)?
     var hideViewElementsHandler: ((Bool)->Void)?
     var didGetPhoto: ((UIImage)->Void)?
+    var removeOrTrashSelectedItem: ((FlexMediaPickerAsset)->Void)?
 
     deinit {
         self.posUpdateTimer.stop()
@@ -109,6 +112,29 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
         self.header.addSubview(self.assetInfoLabel!)
         
         self.createBackOrCloseLeftMenu()
+        
+        self.removeOrTrashViewMenu = CommonIconViewMenu(size: CGSize(width: 50, height: 36), hPos: .right, vPos: .header, menuIconSize: 24)
+        self.removeMI = self.removeOrTrashViewMenu?.createIconMenuItem(imageName: "RemoveItem", selectedImageName: "DeleteIcon", iconSize: 24, selectionHandler: {
+            if let ci = self.currentAsset {
+                self.removeOrTrashSelectedItem?(ci)
+                DispatchQueue.main.async {
+                    if let iss = self.imageSlideshow {
+                        let cp = iss.currentPage
+                        var sources = iss.images
+                        if sources.count < 2 {
+                            self.removeFromSuperview()
+                        }
+                        else {
+                            sources.remove(at: cp)
+                            iss.setImageInputs(sources)
+                            let np = cp % sources.count
+                            iss.setCurrentPage(np, animated: true)
+                        }
+                    }
+                }
+            }
+        })
+        self.addMenu(self.removeOrTrashViewMenu!)
         
         self.footerSize = FlexMediaPickerConfiguration.footerHeight
         self.footer.styleColor = FlexMediaPickerConfiguration.footerPanelColor
@@ -266,6 +292,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
         self.header.showHide(forceHide: forceHide)
         self.footer.showHide(forceHide: forceHide)
         self.closeViewMenu?.viewMenu?.showHide(forceHide: forceHide)
+        self.removeOrTrashViewMenu?.viewMenu?.showHide(forceHide: forceHide)
         if let ass = self.currentAsset, ass.isVideo() {
             self.timeSliderPanel?.showHide(forceHide: forceHide)
         }
@@ -290,6 +317,12 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
             let imageAsset = imageAssets[index]
             self.currentAsset = imageAsset.asset
             self.currentImageSource = imageAsset
+            
+            DispatchQueue.main.async {
+                self.removeMI?.selected = !imageAsset.asset.isAssetBased()
+                self.removeOrTrashViewMenu?.viewMenu?.setNeedsLayout()
+            }
+            
             imageAsset.imageFromVideoLoadedHandler = {
                 asset in
                 // Hide player view when the image slideshow has loaded the image (again)
@@ -304,8 +337,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
                 self.footerText = " "
                 self.assetInfoLabel?.label.text = Helper.stringFromTimeInterval(interval: 0)
                 AssetManager.resolveVideoAsset(ass, resolvedURLHandler: { url in
-                    self.player?.url = url
-                    self.movieAsset = AVURLAsset(url: url, options: nil)
+                    self.initiateVideoValues(withURL: url)
                 })
             }
             else if let url = imageAsset.asset.videoURL {
@@ -315,8 +347,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
                 self.videoControlPanel.showMenu()
                 self.footerText = " "
                 self.assetInfoLabel?.label.text = Helper.stringFromTimeInterval(interval: 0)
-                self.player?.url = url
-                self.movieAsset = AVURLAsset(url: url, options: nil)
+                self.initiateVideoValues(withURL: url)
             }
             else {
                 self.videoControlPanel.isHidden = true
@@ -327,6 +358,16 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
                 self.assetInfoLabel?.label.text = nil
                 self.player?.view.isHidden = true
             }
+        }
+    }
+    
+    private func initiateVideoValues(withURL url: URL) {
+        self.movieAsset = AVURLAsset(url: url, options: nil)
+        if let fma = self.currentAsset {
+            let totalFrames = self.getMaxFrame()
+            self.minimumVideoOffset = fma.minFrame / totalFrames
+            self.maximumVideoOffset = fma.maxFrame == Float64.greatestFiniteMagnitude ? 1 : fma.maxFrame / totalFrames
+            self.player?.url = url
         }
     }
     
@@ -351,7 +392,11 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
             if let movieTrack = movieTracks.first {
                 let totalFrames: Float64 = durationSeconds * Float64(movieTrack.nominalFrameRate)
                 let frame: Float64 = Float64(offset) * totalFrames
+                let minFrame = self.minimumVideoOffset * totalFrames
+                let maxFrame = self.maximumVideoOffset * totalFrames
                 self.currentAsset?.currentFrame = frame
+                self.currentAsset?.minFrame = minFrame
+                self.currentAsset?.maxFrame = maxFrame
                 if shouldUpdateFrameStepper {
                     self.updateFrameStepper()
                 }
@@ -378,19 +423,6 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
             }
         }
         return 1
-    }
-    
-    private func getVideoFrameForTime(time: TimeInterval) -> Float64 {
-        if let asset = self.movieAsset {
-            let movieTracks = asset.tracks(withMediaType: AVMediaTypeVideo)
-            if let movieTrack = movieTracks.first {
-                let durationSeconds = CMTimeGetSeconds(asset.duration)
-                let totalFrames: Float64 = durationSeconds * Float64(movieTrack.nominalFrameRate)
-                let frame: Float64 = Float64(time) / Float64(durationSeconds) * totalFrames
-                return frame
-            }
-        }
-        return 0
     }
     
     private func updateFrameStepper() {
@@ -423,11 +455,14 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
     func playerReady(_ player: Player) {
         // After player has been initialized, make sure it stays hidden until "play" is tapped
         DispatchQueue.main.async {
-            if let player = self.player {
+            if let player = self.player, let fma = self.currentAsset {
                 player.view.isHidden = true
                 self.timeSliderPanel?.maxDuration = player.maximumDuration
-                self.timeSliderPanel?.setMinMaxVideoTime(min: 0, max: player.maximumDuration)
-                self.updateFrameStepper()
+                let minDur = self.minimumVideoOffset * player.maximumDuration
+                let maxDur = self.maximumVideoOffset * player.maximumDuration
+                self.timeSliderPanel?.setMinMaxVideoTime(min: minDur, max: maxDur)
+                let offset = fma.currentFrame / self.getMaxFrame()
+                self.updateVideoTime(toOffset: offset)
             }
         }
     }
@@ -453,7 +488,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
             self.timeSliderPanel?.currentTimeOffset = min(max(fraction, self.minimumVideoOffset), self.maximumVideoOffset)
             
             if player.playbackState == .playing {
-                let frame = self.getVideoFrameForTime(time: player.currentTime)
+                let frame = AssetManager.getVideoFrameForTime(player.currentTime, movieAsset: self.movieAsset)
                 self.currentAsset?.currentFrame = frame
                 self.updateFrameStepper()
             }

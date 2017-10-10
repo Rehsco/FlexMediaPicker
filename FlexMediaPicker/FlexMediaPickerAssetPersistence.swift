@@ -37,6 +37,8 @@ public protocol FlexMediaPickerAssetPersistence {
     func createImageAsset(thumbnail: UIImage, image: UIImage) -> FlexMediaPickerAsset
     func createAssetCollectionAsset(thumbnail: UIImage, asset: PHAsset) -> FlexMediaPickerAsset
     
+    func deleteImageAsset(withID id: String)
+
     func imageFromAsset(withID id: String) -> UIImage?
     
     func isVideoRecorderCreated() -> Bool

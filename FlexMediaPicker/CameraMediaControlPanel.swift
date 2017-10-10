@@ -32,7 +32,7 @@ import MJRFlexStyleComponents
 
 class CameraMediaControlPanel: FlexFooterView {
     private var flashItem: FlexMenuItem?
-    private var backTriggerButton: FlexLabel?
+    fileprivate var backTriggerButton: FlexLabel?
     private var ringTriggerButton: FlexLabel?
     fileprivate var triggerButton: FlexLabel?
     fileprivate var camVidSwitch: CamVidSwitch?
@@ -151,6 +151,7 @@ extension CameraMediaControlPanel {
     func applyTriggerButtonStyle() {
         guard let cvs = self.camVidSwitch else { return }
         if cvs.on {
+            self.backTriggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonBorderColor
             if self.isVideoModeActive {
                 self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonRecordingColor
             }
@@ -159,7 +160,14 @@ extension CameraMediaControlPanel {
             }
         }
         else {
-            self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonColor
+            if self.isVideoModeActive {
+                self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonRecordingColorWhileInCameraMode
+                self.backTriggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonRecordingBorderColorWhileInCameraMode
+            }
+            else {
+                self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonColor
+                self.backTriggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonBorderColor
+            }
         }
     }
 }

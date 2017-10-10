@@ -77,31 +77,7 @@ open class AssetManager {
             }
         }
     }
-/*
-    open static func fetch(allowsVideo: Bool = false, fetchLimit: Int = 0, _ completion: @escaping (_ assets: [PHAsset]) -> Void) {
-        guard PHPhotoLibrary.authorizationStatus() == .authorized else { return }
-        
-        let fOptions = PHFetchOptions()
-        fOptions.fetchLimit = fetchLimit
-        
-        DispatchQueue.global(qos: .background).async {
-            let fetchResult = allowsVideo
-                ? PHAsset.fetchAssets(with: fOptions)
-                : PHAsset.fetchAssets(with: .image, options: fOptions)
-            
-            if fetchResult.count > 0 {
-                var assets = [PHAsset]()
-                fetchResult.enumerateObjects({ object, _, _ in
-                    assets.append(object)
-                })
-                
-                DispatchQueue.main.async {
-                    completion(assets)
-                }
-            }
-        }
-    }
-*/
+
     open static func resolveAsset(_ asset: PHAsset, size: CGSize = CGSize(width: 720, height: 1280), completion: @escaping (_ image: UIImage?) -> Void) {
         let imageManager = PHImageManager.default()
         let requestOptions = PHImageRequestOptions()
@@ -177,5 +153,20 @@ open class AssetManager {
                 NSLog("\(#function): Could not store image to photos. \(error.debugDescription)")
             }
         })
+    }
+    
+    // Helper
+    
+    open class func getVideoFrameForTime(_ time: TimeInterval, movieAsset: AVURLAsset?) -> Float64 {
+        if let asset = movieAsset {
+            let movieTracks = asset.tracks(withMediaType: AVMediaTypeVideo)
+            if let movieTrack = movieTracks.first {
+                let durationSeconds = CMTimeGetSeconds(asset.duration)
+                let totalFrames: Float64 = durationSeconds * Float64(movieTrack.nominalFrameRate)
+                let frame: Float64 = Float64(time) / Float64(durationSeconds) * totalFrames
+                return frame
+            }
+        }
+        return 0
     }
 }

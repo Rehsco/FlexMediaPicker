@@ -435,7 +435,23 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             idx += 1
         }
     }
-    
+
+    func removeSelectedAsset(_ asset: FlexMediaPickerAsset) {
+        var idx = 0
+        for a in self.selectedAssets {
+            if asset.uuid == a.uuid {
+                self.selectedAssets.remove(at: idx)
+                self.imageSources.remove(at: idx)
+                if !asset.isAssetBased() {
+                    AssetManager.persistence.deleteImageAsset(withID: asset.uuid)
+                }
+                self.populateSelectedAssetView()
+                return
+            }
+            idx += 1
+        }
+    }
+
     // MARK: - Internal View Model
     
     override open func populateContent() {
@@ -650,6 +666,10 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             issv.didGetPhoto = {
                 image in
                 self.addNewImage(image, location: nil)
+            }
+            issv.removeOrTrashSelectedItem = {
+                asset in
+                self.removeSelectedAsset(asset)
             }
             issv.hideViewElements(forceHide: true)
         }
