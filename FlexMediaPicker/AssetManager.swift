@@ -109,6 +109,15 @@ open class AssetManager {
         return images
     }
     
+    open static func resolveVideoURL(forMediaAsset mpa: FlexMediaPickerAsset, resolvedURLHandler: @escaping ((URL)->Void)) {
+        if let asset = mpa.asset {
+            self.resolveVideoAsset(asset, resolvedURLHandler: resolvedURLHandler)
+        }
+        else if let url = mpa.videoURL {
+            resolvedURLHandler(url)
+        }
+    }
+    
     open static func resolveVideoAsset(_ asset: PHAsset, resolvedURLHandler: @escaping ((URL)->Void)) {
         PHCachingImageManager().requestAVAsset(forVideo: asset, options: nil) { (asset, audioMix, args) in
             if let asset = asset as? AVURLAsset {

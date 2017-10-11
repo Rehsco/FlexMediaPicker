@@ -333,25 +333,18 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
                 self.hidePlayerView()
             }
             self.player?.url = nil
-            if let ass = imageAsset.asset.asset, ass.mediaType == .video {
-                self.videoControlPanel.isHidden = self.header.isHidden
-                self.timeSliderPanel?.isHidden = self.header.isHidden
-                self.videoControlPanel.panelState = .videoTimeSlider
-                self.videoControlPanel.showMenu()
-                self.footerText = " "
-                self.assetInfoLabel?.label.text = Helper.stringFromTimeInterval(interval: 0)
-                AssetManager.resolveVideoAsset(ass, resolvedURLHandler: { url in
-                    self.initiateVideoValues(withURL: url)
+            if imageAsset.asset.isVideo() {
+                AssetManager.resolveVideoURL(forMediaAsset: imageAsset.asset, resolvedURLHandler: { url in
+                    DispatchQueue.main.async {
+                        self.videoControlPanel.isHidden = self.header.isHidden
+                        self.timeSliderPanel?.isHidden = self.header.isHidden
+                        self.videoControlPanel.panelState = .videoTimeSlider
+                        self.videoControlPanel.showMenu()
+                        self.footerText = " "
+                        self.assetInfoLabel?.label.text = Helper.stringFromTimeInterval(interval: 0)
+                        self.initiateVideoValues(withURL: url)
+                    }
                 })
-            }
-            else if let url = imageAsset.asset.videoURL {
-                self.videoControlPanel.isHidden = self.header.isHidden
-                self.timeSliderPanel?.isHidden = self.header.isHidden
-                self.videoControlPanel.panelState = .videoTimeSlider
-                self.videoControlPanel.showMenu()
-                self.footerText = " "
-                self.assetInfoLabel?.label.text = Helper.stringFromTimeInterval(interval: 0)
-                self.initiateVideoValues(withURL: url)
             }
             else {
                 self.videoControlPanel.isHidden = true
@@ -372,6 +365,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
             let totalFrames = self.getMaxFrame()
             self.minimumVideoOffset = fma.minFrame / totalFrames
             self.maximumVideoOffset = fma.maxFrame == Float64.greatestFiniteMagnitude ? 1 : fma.maxFrame / totalFrames
+            NSLog("\(#function) min \(self.minimumVideoOffset)  max \(self.maximumVideoOffset)")
             self.player?.url = url
         }
     }
@@ -390,7 +384,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
     }
     
     private func updateVideoTime(toOffset offset: Double, shouldUpdateFrameStepper: Bool = true) {
-        NSLog("\(#function)")
+        NSLog("\(#function) to offset \(offset)")
         if let asset = self.movieAsset {
             let durationSeconds = CMTimeGetSeconds(asset.duration)
             let timeOffset = CMTimeMakeWithSeconds(Float64(offset) * durationSeconds, 600)
@@ -403,6 +397,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
                 self.currentAsset?.currentFrame = frame
                 self.currentAsset?.minFrame = minFrame
                 self.currentAsset?.maxFrame = maxFrame
+                NSLog("\(#function) frame min \(minFrame) current \(frame) max \(maxFrame)")
                 if shouldUpdateFrameStepper {
                     self.updateFrameStepper()
                 }
