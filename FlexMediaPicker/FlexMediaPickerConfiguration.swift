@@ -92,6 +92,7 @@ public class FlexMediaPickerConfiguration {
 
     // MARK: Dimensions
     
+    public static var thumbnailSize: CGSize = CGSize(width: 100, height: 100)
     public static var cellSpacing: CGFloat = 2
     public static var indicatorWidth: CGFloat = 41
     public static var indicatorHeight: CGFloat = 8

@@ -92,7 +92,7 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
     let lockQueue = DispatchQueue(label: "org.cocoapods.FlexMediaPicker.Camera.LockQueue")
     let recordingQueue = DispatchQueue(label: "org.cocoapods.FlexMediaPicker.Camera.RecordingQueue")
     
-    var videoRecordedEventHandler: ((URL)->Void)?
+    var videoRecordedEventHandler: ((FlexMediaPickerAsset)->Void)?
     
     deinit {
         self.stopVideoRecording()
@@ -289,10 +289,10 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
                 self.isCapturing = false
                 DispatchQueue.main.async {
                     AssetManager.persistence.stopRecordVideo() {
-                        url in
+                        mpa in
                         NSLog("Recording finished.")
-                        if let url = url {
-                            self.videoRecordedEventHandler?(url)
+                        if let mpa = mpa {
+                            self.videoRecordedEventHandler?(mpa)
                         }
                     }
                 }

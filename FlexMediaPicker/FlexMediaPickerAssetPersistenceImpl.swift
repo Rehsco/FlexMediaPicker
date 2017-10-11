@@ -31,7 +31,7 @@ import UIKit
 import Photos
 import ImagePersistence
 
-open class FlexMediaPickerAssetPersistenceImpl: FlexMediaPickerAssetPersistence {
+open class FlexMediaPickerAssetPersistenceImpl: FlexMediaPickerAssetPersistence {    
     private var assetMap: [String: FlexMediaPickerAsset] = [:]
     private var videoWriter: VideoWriter?
     private var fileIndex = 0
@@ -107,34 +107,26 @@ open class FlexMediaPickerAssetPersistenceImpl: FlexMediaPickerAssetPersistence 
         self.videoWriter?.write(sample: sample, isVideo: isVideo)
     }
 
-    open func stopRecordVideo(finishedHandler: @escaping ((URL?)->Void)) {
+    open func stopRecordVideo(finishedHandler: @escaping ((FlexMediaPickerAsset?)->Void)) {
         self.videoWriter?.finish {
-            self.storeVideo(completion: { url in
-                finishedHandler(url)
-                self.fileIndex += 1
-                self.videoWriter = nil
-            })
-        }
-    }
-    
-    // TODO: must use asset reference instead of URL!!!
-    open func storeVideo(completion: ((URL?) -> Void)? = nil) {
-        if FlexMediaPickerConfiguration.storeRecordedVideosToAssetLibrary {
-            PHPhotoLibrary.shared().performChanges({
-                PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: self.filePathUrl())
-            }) { saved, error in
-                if saved {
-                    NSLog("Transfer video to library finished.")
-                    completion?(self.filePathUrl())
-                }
-                else {
-                    NSLog("Could not store video")
-                    completion?(nil)
+            if FlexMediaPickerConfiguration.storeRecordedVideosToAssetLibrary {
+                AssetManager.storeVideo(forURL: self.filePathUrl(), completion: { videoAsset in
+                    if let asset = videoAsset {
+                        AssetManager.resolveVideoAsset(asset, resolvedURLHandler: { url in
+                            if let thumbnail = AssetManager.getThumbnailForVideoAsset(url: url) {
+                                finishedHandler(self.createAssetCollectionAsset(thumbnail: thumbnail, asset: asset))
+                            }
+                        })
+                    }
+                    self.fileIndex += 1
+                    self.videoWriter = nil
+                })
+            }
+            else {
+                if let thumbnail = AssetManager.getThumbnailForVideoAsset(url: self.filePathUrl()) {
+                    finishedHandler(self.createVideoRecordAsset(thumbnail: thumbnail, videoUrl: self.filePathUrl()))
                 }
             }
-        }
-        else {
-            completion?(self.filePathUrl())
         }
     }
     

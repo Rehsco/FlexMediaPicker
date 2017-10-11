@@ -155,6 +155,43 @@ open class AssetManager {
         })
     }
     
+    open class func storeVideo(forURL url: URL, completion: ((PHAsset?) -> Void)? = nil) {
+        func retrieveVideoWithIdentifer(localIdentifier:String, completion: (PHAsset?) -> Void) {
+            let fetchOptions = PHFetchOptions()
+            fetchOptions.predicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.video.rawValue)
+            let fetchResults = PHAsset.fetchAssets(withLocalIdentifiers: [localIdentifier], options: fetchOptions)
+            
+            if fetchResults.count > 0 {
+                if let videoAsset = fetchResults.firstObject {
+                    completion(videoAsset)
+                } else {
+                    completion(nil)
+                }
+            } else {
+                completion(nil)
+            }
+        }
+        
+        var videoIdentifier: String?
+        PHPhotoLibrary.shared().performChanges({
+            if let request = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url) {
+                let placeholder = request.placeholderForCreatedAsset
+                videoIdentifier = placeholder?.localIdentifier
+            }
+        }) { saved, error in
+            if saved, let vid = videoIdentifier {
+                NSLog("Transfer video to library finished.")
+                retrieveVideoWithIdentifer(localIdentifier: vid, completion: { videoAsset in
+                    completion?(videoAsset)
+                })
+            }
+            else {
+                NSLog("Could not store video")
+                completion?(nil)
+            }
+        }
+    }
+    
     // Helper
     
     open class func getVideoFrameForTime(_ time: TimeInterval, movieAsset: AVURLAsset?) -> Float64 {
@@ -168,5 +205,17 @@ open class AssetManager {
             }
         }
         return 0
+    }
+
+    open class func getThumbnailForVideoAsset(url: URL) -> UIImage? {
+        let asset = AVAsset(url: url)
+        let imgGenerator = AVAssetImageGenerator(asset: asset)
+        imgGenerator.appliesPreferredTrackTransform = true
+        if let cgImage = try? imgGenerator.copyCGImage(at: CMTimeMake(5, 1), actualTime: nil) {
+            let image = UIImage(cgImage: cgImage)
+            let thImageSize = FlexMediaPickerConfiguration.thumbnailSize
+            return image.scaleToSizeKeepAspect(size: thImageSize)
+        }
+        return nil
     }
 }

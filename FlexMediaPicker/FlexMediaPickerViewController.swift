@@ -173,16 +173,8 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                             self.cameraView = nil
                         }
                         self.cameraView?.didRecordVideo = {
-                            url in
-                            let asset = AVAsset(url: url)
-                            let imgGenerator = AVAssetImageGenerator(asset: asset)
-                            imgGenerator.appliesPreferredTrackTransform = true
-                            if let cgImage = try? imgGenerator.copyCGImage(at: CMTimeMake(5, 1), actualTime: nil) {
-                                let image = UIImage(cgImage: cgImage)
-                                let thImageSize = (self.contentView as? ImagesCollectionView)?.thumbnailSize() ?? CGSize(width: 120, height: 120)
-                                let imageAsset = AssetManager.persistence.createVideoRecordAsset(thumbnail: image.scaleToSizeKeepAspect(size: thImageSize), videoUrl: url)
-                                self.addSelectedAsset(imageAsset)
-                            }
+                            mpa in
+                            self.addSelectedAsset(mpa)
                         }
                         self.layoutSupplementaryViews(to: self.view.bounds.size)
                     }
@@ -354,7 +346,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     }
     
     private func addNewImage(_ image: UIImage, location: CLLocation?) {
-        let thImageSize = (self.contentView as? ImagesCollectionView)?.thumbnailSize() ?? CGSize(width: 120, height: 120)
+        let thImageSize = FlexMediaPickerConfiguration.thumbnailSize
         if FlexMediaPickerConfiguration.storeTakenImagesToPhotos {
             let img = image.fixOrientation()
             AssetManager.savePhoto(img, location: location) {

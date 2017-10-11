@@ -102,7 +102,7 @@ class CameraView: FlexView, CLLocationManagerDelegate, CameraManDelegate {
     var startOnFrontCamera: Bool = false
     
     var didGetPhoto: ((UIImage, CLLocation?)->Void)?
-    var didRecordVideo: ((URL)->Void)?
+    var didRecordVideo: ((FlexMediaPickerAsset)->Void)?
     var cancelCameraViewHandler: (()->Void)?
     
     private let minimumZoomFactor: CGFloat = 1.0
@@ -144,8 +144,8 @@ class CameraView: FlexView, CLLocationManagerDelegate, CameraManDelegate {
         cameraMan.setup(self.startOnFrontCamera)
         
         cameraMan.videoRecordedEventHandler = {
-            url in
-            self.didRecordVideo?(url)
+            mpa in
+            self.didRecordVideo?(mpa)
         }
         cameraMan.recordingTimeUpdated = {
             timeElapsed in

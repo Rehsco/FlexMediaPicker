@@ -261,6 +261,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
     }
     
     @objc private func playerSwipeNext(_ gesture: UISwipeGestureRecognizer) {
+        NSLog("\(#function)")
         if let iss = self.imageSlideshow {
             if iss.images.count > 1 {
                 DispatchQueue.main.async {
@@ -272,6 +273,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
     }
 
     @objc private func playerSwipePrev(_ gesture: UISwipeGestureRecognizer) {
+        NSLog("\(#function)")
         if let iss = self.imageSlideshow {
             if iss.images.count > 1 {
                 DispatchQueue.main.async {
@@ -284,6 +286,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
     }
 
     func setCurrentPage(_ idx: Int, animated: Bool) {
+        NSLog("\(#function)")
         self.imageSlideshow?.setCurrentPage(idx, animated: animated)
         self.assignFooterPanel(forAssetIndex: idx)
     }
@@ -313,6 +316,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
     }
     
     private func assignFooterPanel(forAssetIndex index: Int) {
+        NSLog("\(#function)")
         if let imageAssets = self.imageSlideshow?.images as? [ImageAssetImageSource] {
             let imageAsset = imageAssets[index]
             self.currentAsset = imageAsset.asset
@@ -362,6 +366,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
     }
     
     private func initiateVideoValues(withURL url: URL) {
+        NSLog("\(#function)")
         self.movieAsset = AVURLAsset(url: url, options: nil)
         if let fma = self.currentAsset {
             let totalFrames = self.getMaxFrame()
@@ -385,6 +390,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
     }
     
     private func updateVideoTime(toOffset offset: Double, shouldUpdateFrameStepper: Bool = true) {
+        NSLog("\(#function)")
         if let asset = self.movieAsset {
             let durationSeconds = CMTimeGetSeconds(asset.duration)
             let timeOffset = CMTimeMakeWithSeconds(Float64(offset) * durationSeconds, 600)
@@ -414,6 +420,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
     }
     
     private func getMaxFrame() -> Float64 {
+        NSLog("\(#function)")
         if let asset = self.movieAsset {
             let movieTracks = asset.tracks(withMediaType: AVMediaTypeVideo)
             if let movieTrack = movieTracks.first {
@@ -426,6 +433,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
     }
     
     private func updateFrameStepper() {
+        NSLog("\(#function)")
         if let asset = self.movieAsset {
             let movieTracks = asset.tracks(withMediaType: AVMediaTypeVideo)
             if let movieTrack = movieTracks.first {
@@ -441,6 +449,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
     }
     
     private func updateImageToVideoFrame() {
+        NSLog("\(#function)")
         if let imgSource = self.currentImageSource, let iv = imgSource.imageViewRef {
             imgSource.imageFromVideoURL() { image in
                 DispatchQueue.main.async {
@@ -454,6 +463,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
     
     func playerReady(_ player: Player) {
         // After player has been initialized, make sure it stays hidden until "play" is tapped
+        NSLog("\(#function)")
         DispatchQueue.main.async {
             if let player = self.player, let fma = self.currentAsset {
                 player.view.isHidden = true
@@ -503,6 +513,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
     }
     
     func playerPlaybackDidEnd(_ player: Player) {
+        NSLog("\(#function)")
         self.updateVideoTime(toOffset: self.minimumVideoOffset)
         self.updateImageToVideoFrame()
     }

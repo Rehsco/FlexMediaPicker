@@ -41,7 +41,8 @@ class ImagesCollectionView: FlexCollectionView {
     }
     
     func thumbnailSize() -> CGSize {
-        let currentSize: CGFloat = UIDevice.current.userInterfaceIdiom == .pad ? 120 : 100
+        let us = FlexMediaPickerConfiguration.thumbnailSize
+        let currentSize: CGFloat = UIDevice.current.userInterfaceIdiom == .pad ? us.height : us.height * 0.8
         return CGSize(width: currentSize, height: currentSize * 0.8)
     }
 }
