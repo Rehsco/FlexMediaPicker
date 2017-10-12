@@ -83,7 +83,10 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
         self.imageSlideshow?.preload = .fixed(offset: 1)
         self.imageSlideshow?.circular = true
         self.imageSlideshow?.pageControlPosition = .hidden
-        self.addSubview(self.imageSlideshow!)
+        
+        self.imageSlideshow?.willBeginDragging = {
+            self.player?.view.isHidden = true
+        }
         
         self.timeSliderPanel = VideoTimeSliderView(frame: CGRect(x: 0, y: FlexMediaPickerConfiguration.headerHeight, width: self.bounds.size.width, height: FlexMediaPickerConfiguration.timeSliderPanelHeight))
         self.timeSliderPanel?.videoTimeOffsetChangeHandler = {
@@ -161,6 +164,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
             self.player?.playerDelegate = self
             self.player?.playbackDelegate = self
             self.player?.view.frame = self.bounds
+            self.player?.view.backgroundColor = FlexMediaPickerConfiguration.styleColor
             
             tvc.addChildViewController(self.player!)
             self.player?.didMove(toParentViewController: tvc)
@@ -173,6 +177,9 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
             self.player?.view.addGestureRecognizer(prevGR)
         }
         
+        self.insertSubview(player!.view, at: 1)
+        self.insertSubview(self.imageSlideshow!, at: 2)
+
         if let fv = self.footer as? VideoPlaybackControlPanel {
             fv.frameStepperChangeHandler = {
                 newFrame in
@@ -180,12 +187,6 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
                 let offset = newFrame / self.getMaxFrame()
                 self.currentVideoOffset = offset
                 self.userDidUpdateTimeOffsets()
-                // make sure the video view is hidden when not playing:
-                if let pl = self.player, pl.playbackState != .playing {
-                    if !pl.view.isHidden {
-                        NSLog("ERROR: Player view is visible but not playing!")
-                    }
-                }
                 self.updateVideoTime(toOffset: offset, shouldUpdateFrameStepper: false, shouldUpdateTimeSlider: true)
             }
             fv.playPressedHandler = {
@@ -194,10 +195,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
                     if shouldPlay {
                         if pp.view.superview == nil {
                             pp.view.backgroundColor = self.styleColor
-                            self.insertSubview(pp.view, at: 1)
                         }
-                        self.player?.view.isHidden = false
-                        self.imageSlideshow?.isHidden = true
                         self.player?.playFromCurrentTime()
                     }
                     else {
@@ -324,16 +322,19 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
         }
         self.hideViewElementsHandler?(forceHide)
     }
-    
-    private func hidePlayerView() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(250), execute: {
+
+    // TODO: Need this in fix for scaling/zooming video still image
+//    private func hidePlayerView() {
+        /*
+        DispatchQueue.main.async {
             if let p = self.player, !p.view.isHidden {
                 self.imageSlideshow?.isHidden = false
                 p.view.isHidden = true
                 p.view.removeFromSuperview()
             }
-        })
-    }
+        }
+ */
+//    }
     
     private func assignFooterPanel(forAssetIndex index: Int) {
         NSLog("\(#function) Asset index is \(index)")
@@ -349,8 +350,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
             
             imageAsset.imageFromVideoLoadedHandler = {
                 asset in
-                // Hide player view when the image slideshow has loaded the image (again)
-                self.hidePlayerView()
+                // TODO
             }
             self.player?.url = nil
             if imageAsset.asset.isVideo() {
@@ -373,7 +373,6 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
                 self.videoControlPanel.showMenu()
                 self.footerText = nil
                 self.assetInfoLabel?.label.text = nil
-                self.player?.view.isHidden = true
             }
         }
     }
@@ -404,7 +403,6 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
     }
     
     private func updateVideoTime(toOffset offset: Double, shouldUpdateFrameStepper: Bool = true, shouldUpdateTimeSlider: Bool = true) {
-        NSLog("\(#function) to offset \(offset)")
         if let asset = self.movieAsset {
             let durationSeconds = CMTimeGetSeconds(asset.duration)
             let timeOffset = CMTimeMakeWithSeconds(Float64(offset) * durationSeconds, 600)
@@ -477,8 +475,6 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
         NSLog("\(#function)")
         DispatchQueue.main.async {
             if let player = self.player, let fma = self.currentAsset {
-                player.view.isHidden = true
-
                 self.timeSliderPanel?.maxDuration = player.maximumDuration
                 let minDur = self.minimumVideoOffset * player.maximumDuration
                 let maxDur = self.maximumVideoOffset * player.maximumDuration
@@ -490,6 +486,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
     }
     
     func playerPlaybackStateDidChange(_ player: Player) {
+        self.imageSlideshow?.isHidden = player.playbackState == .playing
     }
     
     func playerBufferingStateDidChange(_ player: Player) {
