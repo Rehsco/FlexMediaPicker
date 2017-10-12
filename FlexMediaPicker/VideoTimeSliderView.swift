@@ -141,6 +141,11 @@ class VideoTimeSliderView: FlexView {
         self.infoView?.maximumTime = max
     }
     
+    func setMinMaxVideoOffsets(min: Double, max: Double) {
+        self.timeSlider?.updateThumbValue(atIndex: 0, value: min)
+        self.timeSlider?.updateThumbValue(atIndex: 2, value: max)
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         self.timeSlider?.frame = UIEdgeInsetsInsetRect(self.bounds, UIEdgeInsetsMake(5, 20, 5, 20))
