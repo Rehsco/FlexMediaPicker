@@ -59,6 +59,9 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
     var removeOrTrashSelectedItem: ((FlexMediaPickerAsset)->Void)?
 
     deinit {
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue: ScrollViewNotifications.ScrollViewBeginsZoom), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue: ScrollViewNotifications.ScrollViewEndsZoom), object: nil)
+
         self.posUpdateTimer.stop()
     }
     
@@ -130,13 +133,14 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
                         let cp = iss.currentPage
                         var sources = iss.images
                         if sources.count < 2 {
-                            self.removeFromSuperview()
+                            self.closeView()
                         }
                         else {
                             sources.remove(at: cp)
                             iss.setImageInputs(sources)
                             let np = cp % sources.count
                             iss.setCurrentPage(np, animated: true)
+                            self.updateCurrentPage(toIndex: np)
                         }
                     }
                 }
@@ -152,9 +156,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
         
         self.imageSlideshow?.currentPageChanged = {
             index in
-            self.player?.stop()
-            self.imageSlideshow?.isHidden = false
-            self.assignFooterPanel(forAssetIndex: index)
+            self.updateCurrentPage(toIndex: index)
         }
         
         // Video Playback
@@ -207,15 +209,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
             fv.snapshotPressedHandler = {
                 self.currentImageSource?.imageFromVideoURL() { image in
                     if let image = image {
-                        if FlexMediaPickerConfiguration.storeTakenImagesToPhotos {
-                            AssetManager.savePhoto(image, location: nil, completion: {
-                                _ in
-                                self.didGetPhoto?(image)
-                            })
-                        }
-                        else {
-                            self.didGetPhoto?(image)
-                        }
+                        self.didGetPhoto?(image)
                     }
                 }
             }
@@ -223,8 +217,22 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
         }
         
         self.startPositionUpdateNotification()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.scrollviewBeginsZoom(_:)), name: Notification.Name(rawValue: ScrollViewNotifications.ScrollViewBeginsZoom), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.scrollviewEndsZoom(_:)), name: Notification.Name(rawValue: ScrollViewNotifications.ScrollViewEndsZoom), object: nil)
+
     }
     
+    func scrollviewBeginsZoom(_ sender: Any) {
+        self.player?.view.isHidden = true
+    }
+
+    func scrollviewEndsZoom(_ sender: Any) {
+        if let ass = self.currentAsset, ass.isVideo() {
+            self.player?.view.isHidden = false
+        }
+    }
+
     override func didMoveToWindow() {
         super.didMoveToWindow()
         self.imageSlideshow?.isHidden = false
@@ -244,19 +252,29 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
         self.closeViewMenu?.menuSelectionHandler = {
             type in
             if type == .close {
-                self.player?.stop()
-                self.player?.url = nil
-                self.currentAsset = nil
-                self.movieAsset = nil
-                self.currentImageSource = nil
-                self.closeHandler?()
+                self.closeView()
             }
         }
         self.addMenu(self.closeViewMenu!)
     }
     
+    private func closeView() {
+        self.player?.stop()
+        self.player?.url = nil
+        self.currentAsset = nil
+        self.movieAsset = nil
+        self.currentImageSource = nil
+        self.closeHandler?()
+    }
+    
+    private func updateCurrentPage(toIndex index: Int) {
+        self.player?.stop()
+        self.imageSlideshow?.isHidden = false
+        self.assignFooterPanel(forAssetIndex: index)
+    }
+    
     @objc private func imageSlideshowTap(_ gesture: UITapGestureRecognizer) {
-        self.hideViewElements()
+        self.hideViewElements(hide: !self.header.isHidden)
     }
     
     @objc private func playerSwipeNext(_ gesture: UISwipeGestureRecognizer) {
@@ -309,18 +327,18 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
         self.assignFooterPanel(forAssetIndex: idx)
     }
     
-    func hideViewElements(forceHide: Bool = false) {
-        self.header.showHide(forceHide: forceHide)
-        self.footer.showHide(forceHide: forceHide)
-        self.closeViewMenu?.viewMenu?.showHide(forceHide: forceHide)
-        self.removeOrTrashViewMenu?.viewMenu?.showHide(forceHide: forceHide)
+    func hideViewElements(hide: Bool = false) {
+        self.header.showHide(hide: hide)
+        self.footer.showHide(hide: hide)
+        self.closeViewMenu?.viewMenu?.showHide(hide: hide)
+        self.removeOrTrashViewMenu?.viewMenu?.showHide(hide: hide)
         if let ass = self.currentAsset, ass.isVideo() {
-            self.timeSliderPanel?.showHide(forceHide: forceHide)
+            self.timeSliderPanel?.showHide(hide: hide)
         }
         else {
-            self.timeSliderPanel?.showHide(forceHide: true)
+            self.timeSliderPanel?.showHide(hide: true)
         }
-        self.hideViewElementsHandler?(forceHide)
+        self.hideViewElementsHandler?(hide)
     }
 
     // TODO: Need this in fix for scaling/zooming video still image
@@ -357,9 +375,8 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
                 AssetManager.resolveVideoURL(forMediaAsset: imageAsset.asset, resolvedURLHandler: { url in
                     DispatchQueue.main.async {
                         self.videoControlPanel.isHidden = self.header.isHidden
-                        self.timeSliderPanel?.isHidden = self.header.isHidden
+                        self.timeSliderPanel?.showHide(hide: self.header.isHidden)
                         self.videoControlPanel.panelState = .videoTimeSlider
-                        self.videoControlPanel.showMenu()
                         self.footerText = " "
                         self.assetInfoLabel?.label.text = Helper.stringFromTimeInterval(interval: 0)
                         self.initiateVideoValues(withURL: url)
@@ -368,9 +385,8 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
             }
             else {
                 self.videoControlPanel.isHidden = true
-                self.timeSliderPanel?.isHidden = true
+                self.timeSliderPanel?.showHide(hide: true)
                 self.videoControlPanel.panelState = .noVideo
-                self.videoControlPanel.showMenu()
                 self.footerText = nil
                 self.assetInfoLabel?.label.text = nil
             }

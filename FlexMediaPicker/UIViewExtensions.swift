@@ -30,26 +30,30 @@
 import UIKit
 
 extension UIView {
-    func showHide(forceHide: Bool = false) {
-        if self.isHidden && forceHide {
-            return
-        }
-        if self.isHidden {
-            self.alpha = 0
-            self.isHidden = false
-            UIView.animate(withDuration: 0.5, animations: {
+    func showHide(hide: Bool = false, completionHandler: (()->Void)? = nil) {
+        DispatchQueue.main.async {
+            if self.isHidden == hide {
+                completionHandler?()
+                return
+            }
+            if hide {
                 self.alpha = 1
-            }, completion: { _ in
-                // TODO
-            })
-        }
-        else {
-            self.alpha = 1
-            UIView.animate(withDuration: 0.5, animations: {
+                UIView.animate(withDuration: 0.5, animations: {
+                    self.alpha = 0
+                }, completion: { _ in
+                    self.isHidden = true
+                    completionHandler?()
+                })
+            }
+            else {
                 self.alpha = 0
-            }, completion: { _ in
-                self.isHidden = true
-            })
+                self.isHidden = false
+                UIView.animate(withDuration: 0.5, animations: {
+                    self.alpha = 1
+                }, completion: { _ in
+                    completionHandler?()
+                })
+            }
         }
     }
 }

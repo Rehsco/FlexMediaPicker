@@ -67,6 +67,8 @@
 		5BDC84201F52CFFF00BF45B5 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC841E1F52CFFF00BF45B5 /* LocationManager.swift */; };
 		5BDF22FA1F7F9A65000A6B7E /* ImageSlideShowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDF22F91F7F9A65000A6B7E /* ImageSlideShowView.swift */; };
 		5BDF22FB1F7F9A65000A6B7E /* ImageSlideShowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDF22F91F7F9A65000A6B7E /* ImageSlideShowView.swift */; };
+		5BE0F1741FA203B300BEC1CB /* UIScrollViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE0F1731FA203B300BEC1CB /* UIScrollViewExtensions.swift */; };
+		5BE0F1751FA203B300BEC1CB /* UIScrollViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE0F1731FA203B300BEC1CB /* UIScrollViewExtensions.swift */; };
 		5BE45C591F7C004000322FCC /* ImageAssetImageSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE45C581F7C004000322FCC /* ImageAssetImageSource.swift */; };
 		5BE45C5A1F7C004000322FCC /* ImageAssetImageSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE45C581F7C004000322FCC /* ImageAssetImageSource.swift */; };
 		5BE57D151F83AE340037D4EF /* TimeSliderInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE57D141F83AE340037D4EF /* TimeSliderInfoView.swift */; };
@@ -114,6 +116,7 @@
 		5BDC841B1F52CE8B00BF45B5 /* CameraView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		5BDC841E1F52CFFF00BF45B5 /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		5BDF22F91F7F9A65000A6B7E /* ImageSlideShowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSlideShowView.swift; sourceTree = "<group>"; };
+		5BE0F1731FA203B300BEC1CB /* UIScrollViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIScrollViewExtensions.swift; sourceTree = "<group>"; };
 		5BE45C581F7C004000322FCC /* ImageAssetImageSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAssetImageSource.swift; sourceTree = "<group>"; };
 		5BE57D141F83AE340037D4EF /* TimeSliderInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSliderInfoView.swift; sourceTree = "<group>"; };
 		7F0A6406FB8E47035C90A29C /* Pods-FlexMediaPickerExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlexMediaPickerExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-FlexMediaPickerExample/Pods-FlexMediaPickerExample.release.xcconfig"; sourceTree = "<group>"; };
@@ -231,6 +234,7 @@
 			children = (
 				5BC562971F50599700A848F2 /* UIImageExtensions.swift */,
 				5B3DB3211F7FB8D300D864DE /* UIViewExtensions.swift */,
+				5BE0F1731FA203B300BEC1CB /* UIScrollViewExtensions.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -563,6 +567,7 @@
 				5BE45C591F7C004000322FCC /* ImageAssetImageSource.swift in Sources */,
 				5BC5628B1F50412900A848F2 /* FlexMediaPickerViewController.swift in Sources */,
 				5BC6D94E1F763F190051B0A3 /* CamVidSwitch.swift in Sources */,
+				5BE0F1741FA203B300BEC1CB /* UIScrollViewExtensions.swift in Sources */,
 				5BCCDEC41F82A44A00914DC1 /* PositionUpdateTimer.swift in Sources */,
 				5BBFFABB1F51796500C08350 /* FlexMediaPickerAsset.swift in Sources */,
 				5BDC84191F52CC8F00BF45B5 /* Helper.swift in Sources */,
@@ -584,6 +589,7 @@
 				5BDC84201F52CFFF00BF45B5 /* LocationManager.swift in Sources */,
 				5BC5629F1F506EF300A848F2 /* BusyViewFactory.swift in Sources */,
 				5BD6281D1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift in Sources */,
+				5BE0F1751FA203B300BEC1CB /* UIScrollViewExtensions.swift in Sources */,
 				5BC5629C1F5059E400A848F2 /* ImagesCollectionView.swift in Sources */,
 				5BE57D161F83AE340037D4EF /* TimeSliderInfoView.swift in Sources */,
 				5BC562841F503A9A00A848F2 /* AssetManager.swift in Sources */,

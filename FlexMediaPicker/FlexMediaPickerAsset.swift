@@ -35,6 +35,7 @@ open class FlexMediaPickerAsset {
     var uuid: String
     let thumbnail: UIImage
     var asset: PHAsset?
+    let addedTime: Date
     
     /// Video
     var videoURL: URL?
@@ -46,17 +47,20 @@ open class FlexMediaPickerAsset {
         self.uuid = UUID().uuidString
         self.thumbnail = thumbnail
         self.asset = asset
+        self.addedTime = Date()
     }
 
     init(thumbnail: UIImage) {
         self.uuid = UUID().uuidString
         self.thumbnail = thumbnail
+        self.addedTime = Date()
     }
 
     init(thumbnail: UIImage, videoURL: URL) {
         self.uuid = UUID().uuidString
         self.thumbnail = thumbnail
         self.videoURL = videoURL
+        self.addedTime = Date()
     }
 
     func isAssetBased() -> Bool {

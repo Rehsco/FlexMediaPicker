@@ -61,7 +61,6 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
 
     private var cameraView: CameraView?
     
-    private var selectedAssets: [FlexMediaPickerAsset] = []
     private var imageSources: [ImageAssetImageSource] = []
     private var selectedAssetsView: SelectedAssetsCollectionView?
     
@@ -349,9 +348,11 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         let thImageSize = FlexMediaPickerConfiguration.thumbnailSize
         if FlexMediaPickerConfiguration.storeTakenImagesToPhotos {
             let img = image.fixOrientation()
+            NSLog("Saving photo")
             AssetManager.savePhoto(img, location: location) {
                 newAsset in
                 if let imageAsset = newAsset {
+                    NSLog("Saved photo has local ID \(imageAsset.localIdentifier)")
                     self.addSelectedAsset(imageAsset, thumbnail: img.scaleToSizeKeepAspect(size: thImageSize))
                 }
             }
@@ -363,8 +364,11 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     }
     
     private func addSelectedAsset(_ asset: FlexMediaPickerAsset) {
-        self.selectedAssets.append(asset)
-        self.imageSources.append(ImageAssetImageSource(asset: asset))
+        let ias = ImageAssetImageSource(asset: asset)
+        self.imageSources.append(ias)
+        if let issv = self.imageSlideshowView {
+            issv.imageSlideshow?.setImageInputs(self.imageSources)
+        }
         self.populateSelectedAssetView()
     }
 
@@ -402,48 +406,28 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     }
     
     func addSelectedAsset(_ asset: PHAsset, thumbnail: UIImage) {
-        for a in self.selectedAssets {
-            if let selAsset = a.asset {
-                if selAsset.localIdentifier == asset.localIdentifier {
-                    return
-                }
-            }
-        }
         let sAsset = AssetManager.persistence.createAssetCollectionAsset(thumbnail: thumbnail, asset: asset)
         self.addSelectedAsset(sAsset)
     }
-    
-    func removeSelectedAsset(_ asset: PHAsset) {
-        var idx = 0
-        for a in self.selectedAssets {
-            if let selAsset = a.asset {
-                if selAsset.localIdentifier == asset.localIdentifier {
-                    self.selectedAssets.remove(at: idx)
-                    self.imageSources.remove(at: idx)
-                    self.populateSelectedAssetView()
-                    return
-                }
-            }
-            idx += 1
-        }
-    }
 
     func removeSelectedAsset(_ asset: FlexMediaPickerAsset) {
+        self.removeImageSource(forID: asset.uuid)
+        AssetManager.persistence.deleteImageAsset(withID: asset.uuid)
+        self.populateSelectedAssetView()
+    }
+
+    private func removeImageSource(forID uuid: String) {
         var idx = 0
-        for a in self.selectedAssets {
-            if asset.uuid == a.uuid {
-                self.selectedAssets.remove(at: idx)
+        for ims in self.imageSources {
+            if ims.asset.uuid == uuid {
                 self.imageSources.remove(at: idx)
-                if !asset.isAssetBased() {
-                    AssetManager.persistence.deleteImageAsset(withID: asset.uuid)
-                }
-                self.populateSelectedAssetView()
                 return
             }
             idx += 1
         }
+        NSLog("Could not find image source to remove for uuid \(uuid)")
     }
-
+    
     // MARK: - Internal View Model
     
     override open func populateContent() {
@@ -505,7 +489,9 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                     }
                 }
                 fitem.itemDeselectionActionHandler = {
-                    self.removeSelectedAsset(imageAsset)
+                    if let asset = AssetManager.persistence.getAsset(forLocalIdentifier: imageAsset.localIdentifier) {
+                        self.removeSelectedAsset(asset)
+                    }
                 }
                 self.contentView?.addItem(secRef, item: fitem)
             }
@@ -547,8 +533,9 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             if let sav = self.selectedAssetsView {
                 sav.removeAllSections()
                 let savSecRef = sav.addSection()
+                let allSelectedAssets = AssetManager.persistence.getAllAssets()
                 var idx = 0
-                for selAsset in self.selectedAssets {
+                for selAsset in allSelectedAssets {
                     let ref = selAsset.asset?.localIdentifier ?? UUID().uuidString
                     let fitem = ImagesCollectionItem(reference: ref, icon: selAsset.thumbnail)
                     fitem.canMoveItem = false
@@ -563,10 +550,10 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                     idx += 1
                 }
                 sav.itemCollectionView.reloadData()
-                if self.selectedAssets.count > 0 && sav.isHidden == true {
+                if allSelectedAssets.count > 0 && sav.isHidden == true {
                     self.showSelectedAssetView()
                 }
-                if self.selectedAssets.count == 0 && sav.isHidden == false {
+                if allSelectedAssets.count == 0 && sav.isHidden == false {
                     self.hideSelectedAssetView()
                 }
             }
@@ -576,7 +563,8 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     private func applyAcceptEnabling() {
         var numApplicableSelected = 0
         // TODO: must be extended to allow VoiceRecordings
-        for sa in self.selectedAssets {
+        let allSelectedAssets = AssetManager.persistence.getAllAssets()
+        for sa in allSelectedAssets {
             if sa.isVideo() {
                 if FlexMediaPickerConfiguration.allowVideoSelection {
                     numApplicableSelected += 1
@@ -592,7 +580,8 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     
     private func getAcceptedAssets() -> [FlexMediaPickerAsset] {
         var returnableAssets: [FlexMediaPickerAsset] = []
-        for sa in self.selectedAssets {
+        let allSelectedAssets = AssetManager.persistence.getAllAssets()
+        for sa in allSelectedAssets {
             if sa.isVideo() {
                 if FlexMediaPickerConfiguration.allowVideoSelection {
                     returnableAssets.append(sa)
@@ -652,8 +641,8 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             issv.closeHandler = {
                 self.imageSlideshowView?.isHidden = true
             }
-            issv.hideViewElementsHandler = { forceHide in
-                self.selectedAssetsView?.showHide(forceHide: forceHide)
+            issv.hideViewElementsHandler = { hide in
+                self.selectedAssetsView?.showHide(hide: hide)
             }
             issv.didGetPhoto = {
                 image in
@@ -663,7 +652,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                 asset in
                 self.removeSelectedAsset(asset)
             }
-            issv.hideViewElements(forceHide: true)
+            issv.hideViewElements(hide: true)
         }
     }
     

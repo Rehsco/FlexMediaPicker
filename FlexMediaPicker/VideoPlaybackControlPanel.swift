@@ -44,7 +44,11 @@ class VideoPlaybackControlPanel: FlexFooterView {
 
     private var frameStepper: FlexSnapStepper?
     
-    var panelState: VideoPlaybackPanelState = .noVideo
+    var panelState: VideoPlaybackPanelState = .noVideo {
+        didSet {
+            self.showHide(hide: self.isHidden)
+        }
+    }
     
     var isPlaying: Bool = false {
         didSet {
@@ -58,19 +62,19 @@ class VideoPlaybackControlPanel: FlexFooterView {
     var snapshotPressedHandler: (()->Void)?
     var frameStepperChangeHandler: ((Double)->Void)?
 
-    override func showHide(forceHide: Bool) {
-        super.showHide(forceHide: forceHide)
+    override func showHide(hide: Bool, completionHandler: (()->Void)? = nil) {
+        super.showHide(hide: hide, completionHandler: completionHandler)
         if self.panelState == .noVideo {
-            self.playMenu?.viewMenu?.showHide(forceHide: true)
-            self.cameraMenu?.viewMenu?.showHide(forceHide: true)
+            self.playMenu?.viewMenu?.showHide(hide: true)
+            self.cameraMenu?.viewMenu?.showHide(hide: true)
         }
         else {
-            self.playMenu?.viewMenu?.showHide(forceHide: forceHide)
-            self.cameraMenu?.viewMenu?.showHide(forceHide: forceHide)
+            self.playMenu?.viewMenu?.showHide(hide: hide)
+            self.cameraMenu?.viewMenu?.showHide(hide: hide)
         }
     }
-    
-    func showMenu() {
+ /*
+    func showMenu(visible: Bool = true) {
         DispatchQueue.main.async {
             if self.panelState == .noVideo {
                 self.playMenu?.viewMenu?.isHidden = true
@@ -79,14 +83,14 @@ class VideoPlaybackControlPanel: FlexFooterView {
                 self.cameraMenu?.viewMenu?.alpha = 0
             }
             else if !self.isHidden {
-                self.playMenu?.viewMenu?.isHidden = false
-                self.playMenu?.viewMenu?.alpha = 1
-                self.cameraMenu?.viewMenu?.isHidden = false
-                self.cameraMenu?.viewMenu?.alpha = 1
+                self.playMenu?.viewMenu?.isHidden = visible
+                self.playMenu?.viewMenu?.alpha = visible ? 0 : 1
+                self.cameraMenu?.viewMenu?.isHidden = visible
+                self.cameraMenu?.viewMenu?.alpha = visible ? 0 : 1
             }
         }
     }
-    
+   */
     func setFrameValues(min: Double, current: Double, max: Double) {
         DispatchQueue.main.async {
             self.frameStepper?.minStepperValue = min

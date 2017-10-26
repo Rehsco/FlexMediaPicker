@@ -58,6 +58,20 @@ open class FlexMediaPickerAssetPersistenceImpl: FlexMediaPickerAssetPersistence 
         return asset
     }
     
+    open func getAllAssets() -> [FlexMediaPickerAsset] {
+        return Array(self.assetMap.values).sorted(by: { $0.addedTime < $1.addedTime })
+    }
+    
+    open func getAsset(forLocalIdentifier id: String) -> FlexMediaPickerAsset? {
+        let allAssets = self.getAllAssets()
+        for asset in allAssets {
+            if let pha = asset.asset, pha.localIdentifier == id {
+                return asset
+            }
+        }
+        return nil
+    }
+    
     open func imageFromAsset(withID id: String) -> UIImage? {
         if let asset = self.assetMap[id] {
             if asset.isAssetBased() {
@@ -75,9 +89,11 @@ open class FlexMediaPickerAssetPersistenceImpl: FlexMediaPickerAssetPersistence 
 
     open func deleteImageAsset(withID id: String) {
         if let asset = self.assetMap[id] {
-            if asset.isVideo(), let url = asset.videoURL {
-                NSLog("Deleting video. Deleting file \(url.absoluteString)")
-                self.deleteFile(url)
+            if asset.isVideo() {
+                if let url = asset.videoURL {
+                    NSLog("Deleting video. Deleting file \(url.absoluteString)")
+                    self.deleteFile(url)
+                }
             }
             else {
                 NSLog("Deleting image")

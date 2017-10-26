@@ -45,4 +45,7 @@ public protocol FlexMediaPickerAssetPersistence {
     func startRecordVideo(height:Int, width:Int, channels:Int, samples:Float64)
     func writeVideoData(sample: CMSampleBuffer, isVideo: Bool)
     func stopRecordVideo(finishedHandler: @escaping ((FlexMediaPickerAsset?)->Void))
+    
+    func getAllAssets() -> [FlexMediaPickerAsset]
+    func getAsset(forLocalIdentifier id: String) -> FlexMediaPickerAsset?
 }
