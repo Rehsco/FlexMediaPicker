@@ -33,7 +33,11 @@ import StyledOverlay
 open class BusyViewFactory {
     private static var overlayBusyView: StyledActionOverlay?
     private static var isBusy = false
+    private static var progressBusyView: StyledActionOverlay?
+    private static var isProgressing = false
 
+    // MARK: - Busy View
+    
     open class func showBusyOverlay(onView view: UIView? = nil, autoHideAfter: Int = 12, completionHandler: (() -> Void)? = nil) {
         if self.isBusy {
             return // already busy
@@ -83,6 +87,65 @@ open class BusyViewFactory {
                 self.overlayBusyView?.removeFromSuperview()
                 self.overlayBusyView = nil
                 self.isBusy = false
+                completionHandler?()
+            })
+        }
+    }
+    
+    // MARK: - Progress
+    
+    open class func showProgressOverlay(onView view: UIView? = nil, completionHandler: (() -> Void)? = nil) {
+        if self.isProgressing {
+            return // already busy
+        }
+        self.isProgressing = true
+        
+        let dView: UIView
+        if view == nil {
+            dView = UIApplication.shared.keyWindow!
+        }
+        else {
+            dView = view!
+        }
+        DispatchQueue.main.async {
+            let infoWidth:CGFloat = 220
+            let infoHeight:CGFloat = 150
+            let origin = CGPoint(x: (dView.bounds.width - infoWidth) * 0.5, y: (dView.bounds.height - infoHeight) * 0.5)
+            self.progressBusyView = StyledActionOverlay(frame: CGRect(origin: origin, size: CGSize(width: infoWidth, height: infoHeight)))
+            self.progressBusyView?.alpha = 0
+            self.progressBusyView?.style = .roundedFixed(cornerRadius: 10)
+            self.progressBusyView?.styleColor = UIColor.black.withAlphaComponent(0.6)
+            self.progressBusyView?.actionType = .progressRing(progress: 0)
+            self.progressBusyView?.indicatorLineWidth = 3
+            dView.addSubview(self.progressBusyView!)
+            UIView.animate(withDuration: 0.3, animations: {
+                self.progressBusyView?.alpha = 1
+            }, completion: {
+                finished in
+                completionHandler?()
+            })
+        }
+    }
+    
+    open class func updateProgress(progress: Float, upperLabel: String, lowerLabel: String?) {
+        DispatchQueue.main.async {
+            self.progressBusyView?.setLabels(upperLabel, lowerString: lowerLabel ?? "\(progress)%")
+            self.progressBusyView?.actionType = .progressRing(progress: progress)
+        }
+    }
+    
+    open class func hideProgressOverlay(completionHandler: (() -> Void)? = nil) {
+        DispatchQueue.main.async {
+            if self.progressBusyView == nil {
+                return
+            }
+            self.progressBusyView?.alpha = 1
+            UIView.animate(withDuration: 0.3, animations: {
+                self.progressBusyView?.alpha = 0
+            }, completion: { finished in
+                self.progressBusyView?.removeFromSuperview()
+                self.progressBusyView = nil
+                self.isProgressing = false
                 completionHandler?()
             })
         }

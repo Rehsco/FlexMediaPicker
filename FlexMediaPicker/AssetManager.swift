@@ -201,7 +201,34 @@ open class AssetManager {
         }
     }
     
+    open static func reencodeVideo(forMediaAsset mpa: FlexMediaPickerAsset, progressHandler: ((Float)->Void)? = nil, completedURLHandler: @escaping ((URL)->Void)) {
+        AssetManager.resolveVideoURL(forMediaAsset: mpa) { url in
+            let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0] as URL
+            let fileURL = documentsDirectory.appendingPathComponent("\(mpa.uuid).mp4")
+            let startOffset = self.getTimeForVideoFrame(mpa.minFrame, videoURL: url)
+            let endOffset = self.getTimeForVideoFrame(mpa.maxFrame, videoURL: url)
+            let duration = endOffset - startOffset
+            self.persistence.encodeVideo(url, targetURL: fileURL, fromTime: startOffset, duration: duration, presetName: FlexMediaPickerConfiguration.videoOutputFormat, progressHandler: progressHandler, exportFinishedHandler: { url in
+                if let videoUrl = url {
+                    completedURLHandler(videoUrl)
+                }
+            })
+        }
+    }
+    
     // Helper
+    
+    open class func getTimeForVideoFrame(_ frame: Float64, videoURL: URL) -> CMTime {
+        let asset = AVURLAsset(url: videoURL, options: nil)
+        let movieTracks = asset.tracks(withMediaType: AVMediaTypeVideo)
+        if let movieTrack = movieTracks.first {
+            let durationSeconds = CMTimeGetSeconds(asset.duration)
+            let totalFrames: Float64 = durationSeconds * Float64(movieTrack.nominalFrameRate)
+            let time64 = (frame / totalFrames) * durationSeconds
+            return CMTimeMakeWithSeconds(time64, 600)
+        }
+        return CMTimeMakeWithSeconds(0.0, 0)        
+    }
     
     open class func getVideoFrameForTime(_ time: TimeInterval, movieAsset: AVURLAsset?) -> Float64 {
         if let asset = movieAsset {

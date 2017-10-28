@@ -35,6 +35,7 @@ import Photos
 import ImageSlideshow
 import CoreLocation
 import ImagePersistence
+import TaskQueue
 
 class SelectedAssetsCollectionView: ImagesCollectionView {}
 
@@ -114,7 +115,10 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         self.rightViewMenu?.menuSelectionHandler = {
             type in
             if type == .accept {
-                self.mediaAcceptedHandler?(self.getAcceptedAssets())
+                self.convertSelectedVideoAssets {
+                    let aa = self.getAcceptedAssets()
+                    self.mediaAcceptedHandler?(aa)
+                }
             }
         }
         self.contentView?.addMenu(self.rightViewMenu!)
@@ -333,6 +337,54 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     
     // MARK: - Item handling
 
+    private func convertSelectedVideoAssets(completedHandler: @escaping (()->Void)) {
+        if FlexMediaPickerConfiguration.allowVideoSelection {
+            let aAssets = self.getAcceptedAssets()
+            var assetsToConvert: [FlexMediaPickerAsset] = []
+            for aa in aAssets {
+                if aa.isVideo() {
+                    assetsToConvert.append(aa)
+                }
+            }
+            
+            BusyViewFactory.showProgressOverlay(onView: nil, completionHandler: {
+                var idx = 1
+                let assetsConvertCount = assetsToConvert.count
+                let queue = TaskQueue()
+                
+                for _ in 0..<assetsConvertCount {
+                    queue.tasks +=~ { result, next in
+                        BusyViewFactory.updateProgress(progress: 0, upperLabel: "Converting Videos", lowerLabel: "\(idx) of \(assetsConvertCount)")
+
+                        if let assetToConvert = assetsToConvert.first != nil ? assetsToConvert.removeFirst() : nil {
+                            AssetManager.reencodeVideo(forMediaAsset: assetToConvert, progressHandler: { progress in
+                                BusyViewFactory.updateProgress(progress: progress, upperLabel: "Converting Videos", lowerLabel: "\(idx) of \(assetsConvertCount)")
+                            }, completedURLHandler: { url in
+                                AssetManager.storeVideo(forURL: url, completion: { _ in
+                                    NSLog("re-encoded video stored to Photos (as test)")
+                                    next(nil)
+                                })
+                            })
+                        }
+                    }
+                    
+                    queue.tasks +=! {
+                        idx += 1
+                    }
+                }
+                
+                queue.run {
+                    BusyViewFactory.hideProgressOverlay() {
+                        completedHandler()
+                    }
+                }
+            })
+        }
+        else {
+            completedHandler()
+        }
+    }
+    
     func fetchAssets(in collection: PHAssetCollection) {
         self.currentAssetCollection = collection
         self.contentView?.removeMenu(self.leftViewMenu!)

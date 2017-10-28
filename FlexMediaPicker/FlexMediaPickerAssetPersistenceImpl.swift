@@ -36,6 +36,7 @@ open class FlexMediaPickerAssetPersistenceImpl: FlexMediaPickerAssetPersistence 
     private var videoWriter: VideoWriter?
     private var fileIndex = 0
     private var exportSession: AVAssetExportSession?
+    private var progressUpdateTimer: Timer?
     
     open var imagePersistence: ImagePersistenceInterface = FlexMediaPickerImagePersistenceImpl()!
     
@@ -161,30 +162,28 @@ open class FlexMediaPickerAssetPersistenceImpl: FlexMediaPickerAssetPersistence 
 
     /// Crop video
 
-    // TODO: Need to change this to work with FlexMediaAsset model
-    // TODO: Need to use a progress indication handler as well
-    func encodeVideo(_ videoURL: URL, fromTime: CMTime? = nil, duration: CMTime? = nil, presetName: String = AVAssetExportPresetPassthrough, exportFinishedHandler: @escaping ((URL?)->Void))  {
+    // TODO: Need to use a progress indication handler
+    open func encodeVideo(_ videoURL: URL, targetURL: URL, fromTime: CMTime? = nil, duration: CMTime? = nil, presetName: String = AVAssetExportPresetPassthrough, progressHandler: ((Float)->Void)? = nil, exportFinishedHandler: @escaping ((URL?)->Void))  {
+        self.progressUpdateTimer?.invalidate()
         
         let avAsset = AVURLAsset(url: videoURL, options: nil)
         let startDate = Foundation.Date()
         
         //Create Export session
         /// Seems that you can set the preset name to for example: AVAssetExportPreset640x480 for 480p export
-        let exportSession = AVAssetExportSession(asset: avAsset, presetName: presetName)
+        self.exportSession = AVAssetExportSession(asset: avAsset, presetName: presetName)
+
+        deleteFile(targetURL)
         
-        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0] as URL
-        // TODO: This needs to be based on the UUID as filename
-        let filePath = documentsDirectory.appendingPathComponent("rendered-Video.mp4")
-        deleteFile(filePath)
-        
-        exportSession?.outputURL = filePath
+        exportSession?.outputURL = targetURL
         exportSession?.outputFileType = AVFileTypeMPEG4
         exportSession?.shouldOptimizeForNetworkUse = true
         let start = fromTime ?? CMTimeMakeWithSeconds(0.0, 0)
         let range = CMTimeRangeMake(start, duration ?? avAsset.duration)
         exportSession?.timeRange = range
         
-        exportSession!.exportAsynchronously(completionHandler: {() -> Void in
+        exportSession?.exportAsynchronously(completionHandler: {() -> Void in
+            self.progressUpdateTimer?.invalidate()
             switch self.exportSession!.status {
             case .failed:
                 NSLog("\(String(describing: self.exportSession!.error))")
@@ -203,6 +202,14 @@ open class FlexMediaPickerAssetPersistenceImpl: FlexMediaPickerAssetPersistence 
                 break
             }
         })
+        
+        DispatchQueue.main.async {
+            self.progressUpdateTimer = Timer.scheduledTimer(withTimeInterval: 0.025, repeats: true) { _ in
+                if let es = self.exportSession {
+                    progressHandler?(es.progress)
+                }
+            }
+        }
     }
     
     func deleteFile(_ filePath:URL) {

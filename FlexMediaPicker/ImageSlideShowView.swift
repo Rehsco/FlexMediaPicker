@@ -220,7 +220,6 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.scrollviewBeginsZoom(_:)), name: Notification.Name(rawValue: ScrollViewNotifications.ScrollViewBeginsZoom), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.scrollviewEndsZoom(_:)), name: Notification.Name(rawValue: ScrollViewNotifications.ScrollViewEndsZoom), object: nil)
-
     }
     
     func scrollviewBeginsZoom(_ sender: Any) {

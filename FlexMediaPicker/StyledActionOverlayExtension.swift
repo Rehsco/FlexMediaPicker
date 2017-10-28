@@ -1,5 +1,5 @@
 //
-//  UIScrollviewExtensions.swift
+//  StyledActionOverlayExtension.swift
 //  FlexMediaPicker
 //
 //  Created by Martin Rehder on 30.09.2017.
@@ -28,21 +28,21 @@
  */
 
 import UIKit
+import StyledOverlay
 
-class ScrollViewNotifications {
-    static let ScrollViewBeginsZoom = "scrollview-begins-zoom"
-    static let ScrollViewEndsZoom = "scrollview-ends-zoom"
-}
+extension StyledActionOverlay {
 
-extension UIScrollView: UIScrollViewDelegate {
-    
-    public func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {
-        let note = Notification(name: Notification.Name(rawValue: ScrollViewNotifications.ScrollViewBeginsZoom))
-        NotificationCenter.default.post(note)
+    func setLabels(_ upperString: String? = nil, lowerString: String? = nil) {
+        if let us = upperString {
+            self.upperLabel.attributedText = Helper.applyFontAndColorToString(FlexMediaPickerConfiguration.upperProgressLabelFont, color: FlexMediaPickerConfiguration.upperProgressLabelTextColor, text: us)
+        }
+        if let ls = lowerString {
+            self.lowerLabel.attributedText = Helper.applyFontAndColorToString(FlexMediaPickerConfiguration.lowerProgressLabelFont, color: FlexMediaPickerConfiguration.lowerProgressLabelTextColor, text: ls)
+        }
     }
     
-    public func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
-        let note = Notification(name: Notification.Name(rawValue: ScrollViewNotifications.ScrollViewEndsZoom))
-        NotificationCenter.default.post(note)
+    func clearLabels() {
+        self.upperLabel.attributedText = nil
+        self.lowerLabel.attributedText = nil
     }
 }

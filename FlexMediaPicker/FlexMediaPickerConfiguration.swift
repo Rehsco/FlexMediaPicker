@@ -4,6 +4,7 @@
 
 import UIKit
 import MJRFlexStyleComponents
+import AVFoundation
 
 public class FlexMediaPickerConfiguration {
     
@@ -52,6 +53,9 @@ public class FlexMediaPickerConfiguration {
     public static var camVidSwitchThumbColor = UIColor(red: 0.25, green: 0.29, blue: 0.34, alpha: 1)
     public static var camVidSwitchBorderColor = UIColor(red: 0.25, green: 0.29, blue: 0.34, alpha: 1)
 
+    public static var upperProgressLabelTextColor = UIColor.white
+    public static var lowerProgressLabelTextColor = UIColor.white
+
     // MARK: Styled
     
     public static var camVidSwitchStyle = FlexShapeStyle(style: .rounded)
@@ -71,12 +75,16 @@ public class FlexMediaPickerConfiguration {
     public static var headerSubCaptionFont = UIFont.systemFont(ofSize: 12, weight: UIFontWeightRegular)
     public static var collectionCaptionFont = UIFont.systemFont(ofSize: 12, weight: UIFontWeightRegular)
     public static var numberLabelFont = UIFont.systemFont(ofSize: 19, weight: UIFontWeightBold)
-    public static var doneButton = UIFont.systemFont(ofSize: 19, weight: UIFontWeightMedium)
+/*    public static var doneButton = UIFont.systemFont(ofSize: 19, weight: UIFontWeightMedium)
     public static var flashButton = UIFont.systemFont(ofSize: 12, weight: UIFontWeightMedium)
+ */
     public static var noImagesFont = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium)
     public static var noCameraFont = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium)
     public static var settingsFont = UIFont.systemFont(ofSize: 16, weight: UIFontWeightMedium)
     public static var timeSliderCaptionFont = UIFont.systemFont(ofSize: 12, weight: UIFontWeightRegular)
+
+    public static var upperProgressLabelFont = UIFont.systemFont(ofSize: 16, weight: UIFontWeightMedium)
+    public static var lowerProgressLabelFont = UIFont.systemFont(ofSize: 14, weight: UIFontWeightRegular)
 
     // MARK: Titles
 
@@ -121,7 +129,7 @@ public class FlexMediaPickerConfiguration {
     public static var collapseCollectionViewWhileShot = true
     public static var recordLocation = true
     public static var allowMultipleSelection = true
-    public static var allowVideoSelection = false
+    public static var allowVideoSelection = true
     public static var allowVoiceRecording = true
     public static var showsImageCountLabel = true
     public static var flashButtonAlwaysHidden = false
@@ -130,6 +138,11 @@ public class FlexMediaPickerConfiguration {
     public static var storeTakenImagesToPhotos = true
     public static var storeRecordedVideosToAssetLibrary = true
     public static var statusBarHidden = true
+
+    // MARK: Media Formats
+
+    public static var videoOutputFormat = AVAssetExportPreset640x480
+//    public static var videoOutputFormat = AVAssetExportPresetPassthrough
 
     // MARK: Limits
 
