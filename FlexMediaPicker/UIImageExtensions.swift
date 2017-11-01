@@ -115,6 +115,56 @@ extension UIImage {
         return nil
     }
     
+    func crop(toRect rect: CGRect) -> UIImage {
+        if let imageRef = self.cgImage?.cropping(to: rect) {
+            let cropped = UIImage(cgImage: imageRef)
+            return cropped
+        }
+        return self
+    }
+    
+    func maskImageWithPathAndCrop(_ path: UIBezierPath) -> UIImage {
+        let newSize = path.cgPath.boundingBox.size
+        
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0)
+        let context = UIGraphicsGetCurrentContext()
+        
+        self.draw(in: CGRect(origin: CGPoint.zero, size: newSize), blendMode: .copy, alpha: 1.0)
+        
+        context!.setBlendMode(.copy)
+        context!.setFillColor(UIColor.clear.cgColor)
+        
+        let rectPath = UIBezierPath(rect: CGRect(origin: CGPoint.zero, size: newSize))
+        rectPath.append(path)
+        rectPath.usesEvenOddFillRule = true
+        rectPath.fill()
+        
+        let result = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return result!
+    }
+
+    func maskImageWithPath(_ path: UIBezierPath) -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(self.size, false, 0.0)
+        let context = UIGraphicsGetCurrentContext()
+        
+        self.draw(in: CGRect(origin: CGPoint.zero, size: self.size), blendMode: .copy, alpha: 1.0)
+        
+        context!.setBlendMode(.copy)
+        context!.setFillColor(UIColor.clear.cgColor)
+        
+        let rectPath = UIBezierPath(rect: CGRect(origin: CGPoint.zero, size: self.size))
+        rectPath.append(path)
+        rectPath.usesEvenOddFillRule = true
+        rectPath.fill()
+        
+        let result = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return result!
+    }
+
     func scaleToSizeKeepAspect(size: CGSize) -> UIImage {
         let ws = size.width/self.size.width
         let hs = size.height/self.size.height
@@ -223,5 +273,23 @@ extension UIImage {
         let cgimg = ctx!.makeImage()
         let img = UIImage(cgImage:cgimg!)
         return img
+    }
+    
+    func rotateByAngle(angleInRadians: CGFloat) -> UIImage {
+        let contextSize = size
+        
+        UIGraphicsBeginImageContextWithOptions(contextSize, false, self.scale)
+        defer {
+            UIGraphicsEndImageContext()
+        }
+        
+        guard let context = UIGraphicsGetCurrentContext() else { return UIImage() }
+        
+        context.translateBy(x: 0.5 * contextSize.width, y: 0.5 * contextSize.height)
+        context.rotate(by: angleInRadians)
+        context.translateBy(x: -0.5 * contextSize.width, y: -0.5 * contextSize.height)
+        draw(at: .zero)
+        
+        return UIGraphicsGetImageFromCurrentImageContext()!
     }
 }

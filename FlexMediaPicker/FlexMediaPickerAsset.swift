@@ -32,31 +32,34 @@ import Photos
 import AVFoundation
 
 open class FlexMediaPickerAsset {
-    var uuid: String
-    let thumbnail: UIImage
-    var asset: PHAsset?
-    let addedTime: Date
+    public var uuid: String
+    public let thumbnail: UIImage
+    public var asset: PHAsset?
+    public let addedTime: Date
     
     /// Video
-    var videoURL: URL?
-    var currentFrame: Float64 = 1
-    var minFrame: Float64 = 1
-    var maxFrame: Float64 = Float64.greatestFiniteMagnitude
+    public var videoURL: URL?
+    public var currentFrame: Float64 = 1
+    public var minFrame: Float64 = 1
+    public var maxFrame: Float64 = Float64.greatestFiniteMagnitude
     
-    init(thumbnail: UIImage, asset: PHAsset) {
+    /// Image
+    public var cropRect: CGRect = CGRect(x: 0, y: 0, width: 1, height: 1) // Relative to image size
+    
+    public init(thumbnail: UIImage, asset: PHAsset) {
         self.uuid = UUID().uuidString
         self.thumbnail = thumbnail
         self.asset = asset
         self.addedTime = Date()
     }
 
-    init(thumbnail: UIImage) {
+    public init(thumbnail: UIImage) {
         self.uuid = UUID().uuidString
         self.thumbnail = thumbnail
         self.addedTime = Date()
     }
 
-    init(thumbnail: UIImage, videoURL: URL) {
+    public init(thumbnail: UIImage, videoURL: URL) {
         self.uuid = UUID().uuidString
         self.thumbnail = thumbnail
         self.videoURL = videoURL

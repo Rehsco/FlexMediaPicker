@@ -33,20 +33,27 @@ import ImageSlideshow
 import AVFoundation
 import Player
 
-class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
+class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate {
     private var player: Player?
+
+    private var cropView: ImageCropView?
+    
     private var currentImageSource: ImageAssetImageSource?
+
     private var currentAsset: FlexMediaPickerAsset?
     private var movieAsset: AVURLAsset?
+
     private var assetInfoLabel: FlexLabel?
+    
     private var timeSliderPanel: VideoTimeSliderView?
     private let posUpdateTimer = PositionUpdateTimer()
     private var shouldUpdateTimeOffset: Bool = false
     
-    private var closeViewMenu: CommonIconViewMenu?
-    private var removeOrTrashViewMenu: CommonIconViewMenu?
     private var removeMI: FlexMenuItem?
+    private var cropMI: FlexMenuItem?
 
+    private var overlayMaskLayer: CALayer?
+    
     var imageSlideshow: ImageSlideshow?
     
     var minimumVideoOffset: Double = 0
@@ -57,6 +64,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
     var hideViewElementsHandler: ((Bool)->Void)?
     var didGetPhoto: ((UIImage)->Void)?
     var removeOrTrashSelectedItem: ((FlexMediaPickerAsset)->Void)?
+    var updateImageCroppingHandler: (()->Void)?
 
     deinit {
         NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue: ScrollViewNotifications.ScrollViewBeginsZoom), object: nil)
@@ -122,10 +130,26 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
         self.assetInfoLabel?.labelTextAlignment = .center
         self.header.addSubview(self.assetInfoLabel!)
         
-        self.createBackOrCloseLeftMenu()
+        self.createBackOrCloseLeftMenu() {
+            self.closeView()
+        }
         
-        self.removeOrTrashViewMenu = CommonIconViewMenu(size: CGSize(width: 50, height: 36), hPos: .right, vPos: .header, menuIconSize: 24)
-        self.removeMI = self.removeOrTrashViewMenu?.createIconMenuItem(imageName: "RemoveItem", selectedImageName: "DeleteIcon", iconSize: 24, selectionHandler: {
+        self.rightViewMenu = CommonIconViewMenu(size: CGSize(width: 120, height: 36), hPos: .right, vPos: .header, menuIconSize: 24)
+        self.cropMI = self.rightViewMenu?.createIconMenuItem(imageName: "", selectedImageName: "crop", iconSize: 24, selectionHandler: {
+            if let asset = self.currentAsset, let image = AssetManager.persistence.imageFromAsset(withID: asset.uuid) {
+                self.cropView = ImageCropView(frame: UIScreen.main.bounds, image: image, cropRect: asset.cropRect)
+                self.cropView?.imageCroppedHandler = {
+                    cropRect in
+                    asset.cropRect = cropRect
+                    // TODO: Update views!
+                    self.updateImageCroppingHandler?()
+                }
+                if let tvc = self.getTopViewController() {
+                    tvc.view.addSubview(self.cropView!)
+                }
+            }
+        })
+        self.removeMI = self.rightViewMenu?.createIconMenuItem(imageName: "RemoveItem", selectedImageName: "DeleteIcon", iconSize: 24, selectionHandler: {
             if let ci = self.currentAsset {
                 self.removeOrTrashSelectedItem?(ci)
                 DispatchQueue.main.async {
@@ -146,7 +170,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
                 }
             }
         })
-        self.addMenu(self.removeOrTrashViewMenu!)
+        self.addMenu(self.rightViewMenu!)
         
         self.footerSize = FlexMediaPickerConfiguration.footerHeight
         self.footer.styleColor = FlexMediaPickerConfiguration.footerPanelColor
@@ -245,18 +269,6 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
         self.timeSliderPanel?.frame = CGRect(x: 0, y: FlexMediaPickerConfiguration.headerHeight, width: self.bounds.size.width, height: FlexMediaPickerConfiguration.timeSliderPanelHeight)
     }
     
-    private func createBackOrCloseLeftMenu() {
-        self.closeViewMenu = CommonIconViewMenu(size: CGSize(width: 50, height: 36), hPos: .left, vPos: .header, menuIconSize: 24)
-        self.closeViewMenu?.createCloseIconMenuItem()
-        self.closeViewMenu?.menuSelectionHandler = {
-            type in
-            if type == .close {
-                self.closeView()
-            }
-        }
-        self.addMenu(self.closeViewMenu!)
-    }
-    
     private func closeView() {
         self.player?.stop()
         self.player?.url = nil
@@ -326,11 +338,11 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
         self.assignFooterPanel(forAssetIndex: idx)
     }
     
-    func hideViewElements(hide: Bool = false) {
+    override func hideViewElements(hide: Bool = false) {
+        super.hideViewElements(hide: hide)
         self.header.showHide(hide: hide)
         self.footer.showHide(hide: hide)
-        self.closeViewMenu?.viewMenu?.showHide(hide: hide)
-        self.removeOrTrashViewMenu?.viewMenu?.showHide(hide: hide)
+        self.rightViewMenu?.viewMenu?.showHide(hide: hide)
         if let ass = self.currentAsset, ass.isVideo() {
             self.timeSliderPanel?.showHide(hide: hide)
         }
@@ -359,12 +371,7 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
             let imageAsset = imageAssets[index]
             self.currentAsset = imageAsset.asset
             self.currentImageSource = imageAsset
-            
-            DispatchQueue.main.async {
-                self.removeMI?.selected = !imageAsset.asset.isAssetBased()
-                self.removeOrTrashViewMenu?.viewMenu?.setNeedsLayout()
-            }
-            
+
             imageAsset.imageFromVideoLoadedHandler = {
                 asset in
                 // TODO
@@ -388,6 +395,21 @@ class ImageSlideShowView: FlexView, PlayerDelegate, PlayerPlaybackDelegate {
                 self.videoControlPanel.panelState = .noVideo
                 self.footerText = nil
                 self.assetInfoLabel?.label.text = nil
+                
+                // MASK
+                /*
+                if FlexMediaPickerConfiguration.maskImage {
+                    self.overlayMaskLayer?.removeFromSuperlayer()
+                    self.overlayMaskLayer = Helper.mask(forSize: imageAsset.asset.thumbnail.size)
+                    self.imageSlideshow?.layer.addSublayer(self.overlayMaskLayer!)
+                }
+ */
+            }
+
+            DispatchQueue.main.async {
+                self.removeMI?.selected = !imageAsset.asset.isAssetBased()
+                self.cropMI?.selected = !imageAsset.asset.isVideo() && FlexMediaPickerConfiguration.maskImage
+                self.rightViewMenu?.viewMenu?.setNeedsLayout()
             }
         }
     }

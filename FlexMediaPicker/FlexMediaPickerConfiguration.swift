@@ -33,6 +33,8 @@ public class FlexMediaPickerConfiguration {
     public static var takeButtonBorderColor = UIColor(white: 0.95, alpha: 1.0)
     public static var takeButtonRingColor = UIColor(white: 0.85, alpha: 1.0)
 
+    public static var overlayMaskColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.55)
+    
     /// When recording and switching to camera
     public static var takeButtonRecordingBorderColorWhileInCameraMode = UIColor(red: 0.95, green: 0.19, blue: 0.14, alpha: 1)
     public static var takeButtonRecordingColorWhileInCameraMode = UIColor(white: 0.95, alpha: 1.0)
@@ -69,15 +71,14 @@ public class FlexMediaPickerConfiguration {
     public static var frameStepperStyle: FlexShapeStyle = FlexShapeStyle(style: .rounded)
     public static var frameStepperThumbStyle: FlexShapeStyle = FlexShapeStyle(style: .rounded)
 
+    public static var imageMaskStyle: FlexShapeStyle = FlexShapeStyle(style: .thumb)
+    
     // MARK: Fonts
     
     public static var headerFont = UIFont.systemFont(ofSize: 19, weight: UIFontWeightMedium)
     public static var headerSubCaptionFont = UIFont.systemFont(ofSize: 12, weight: UIFontWeightRegular)
     public static var collectionCaptionFont = UIFont.systemFont(ofSize: 12, weight: UIFontWeightRegular)
     public static var numberLabelFont = UIFont.systemFont(ofSize: 19, weight: UIFontWeightBold)
-/*    public static var doneButton = UIFont.systemFont(ofSize: 19, weight: UIFontWeightMedium)
-    public static var flashButton = UIFont.systemFont(ofSize: 12, weight: UIFontWeightMedium)
- */
     public static var noImagesFont = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium)
     public static var noCameraFont = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium)
     public static var settingsFont = UIFont.systemFont(ofSize: 16, weight: UIFontWeightMedium)
@@ -111,8 +112,10 @@ public class FlexMediaPickerConfiguration {
     public static var takeButtonRingWidth: CGFloat = 1.5
     public static var camVidSwitchBorderWidth: CGFloat = 1.5
     public static var camVidSwitchSize: CGSize = CGSize(width: 80, height: 40)
+    
     public static var centerActionButtonWidth: CGFloat = 80
     public static var centerActionButtonHeight: CGFloat = footerHeight * 0.8
+    
     public static var timeSliderPanelHeight: CGFloat = 72
     public static var timeSliderBorderWidth: CGFloat = 1.5
     public static var timeSliderThumbSize: CGSize = CGSize(width: 25, height: 25)
@@ -120,8 +123,13 @@ public class FlexMediaPickerConfiguration {
     public static var timeSliderBarInsets: UIEdgeInsets = UIEdgeInsets(top: 26, left: 0, bottom: 26, right: 0)
     public static var timeSliderCaptionPanelHeight: CGFloat = 20
     public static var timeSliderCaptionPanelInsets: UIEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+
     public static var frameStepperBorderWidth: CGFloat = 1.5
     public static var frameStepperSize: CGSize = CGSize(width: 200, height: 40)
+
+//    public static var imageMaskMargin: UIEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10)
+    public static var imageCroppingMaxScale: CGFloat = 5.0
+    public static var imageMaskFitting: FlexImageShapeFit = .scaleToFit
 
     // MARK: Custom behaviour
     
@@ -138,6 +146,7 @@ public class FlexMediaPickerConfiguration {
     public static var storeTakenImagesToPhotos = true
     public static var storeRecordedVideosToAssetLibrary = true
     public static var statusBarHidden = true
+    public static var maskImage = true
 
     // MARK: Media Formats
 

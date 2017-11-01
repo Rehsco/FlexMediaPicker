@@ -4,6 +4,7 @@
 
 import UIKit
 import AVFoundation
+import StyledLabel
 
 struct Helper {
     
@@ -55,4 +56,28 @@ struct Helper {
         let hours = (ti / 3600)
         return NSString(format: "%0.2d:%0.2d:%0.2d",hours,minutes,seconds) as String
     }
+
+    static func mask(forSize size: CGSize, invert: Bool = true) -> CALayer {
+        let dRect = CGRect(origin: .zero, size: size)
+        let imgRect = CGRectHelper.AspectFitRectInRect(dRect, rtarget: UIScreen.main.bounds)
+        let maskLayer = CAShapeLayer()
+        let maskRect = CGRectHelper.AspectFitRectInRect(CGRect(x: 0, y: 0, width: 1, height: 1), rtarget: imgRect)
+        let shape = StyledShapeLayer.shapePathForStyle(FlexMediaPickerConfiguration.imageMaskStyle.style, bounds: maskRect)
+        let path = CGMutablePath()
+        if (invert) {
+            path.addRect(UIScreen.main.bounds)
+        }
+        path.addPath(shape.cgPath)
+        
+        maskLayer.path = path
+        if (invert) {
+            maskLayer.fillRule = kCAFillRuleEvenOdd
+        }
+        
+        // Set the mask of the view.
+        let overlayShape = StyledShapeLayer.createShape(.box, bounds: UIScreen.main.bounds, color: FlexMediaPickerConfiguration.overlayMaskColor)
+        overlayShape.mask = maskLayer
+        return overlayShape
+    }
+
 }

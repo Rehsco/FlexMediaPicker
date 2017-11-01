@@ -36,6 +36,7 @@ import ImageSlideshow
 import CoreLocation
 import ImagePersistence
 import TaskQueue
+import StyledLabel
 
 class SelectedAssetsCollectionView: ImagesCollectionView {}
 
@@ -400,6 +401,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         let thImageSize = FlexMediaPickerConfiguration.thumbnailSize
         if FlexMediaPickerConfiguration.storeTakenImagesToPhotos {
             let img = image.fixOrientation()
+            
             NSLog("Saving photo")
             AssetManager.savePhoto(img, location: location) {
                 newAsset in
@@ -413,6 +415,31 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             let imageAsset = AssetManager.persistence.createImageAsset(thumbnail: image.scaleToSizeKeepAspect(size: thImageSize), image: image)
             self.addSelectedAsset(imageAsset)
         }
+    }
+    
+    private func maskImage(_ image: UIImage, cropRect: CGRect) -> UIImage {
+        NSLog("Mask photo to cropRect \(cropRect) of image with size: \(image.size)")
+        if FlexMediaPickerConfiguration.maskImage {
+            let imgRect = CGRect(origin: .zero, size: image.size)
+            let imgMaskRect = self.getMaskRect(inRect: imgRect)
+            let zoomScale = min(cropRect.width, cropRect.height)
+            let imgCropRect = CGRect(x: (cropRect.origin.x / zoomScale) * imgRect.width, y: (cropRect.origin.y / zoomScale) * imgRect.height, width: (1.0 / zoomScale)  * imgMaskRect.width, height: (1.0 / zoomScale) * imgMaskRect.height)
+            NSLog("imgCropRect: \(imgCropRect)")
+            let croppedImage = image.crop(toRect: imgCropRect)
+            let cimgRect = CGRect(origin: .zero, size: croppedImage.size)
+            NSLog("cimgRect: \(cimgRect)")
+            let maskRect = self.getMaskRect(inRect: cimgRect)
+            let maskShape = StyledShapeLayer.createShape(FlexMediaPickerConfiguration.imageMaskStyle.style, bounds: maskRect, color: .black)
+            let maskPath = UIBezierPath(cgPath: maskShape.path!)
+            return croppedImage.maskImageWithPath(maskPath)
+        }
+        return image
+    }
+    
+    private func getMaskRect(inRect rect: CGRect) -> CGRect {
+        // TODO: Adhere to fitting settings
+        let maskRect = CGRectHelper.AspectFitRectInRect(CGRect(x: 0, y: 0, width: 1, height: 1), rtarget: rect)
+        return maskRect
     }
     
     private func addSelectedAsset(_ asset: FlexMediaPickerAsset) {
@@ -589,7 +616,8 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                 var idx = 0
                 for selAsset in allSelectedAssets {
                     let ref = selAsset.asset?.localIdentifier ?? UUID().uuidString
-                    let fitem = ImagesCollectionItem(reference: ref, icon: selAsset.thumbnail)
+                    let thumbnail = self.maskImage(selAsset.thumbnail, cropRect: selAsset.cropRect)
+                    let fitem = ImagesCollectionItem(reference: ref, icon: thumbnail)
                     fitem.canMoveItem = false
                     fitem.imageViewFitting = .scaleToFit
                     fitem.contentInteractionWillSelectItem = true
@@ -703,6 +731,9 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             issv.removeOrTrashSelectedItem = {
                 asset in
                 self.removeSelectedAsset(asset)
+            }
+            issv.updateImageCroppingHandler = {
+                self.populateSelectedAssetView()
             }
             issv.hideViewElements(hide: true)
         }

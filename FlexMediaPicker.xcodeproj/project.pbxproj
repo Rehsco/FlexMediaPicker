@@ -15,6 +15,16 @@
 		5BBFFABC1F51796500C08350 /* FlexMediaPickerAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBFFABA1F51796500C08350 /* FlexMediaPickerAsset.swift */; };
 		5BBFFABE1F51DF7500C08350 /* MediaControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBFFABD1F51DF7500C08350 /* MediaControlPanel.swift */; };
 		5BBFFABF1F51DF7500C08350 /* MediaControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBFFABD1F51DF7500C08350 /* MediaControlPanel.swift */; };
+		5BC3EF891FA72A4B00D21B14 /* CGGeometryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF881FA72A4B00D21B14 /* CGGeometryExtension.swift */; };
+		5BC3EF8A1FA72A4B00D21B14 /* CGGeometryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF881FA72A4B00D21B14 /* CGGeometryExtension.swift */; };
+		5BC3EF8C1FA72A6900D21B14 /* RSKImageScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF8B1FA72A6900D21B14 /* RSKImageScrollView.swift */; };
+		5BC3EF8D1FA72A6900D21B14 /* RSKImageScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF8B1FA72A6900D21B14 /* RSKImageScrollView.swift */; };
+		5BC3EF8F1FA72A9800D21B14 /* RSKTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF8E1FA72A9800D21B14 /* RSKTouchView.swift */; };
+		5BC3EF901FA72A9800D21B14 /* RSKTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF8E1FA72A9800D21B14 /* RSKTouchView.swift */; };
+		5BC3EF921FA72AF000D21B14 /* ImageCropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF911FA72AF000D21B14 /* ImageCropView.swift */; };
+		5BC3EF931FA72AF000D21B14 /* ImageCropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF911FA72AF000D21B14 /* ImageCropView.swift */; };
+		5BC3EF951FA757E800D21B14 /* CommonFlexView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF941FA757E800D21B14 /* CommonFlexView.swift */; };
+		5BC3EF961FA757E800D21B14 /* CommonFlexView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF941FA757E800D21B14 /* CommonFlexView.swift */; };
 		5BC562631F50392D00A848F2 /* FlexMediaPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BC562611F50392D00A848F2 /* FlexMediaPicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5BC562701F50394700A848F2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC5626F1F50394700A848F2 /* AppDelegate.swift */; };
 		5BC562721F50394700A848F2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC562711F50394700A848F2 /* ViewController.swift */; };
@@ -41,6 +51,8 @@
 		5BC5629F1F506EF300A848F2 /* BusyViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC5629D1F506EF300A848F2 /* BusyViewFactory.swift */; };
 		5BC6677E1FA480FE004D517D /* StyledActionOverlayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6677D1FA480FE004D517D /* StyledActionOverlayExtension.swift */; };
 		5BC6677F1FA480FE004D517D /* StyledActionOverlayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6677D1FA480FE004D517D /* StyledActionOverlayExtension.swift */; };
+		5BC667811FA4D948004D517D /* CGRectHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC667801FA4D948004D517D /* CGRectHelper.swift */; };
+		5BC667821FA4D948004D517D /* CGRectHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC667801FA4D948004D517D /* CGRectHelper.swift */; };
 		5BC6D9481F763E570051B0A3 /* MainMediaControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6D9471F763E570051B0A3 /* MainMediaControlPanel.swift */; };
 		5BC6D9491F763E570051B0A3 /* MainMediaControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6D9471F763E570051B0A3 /* MainMediaControlPanel.swift */; };
 		5BC6D94B1F763EB00051B0A3 /* CameraMediaControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6D94A1F763EB00051B0A3 /* CameraMediaControlPanel.swift */; };
@@ -85,6 +97,11 @@
 		5B3DB3271F7FFB1200D864DE /* VideoPlaybackControlPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlaybackControlPanel.swift; sourceTree = "<group>"; };
 		5BBFFABA1F51796500C08350 /* FlexMediaPickerAsset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlexMediaPickerAsset.swift; sourceTree = "<group>"; };
 		5BBFFABD1F51DF7500C08350 /* MediaControlPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaControlPanel.swift; sourceTree = "<group>"; };
+		5BC3EF881FA72A4B00D21B14 /* CGGeometryExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGGeometryExtension.swift; sourceTree = "<group>"; };
+		5BC3EF8B1FA72A6900D21B14 /* RSKImageScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSKImageScrollView.swift; sourceTree = "<group>"; };
+		5BC3EF8E1FA72A9800D21B14 /* RSKTouchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSKTouchView.swift; sourceTree = "<group>"; };
+		5BC3EF911FA72AF000D21B14 /* ImageCropView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCropView.swift; sourceTree = "<group>"; };
+		5BC3EF941FA757E800D21B14 /* CommonFlexView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonFlexView.swift; sourceTree = "<group>"; };
 		5BC5625E1F50392D00A848F2 /* FlexMediaPicker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FlexMediaPicker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BC562611F50392D00A848F2 /* FlexMediaPicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlexMediaPicker.h; sourceTree = "<group>"; };
 		5BC562621F50392D00A848F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -105,6 +122,7 @@
 		5BC5629A1F5059E400A848F2 /* ImagesCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagesCollectionView.swift; sourceTree = "<group>"; };
 		5BC5629D1F506EF300A848F2 /* BusyViewFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BusyViewFactory.swift; sourceTree = "<group>"; };
 		5BC6677D1FA480FE004D517D /* StyledActionOverlayExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyledActionOverlayExtension.swift; sourceTree = "<group>"; };
+		5BC667801FA4D948004D517D /* CGRectHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGRectHelper.swift; sourceTree = "<group>"; };
 		5BC6D9471F763E570051B0A3 /* MainMediaControlPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMediaControlPanel.swift; sourceTree = "<group>"; };
 		5BC6D94A1F763EB00051B0A3 /* CameraMediaControlPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraMediaControlPanel.swift; sourceTree = "<group>"; };
 		5BC6D94D1F763F190051B0A3 /* CamVidSwitch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CamVidSwitch.swift; sourceTree = "<group>"; };
@@ -172,6 +190,16 @@
 			name = "Control Panels";
 			sourceTree = "<group>";
 		};
+		5BC3EF871FA72A3100D21B14 /* Image Crop View */ = {
+			isa = PBXGroup;
+			children = (
+				5BC3EF8B1FA72A6900D21B14 /* RSKImageScrollView.swift */,
+				5BC3EF8E1FA72A9800D21B14 /* RSKTouchView.swift */,
+				5BC3EF911FA72AF000D21B14 /* ImageCropView.swift */,
+			);
+			name = "Image Crop View";
+			sourceTree = "<group>";
+		};
 		5BC562541F50392D00A848F2 = {
 			isa = PBXGroup;
 			children = (
@@ -222,10 +250,10 @@
 			isa = PBXGroup;
 			children = (
 				5BDC84171F52CC8300BF45B5 /* Helper */,
+				5BC5628D1F50435B00A848F2 /* Base UI */,
 				5BDC84131F52CC2300BF45B5 /* Camera */,
 				5BDF22F81F7F9A3E000A6B7E /* Media Viewer */,
 				5BBFFAC01F51DF8000C08350 /* Control Panels */,
-				5BC5628D1F50435B00A848F2 /* Base UI */,
 				5BC562891F503B7300A848F2 /* Assets */,
 				5BC562881F503B6800A848F2 /* Config */,
 			);
@@ -239,6 +267,8 @@
 				5B3DB3211F7FB8D300D864DE /* UIViewExtensions.swift */,
 				5BE0F1731FA203B300BEC1CB /* UIScrollViewExtensions.swift */,
 				5BC6677D1FA480FE004D517D /* StyledActionOverlayExtension.swift */,
+				5BC667801FA4D948004D517D /* CGRectHelper.swift */,
+				5BC3EF881FA72A4B00D21B14 /* CGGeometryExtension.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -270,6 +300,7 @@
 				5BC562911F50437B00A848F2 /* CommonIconViewMenu.swift */,
 				5BC5628E1F50436700A848F2 /* CommonFlexCollectionViewController.swift */,
 				5BC5629A1F5059E400A848F2 /* ImagesCollectionView.swift */,
+				5BC3EF941FA757E800D21B14 /* CommonFlexView.swift */,
 			);
 			name = "Base UI";
 			sourceTree = "<group>";
@@ -306,6 +337,7 @@
 		5BDF22F81F7F9A3E000A6B7E /* Media Viewer */ = {
 			isa = PBXGroup;
 			children = (
+				5BC3EF871FA72A3100D21B14 /* Image Crop View */,
 				5BE57D141F83AE340037D4EF /* TimeSliderInfoView.swift */,
 				5BCB66441F81549800AB9F4E /* VideoTimeSliderView.swift */,
 				5BDF22F91F7F9A65000A6B7E /* ImageSlideShowView.swift */,
@@ -555,17 +587,21 @@
 				5BC562861F503ABB00A848F2 /* FlexMediaPickerConfiguration.swift in Sources */,
 				5BC6677E1FA480FE004D517D /* StyledActionOverlayExtension.swift in Sources */,
 				5BD6281C1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift in Sources */,
+				5BC3EF891FA72A4B00D21B14 /* CGGeometryExtension.swift in Sources */,
 				5BDC841C1F52CE8B00BF45B5 /* CameraView.swift in Sources */,
 				5BCB66451F81549800AB9F4E /* VideoTimeSliderView.swift in Sources */,
 				5BC6D94B1F763EB00051B0A3 /* CameraMediaControlPanel.swift in Sources */,
 				5BBFFABE1F51DF7500C08350 /* MediaControlPanel.swift in Sources */,
 				5BC562831F503A9A00A848F2 /* AssetManager.swift in Sources */,
 				5BD1E6E61F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift in Sources */,
+				5BC3EF951FA757E800D21B14 /* CommonFlexView.swift in Sources */,
 				5BD79AB91F66879A0023CE21 /* VideoWriter.swift in Sources */,
 				5BE57D151F83AE340037D4EF /* TimeSliderInfoView.swift in Sources */,
 				5BC562921F50437B00A848F2 /* CommonIconViewMenu.swift in Sources */,
 				5BC5629B1F5059E400A848F2 /* ImagesCollectionView.swift in Sources */,
+				5BC3EF921FA72AF000D21B14 /* ImageCropView.swift in Sources */,
 				5BC562981F50599700A848F2 /* UIImageExtensions.swift in Sources */,
+				5BC3EF8F1FA72A9800D21B14 /* RSKTouchView.swift in Sources */,
 				5BC5628F1F50436700A848F2 /* CommonFlexCollectionViewController.swift in Sources */,
 				5BDF22FA1F7F9A65000A6B7E /* ImageSlideShowView.swift in Sources */,
 				5BC5629E1F506EF300A848F2 /* BusyViewFactory.swift in Sources */,
@@ -575,6 +611,8 @@
 				5BC5628B1F50412900A848F2 /* FlexMediaPickerViewController.swift in Sources */,
 				5BC6D94E1F763F190051B0A3 /* CamVidSwitch.swift in Sources */,
 				5BE0F1741FA203B300BEC1CB /* UIScrollViewExtensions.swift in Sources */,
+				5BC667811FA4D948004D517D /* CGRectHelper.swift in Sources */,
+				5BC3EF8C1FA72A6900D21B14 /* RSKImageScrollView.swift in Sources */,
 				5BCCDEC41F82A44A00914DC1 /* PositionUpdateTimer.swift in Sources */,
 				5BBFFABB1F51796500C08350 /* FlexMediaPickerAsset.swift in Sources */,
 				5BDC84191F52CC8F00BF45B5 /* Helper.swift in Sources */,
@@ -585,6 +623,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5BC3EF931FA72AF000D21B14 /* ImageCropView.swift in Sources */,
 				5BC562901F50436700A848F2 /* CommonFlexCollectionViewController.swift in Sources */,
 				5B3DB3291F7FFB1200D864DE /* VideoPlaybackControlPanel.swift in Sources */,
 				5BCB66461F81549800AB9F4E /* VideoTimeSliderView.swift in Sources */,
@@ -596,6 +635,7 @@
 				5BDC84201F52CFFF00BF45B5 /* LocationManager.swift in Sources */,
 				5BC5629F1F506EF300A848F2 /* BusyViewFactory.swift in Sources */,
 				5BD6281D1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift in Sources */,
+				5BC3EF8A1FA72A4B00D21B14 /* CGGeometryExtension.swift in Sources */,
 				5BC6677F1FA480FE004D517D /* StyledActionOverlayExtension.swift in Sources */,
 				5BE0F1751FA203B300BEC1CB /* UIScrollViewExtensions.swift in Sources */,
 				5BC5629C1F5059E400A848F2 /* ImagesCollectionView.swift in Sources */,
@@ -611,10 +651,14 @@
 				5BBFFABC1F51796500C08350 /* FlexMediaPickerAsset.swift in Sources */,
 				5BD79ABA1F66879A0023CE21 /* VideoWriter.swift in Sources */,
 				5BC5628C1F50412900A848F2 /* FlexMediaPickerViewController.swift in Sources */,
+				5BC3EF901FA72A9800D21B14 /* RSKTouchView.swift in Sources */,
 				5BC562701F50394700A848F2 /* AppDelegate.swift in Sources */,
+				5BC3EF961FA757E800D21B14 /* CommonFlexView.swift in Sources */,
 				5BDC84161F52CC3000BF45B5 /* CameraMan.swift in Sources */,
 				5BC562931F50437B00A848F2 /* CommonIconViewMenu.swift in Sources */,
 				5BE45C5A1F7C004000322FCC /* ImageAssetImageSource.swift in Sources */,
+				5BC3EF8D1FA72A6900D21B14 /* RSKImageScrollView.swift in Sources */,
+				5BC667821FA4D948004D517D /* CGRectHelper.swift in Sources */,
 				5BC6D94F1F763F190051B0A3 /* CamVidSwitch.swift in Sources */,
 				5BD1E6E71F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift in Sources */,
 			);
