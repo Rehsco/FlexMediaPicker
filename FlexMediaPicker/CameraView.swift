@@ -98,7 +98,6 @@ class CameraView: FlexView, CLLocationManagerDelegate, CameraManDelegate {
     var previewLayer: AVCaptureVideoPreviewLayer?
     weak var delegate: CameraViewDelegate?
     var animationTimer: Timer?
-    var locationManager: LocationManager?
     var startOnFrontCamera: Bool = false
     
     var didGetPhoto: ((UIImage, CLLocation?)->Void)?
@@ -121,10 +120,6 @@ class CameraView: FlexView, CLLocationManagerDelegate, CameraManDelegate {
     }
     
     private func setupView() {
-        if FlexMediaPickerConfiguration.recordLocation {
-            locationManager = LocationManager()
-        }
-        
         self.backgroundColor = FlexMediaPickerConfiguration.styleColor
         
         self.addSubview(containerView)
@@ -208,11 +203,12 @@ class CameraView: FlexView, CLLocationManagerDelegate, CameraManDelegate {
     
     public func displayView() {
         previewLayer?.connection.videoOrientation = Helper.videoOrientation() // .portrait
-        locationManager?.startUpdatingLocation()
+        if FlexMediaPickerConfiguration.recordLocationOnPhoto {
+            locationService.startLocationMessagingUse()
+        }
     }
 
     public func closeView() {
-        locationManager?.stopUpdatingLocation()
     }
     
     private func setupPreviewLayer() {
@@ -294,7 +290,12 @@ class CameraView: FlexView, CLLocationManagerDelegate, CameraManDelegate {
         })
         
         cameraMan.takePhoto(previewLayer) { image in
-            completion(image, self.locationManager?.latestLocation)
+            if FlexMediaPickerConfiguration.recordLocationOnPhoto {
+                completion(image, locationService.currentLocation)
+            }
+            else {
+                completion(image, nil)
+            }
         }
     }
     

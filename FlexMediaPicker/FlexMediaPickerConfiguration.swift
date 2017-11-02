@@ -102,6 +102,7 @@ public class FlexMediaPickerConfiguration {
     // MARK: Dimensions
     
     public static var thumbnailSize: CGSize = CGSize(width: 100, height: 100)
+    public static var locationImageSize: CGSize = CGSize(width: 512, height: 512)
     public static var cellSpacing: CGFloat = 2
     public static var indicatorWidth: CGFloat = 41
     public static var indicatorHeight: CGFloat = 8
@@ -129,24 +130,31 @@ public class FlexMediaPickerConfiguration {
 
 //    public static var imageMaskMargin: UIEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10)
     public static var imageCroppingMaxScale: CGFloat = 5.0
+    // Currently available: scaleToFit and scaleToFill
     public static var imageMaskFitting: FlexImageShapeFit = .scaleToFit
 
     // MARK: Custom behaviour
     
+    public static var statusBarHidden = true
+
     public static var canRotateCamera = true
-    public static var collapseCollectionViewWhileShot = true
-    public static var recordLocation = true
+    public static var flashButtonAlwaysHidden = false
+    public static var managesAudioSession = true
+
     public static var allowMultipleSelection = true
     public static var allowVideoSelection = true
     public static var allowVoiceRecording = true
+    public static var allowLocationSelection = true
+
     public static var showsImageCountLabel = true
-    public static var flashButtonAlwaysHidden = false
-    public static var managesAudioSession = true
     public static var allowPinchToZoom = true
     public static var storeTakenImagesToPhotos = true
     public static var storeRecordedVideosToAssetLibrary = true
-    public static var statusBarHidden = true
+
     public static var maskImage = true
+    public static var maskImageAutoCropToDetectedFace = true
+
+    public static var recordLocationOnPhoto = true
 
     // MARK: Media Formats
 

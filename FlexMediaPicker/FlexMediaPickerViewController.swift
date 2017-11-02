@@ -37,6 +37,7 @@ import CoreLocation
 import ImagePersistence
 import TaskQueue
 import StyledLabel
+import MapKit
 
 class SelectedAssetsCollectionView: ImagesCollectionView {}
 
@@ -182,6 +183,8 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                         }
                         self.layoutSupplementaryViews(to: self.view.bounds.size)
                     }
+                case .location:
+                    self.addCurrentLocationAsImage()
                 case .microphone:
                     break
                 case .cameraTake:
@@ -213,6 +216,9 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     
     open override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        if FlexMediaPickerConfiguration.allowLocationSelection || FlexMediaPickerConfiguration.recordLocationOnPhoto {
+            locationService.checkAuthorization(true)
+        }
         self.checkStatus()
         self.layoutSupplementaryViews(to: self.view.bounds.size)
     }
@@ -398,7 +404,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     }
     
     private func addNewImage(_ image: UIImage, location: CLLocation?) {
-        let thImageSize = FlexMediaPickerConfiguration.thumbnailSize
+        let thImageSize = CGSize(width: FlexMediaPickerConfiguration.thumbnailSize.width * 2, height: FlexMediaPickerConfiguration.thumbnailSize.height * 2)
         if FlexMediaPickerConfiguration.storeTakenImagesToPhotos {
             let img = image.fixOrientation()
             
@@ -421,25 +427,17 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         NSLog("Mask photo to cropRect \(cropRect) of image with size: \(image.size)")
         if FlexMediaPickerConfiguration.maskImage {
             let imgRect = CGRect(origin: .zero, size: image.size)
-            let imgMaskRect = self.getMaskRect(inRect: imgRect)
-            let zoomScale = min(cropRect.width, cropRect.height)
-            let imgCropRect = CGRect(x: (cropRect.origin.x / zoomScale) * imgRect.width, y: (cropRect.origin.y / zoomScale) * imgRect.height, width: (1.0 / zoomScale)  * imgMaskRect.width, height: (1.0 / zoomScale) * imgMaskRect.height)
+            let imgCropRect = CGRect(x: cropRect.origin.x * imgRect.width, y: cropRect.origin.y * imgRect.height, width: cropRect.width * imgRect.width, height: cropRect.height * imgRect.height)
             NSLog("imgCropRect: \(imgCropRect)")
             let croppedImage = image.crop(toRect: imgCropRect)
             let cimgRect = CGRect(origin: .zero, size: croppedImage.size)
             NSLog("cimgRect: \(cimgRect)")
-            let maskRect = self.getMaskRect(inRect: cimgRect)
+            let maskRect = Helper.getMaskRect(inRect: cimgRect)
             let maskShape = StyledShapeLayer.createShape(FlexMediaPickerConfiguration.imageMaskStyle.style, bounds: maskRect, color: .black)
             let maskPath = UIBezierPath(cgPath: maskShape.path!)
             return croppedImage.maskImageWithPath(maskPath)
         }
         return image
-    }
-    
-    private func getMaskRect(inRect rect: CGRect) -> CGRect {
-        // TODO: Adhere to fitting settings
-        let maskRect = CGRectHelper.AspectFitRectInRect(CGRect(x: 0, y: 0, width: 1, height: 1), rtarget: rect)
-        return maskRect
     }
     
     private func addSelectedAsset(_ asset: FlexMediaPickerAsset) {
@@ -486,6 +484,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     
     func addSelectedAsset(_ asset: PHAsset, thumbnail: UIImage) {
         let sAsset = AssetManager.persistence.createAssetCollectionAsset(thumbnail: thumbnail, asset: asset)
+        sAsset.cropRect = self.detectFaceRect(inImage: thumbnail)
         self.addSelectedAsset(sAsset)
     }
 
@@ -505,6 +504,80 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             idx += 1
         }
         NSLog("Could not find image source to remove for uuid \(uuid)")
+    }
+    
+    // MARK: - Face detection
+    
+    func detectFaceRect(inImage image: UIImage) -> CGRect {
+        let maxDim = max(image.size.width, image.size.height)
+        // Default aspect ration - zero offset crop rect
+        let cropRect = CGRect(x: 0, y: 0, width: image.size.height / maxDim, height: image.size.width / maxDim)
+
+        if !FlexMediaPickerConfiguration.maskImageAutoCropToDetectedFace {
+            return cropRect
+        }
+        
+        NSLog("face detection for image with dim \(image.size)")
+
+        let resImage: UIImage
+        if image.size.width > image.size.height {
+            // Face detection has issue with portrait images, so resize to square
+            resImage = image.resized(newSize: CGSize(width: maxDim, height: maxDim))!
+        }
+        else {
+            resImage = image
+        }
+        NSLog("face detection for resimage with dim \(resImage.size)")
+
+        guard let personciImage = CIImage(image: resImage) else {
+            return cropRect
+        }
+        
+        let ciImageSize = personciImage.extent.size
+        NSLog("ciimage with dim \(ciImageSize)")
+        var transform = CGAffineTransform(scaleX: 1, y: -1)
+        transform = transform.translatedBy(x: 0, y: -ciImageSize.height)
+
+        let accuracy: [String : Any] = [CIDetectorAccuracy: CIDetectorAccuracyHigh, CIDetectorImageOrientation: self.imageOrientationToCG(orientation: .up)]
+        let faceDetector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: accuracy)
+        if let faces = faceDetector?.features(in: personciImage) {
+            var largestRect: CGRect = .zero
+            var largestArea: CGFloat = 0
+            for face in faces as! [CIFaceFeature] {
+                NSLog("Found bounds are \(face.bounds)")
+                // Apply the transform to convert the coordinates
+                let faceViewBounds = face.bounds.applying(transform)
+                if faceViewBounds.width * faceViewBounds.height > largestArea {
+                    largestArea = faceViewBounds.width * faceViewBounds.height
+                    largestRect = faceViewBounds
+                }
+            }
+            if largestArea > 0 {
+                return CGRect(x: largestRect.minX / ciImageSize.width, y: largestRect.minY / ciImageSize.height, width: largestRect.width / ciImageSize.width, height: largestRect.height / ciImageSize.height)
+            }
+        }
+        return cropRect
+    }
+    
+    private func imageOrientationToCG(orientation:UIImageOrientation) -> CGImagePropertyOrientation {
+        switch (orientation) {
+        case .up:
+            return CGImagePropertyOrientation.up
+        case .upMirrored:
+            return CGImagePropertyOrientation.upMirrored
+        case .down:
+            return CGImagePropertyOrientation.down
+        case .downMirrored:
+            return CGImagePropertyOrientation.downMirrored
+        case .leftMirrored:
+            return CGImagePropertyOrientation.leftMirrored
+        case .right:
+            return CGImagePropertyOrientation.right
+        case .rightMirrored:
+            return CGImagePropertyOrientation.rightMirrored
+        case .left:
+            return CGImagePropertyOrientation.left
+        }
     }
     
     // MARK: - Internal View Model
@@ -540,7 +613,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     }
 
     func populateWithAssets() {
-        if let secRef = self.mainSecRef, let iconView = self.contentView as? ImagesCollectionView {
+        if let secRef = self.mainSecRef {
             for imageAsset in self.assetCache {
                 let thumb = self.assetThumbnailCache.getImage(id: imageAsset.localIdentifier)
                 let fitem = ImagesCollectionItem(reference: imageAsset.localIdentifier, icon: thumb)
@@ -552,7 +625,8 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                         if let thumbnail = self.assetThumbnailCache.getImage(id: imageAsset.localIdentifier) {
                             return thumbnail
                         }
-                        let thumbnail = AssetManager.resolveAssets([imageAsset], size: iconView.thumbnailSize()).first
+                        let thImageSize = CGSize(width: FlexMediaPickerConfiguration.thumbnailSize.width * 2, height: FlexMediaPickerConfiguration.thumbnailSize.height * 2)
+                        let thumbnail = AssetManager.resolveAssets([imageAsset], size: thImageSize).first
                         if let th = thumbnail {
                             self.assetThumbnailCache.addImage(id: imageAsset.localIdentifier, image: th)
                         }
@@ -737,6 +811,70 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             }
             issv.hideViewElements(hide: true)
         }
+    }
+    
+    // MARK: - Locations
+
+    private func addCurrentLocationAsImage() {
+        if let loc = locationService.currentLocation {
+            let mapView = LocationMapView(frame: CGRect(origin: .zero , size: FlexMediaPickerConfiguration.locationImageSize))
+            mapView.setSingleLocation(loc, tag: "My location")
+            mapView.setMapAnnotations()
+            self.takeSnapshot(mapView, withCallback: { (image, error) in
+                if let e = error {
+                    NSLog("Error creating location snapshot image: \(e.localizedDescription)")
+                }
+                else if let thumbnail = image {
+                    self.addNewImage(thumbnail, location: nil)
+                }
+                else {
+                    NSLog("Location snapshort returned neither image nor an error!")
+                }
+            })
+        }
+    }
+    
+    private func takeSnapshot(_ mapView: MKMapView, withCallback: @escaping (UIImage?, NSError?) -> ()) {
+        let options = MKMapSnapshotOptions()
+        options.region = mapView.region
+        options.size = mapView.frame.size
+        options.scale = UIScreen.main.scale
+        
+        let snapshotter = MKMapSnapshotter(options: options)
+        snapshotter.start(completionHandler: { snapshot, error in
+            guard snapshot != nil else {
+                withCallback(nil, error as NSError?)
+                return
+            }
+            
+            if let image = snapshot?.image {
+                let finalImageRect = CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height)
+                
+                UIGraphicsBeginImageContextWithOptions(image.size, true, image.scale)
+                
+                image.draw(at:CGPoint.zero)
+                
+                let pin = MKPinAnnotationView()
+                let pinImage = pin.image
+                for annotation in mapView.annotations {
+                    let point = snapshot?.point(for: annotation.coordinate)
+                    if let po = point {
+                        var p = po
+                        if finalImageRect.contains(p) {
+                            let pinCenterOffset = pin.centerOffset
+                            p.x -= pin.bounds.size.width / 2.0
+                            p.y -= pin.bounds.size.height / 2.0
+                            p.x += pinCenterOffset.x
+                            p.y += pinCenterOffset.y
+                            pinImage?.draw(at: p)
+                        }
+                    }
+                }
+                let finalImage = UIGraphicsGetImageFromCurrentImageContext()
+                UIGraphicsEndImageContext()
+                withCallback(finalImage, nil)
+            }
+        })
     }
     
     // MARK: - Helper

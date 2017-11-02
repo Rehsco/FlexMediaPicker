@@ -395,15 +395,6 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
                 self.videoControlPanel.panelState = .noVideo
                 self.footerText = nil
                 self.assetInfoLabel?.label.text = nil
-                
-                // MASK
-                /*
-                if FlexMediaPickerConfiguration.maskImage {
-                    self.overlayMaskLayer?.removeFromSuperlayer()
-                    self.overlayMaskLayer = Helper.mask(forSize: imageAsset.asset.thumbnail.size)
-                    self.imageSlideshow?.layer.addSublayer(self.overlayMaskLayer!)
-                }
- */
             }
 
             DispatchQueue.main.async {

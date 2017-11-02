@@ -36,6 +36,7 @@ enum MediaControlAction {
     case videocamMode
     case videocamTake
     case microphone
+    case location
 }
 
 class MediaControlPanel: FlexFooterView {

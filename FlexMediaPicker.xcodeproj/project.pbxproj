@@ -63,6 +63,10 @@
 		5BCB66461F81549800AB9F4E /* VideoTimeSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCB66441F81549800AB9F4E /* VideoTimeSliderView.swift */; };
 		5BCCDEC41F82A44A00914DC1 /* PositionUpdateTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCCDEC31F82A44A00914DC1 /* PositionUpdateTimer.swift */; };
 		5BCCDEC51F82A44A00914DC1 /* PositionUpdateTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCCDEC31F82A44A00914DC1 /* PositionUpdateTimer.swift */; };
+		5BCE9C261FAB79A2008D2E31 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCE9C251FAB79A2008D2E31 /* LocationService.swift */; };
+		5BCE9C271FAB79A2008D2E31 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCE9C251FAB79A2008D2E31 /* LocationService.swift */; };
+		5BCE9C291FAB7E2A008D2E31 /* LocationMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCE9C281FAB7E2A008D2E31 /* LocationMapView.swift */; };
+		5BCE9C2A1FAB7E2A008D2E31 /* LocationMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCE9C281FAB7E2A008D2E31 /* LocationMapView.swift */; };
 		5BD1E6E61F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD1E6E51F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift */; };
 		5BD1E6E71F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD1E6E51F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift */; };
 		5BD6281C1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD6281B1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift */; };
@@ -128,6 +132,8 @@
 		5BC6D94D1F763F190051B0A3 /* CamVidSwitch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CamVidSwitch.swift; sourceTree = "<group>"; };
 		5BCB66441F81549800AB9F4E /* VideoTimeSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTimeSliderView.swift; sourceTree = "<group>"; };
 		5BCCDEC31F82A44A00914DC1 /* PositionUpdateTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionUpdateTimer.swift; sourceTree = "<group>"; };
+		5BCE9C251FAB79A2008D2E31 /* LocationService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
+		5BCE9C281FAB7E2A008D2E31 /* LocationMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationMapView.swift; sourceTree = "<group>"; };
 		5BD1E6E51F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexMediaPickerImagePersistenceImpl.swift; sourceTree = "<group>"; };
 		5BD6281B1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexMediaPickerAssetPersistence.swift; sourceTree = "<group>"; };
 		5BD6281E1F84C57F001DB4BA /* FlexMediaPickerAssetPersistenceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexMediaPickerAssetPersistenceImpl.swift; sourceTree = "<group>"; };
@@ -223,6 +229,7 @@
 		5BC562601F50392D00A848F2 /* FlexMediaPicker */ = {
 			isa = PBXGroup;
 			children = (
+				5BCE9C241FAB798B008D2E31 /* Services */,
 				5BC562811F503A8700A848F2 /* Extensions */,
 				5BC562801F503A7100A848F2 /* UI */,
 				5BC5628A1F50412900A848F2 /* FlexMediaPickerViewController.swift */,
@@ -301,8 +308,17 @@
 				5BC5628E1F50436700A848F2 /* CommonFlexCollectionViewController.swift */,
 				5BC5629A1F5059E400A848F2 /* ImagesCollectionView.swift */,
 				5BC3EF941FA757E800D21B14 /* CommonFlexView.swift */,
+				5BCE9C281FAB7E2A008D2E31 /* LocationMapView.swift */,
 			);
 			name = "Base UI";
+			sourceTree = "<group>";
+		};
+		5BCE9C241FAB798B008D2E31 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				5BCE9C251FAB79A2008D2E31 /* LocationService.swift */,
+			);
+			name = Services;
 			sourceTree = "<group>";
 		};
 		5BD628211F84C5C4001DB4BA /* Model */ = {
@@ -584,6 +600,7 @@
 				5B3DB3281F7FFB1200D864DE /* VideoPlaybackControlPanel.swift in Sources */,
 				5BD6281F1F84C57F001DB4BA /* FlexMediaPickerAssetPersistenceImpl.swift in Sources */,
 				5B3DB3231F7FB8D300D864DE /* UIViewExtensions.swift in Sources */,
+				5BCE9C291FAB7E2A008D2E31 /* LocationMapView.swift in Sources */,
 				5BC562861F503ABB00A848F2 /* FlexMediaPickerConfiguration.swift in Sources */,
 				5BC6677E1FA480FE004D517D /* StyledActionOverlayExtension.swift in Sources */,
 				5BD6281C1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift in Sources */,
@@ -593,6 +610,7 @@
 				5BC6D94B1F763EB00051B0A3 /* CameraMediaControlPanel.swift in Sources */,
 				5BBFFABE1F51DF7500C08350 /* MediaControlPanel.swift in Sources */,
 				5BC562831F503A9A00A848F2 /* AssetManager.swift in Sources */,
+				5BCE9C261FAB79A2008D2E31 /* LocationService.swift in Sources */,
 				5BD1E6E61F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift in Sources */,
 				5BC3EF951FA757E800D21B14 /* CommonFlexView.swift in Sources */,
 				5BD79AB91F66879A0023CE21 /* VideoWriter.swift in Sources */,
@@ -625,6 +643,7 @@
 			files = (
 				5BC3EF931FA72AF000D21B14 /* ImageCropView.swift in Sources */,
 				5BC562901F50436700A848F2 /* CommonFlexCollectionViewController.swift in Sources */,
+				5BCE9C2A1FAB7E2A008D2E31 /* LocationMapView.swift in Sources */,
 				5B3DB3291F7FFB1200D864DE /* VideoPlaybackControlPanel.swift in Sources */,
 				5BCB66461F81549800AB9F4E /* VideoTimeSliderView.swift in Sources */,
 				5BDC841A1F52CC8F00BF45B5 /* Helper.swift in Sources */,
@@ -645,6 +664,7 @@
 				5BC562991F50599700A848F2 /* UIImageExtensions.swift in Sources */,
 				5BC562871F503ABB00A848F2 /* FlexMediaPickerConfiguration.swift in Sources */,
 				5BCCDEC51F82A44A00914DC1 /* PositionUpdateTimer.swift in Sources */,
+				5BCE9C271FAB79A2008D2E31 /* LocationService.swift in Sources */,
 				5BD628201F84C57F001DB4BA /* FlexMediaPickerAssetPersistenceImpl.swift in Sources */,
 				5BC6D94C1F763EB00051B0A3 /* CameraMediaControlPanel.swift in Sources */,
 				5BBFFABF1F51DF7500C08350 /* MediaControlPanel.swift in Sources */,

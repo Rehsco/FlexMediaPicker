@@ -180,7 +180,12 @@ public class ImageCropView: CommonFlexView, UIGestureRecognizerDelegate {
             self.reset(animated: true)
         })
         self.rightViewMenu?.createIconMenuItem(imageName: "Accept", iconSize: 24, selectionHandler: {
-            self.imageCroppedHandler?(self.relativeCropRect)
+            self.imageCroppedHandler?(self.getImageRelativeCroppingRect())
+            NSLog("image scrollview bounds: \(self.imageScrollView.bounds)")
+            NSLog("image scrollview scale: \(self.imageScrollView.zoomScale)")
+            NSLog("image scrollview minscale: \(self.imageScrollView.minimumZoomScale), maxscale:  \(self.imageScrollView.maximumZoomScale)")
+            NSLog("rel crop rect: \(self.getImageRelativeCroppingRect())")
+            NSLog("abs crop rect: \(self.cropRect)")
             self.closeView()
         })
         self.addMenu(self.rightViewMenu!)
@@ -209,21 +214,10 @@ public class ImageCropView: CommonFlexView, UIGestureRecognizerDelegate {
 
     // MARK: - Custom Accessors
 
-    fileprivate var relativeCropRect: CGRect {
-        guard let originalImage = originalImage else { return CGRect(x: 0, y: 0, width: 0, height: 0) }
-        let absRect = self.cropRect
-        return CGRect(x: self.imageScrollView.contentOffset.x / originalImage.size.width,
-                      y: self.imageScrollView.contentOffset.y / originalImage.size.height,
-                      width: self.imageScrollView.bounds.width / absRect.width,
-                      height: self.imageScrollView.bounds.height / absRect.height)
-    }
-    
     fileprivate func setCropRectBasedOnRelativeRect(_ rect: CGRect) {
-        guard let originalImage = originalImage else { return }
-        
-        self.imageScrollView.zoomScale = min(rect.width, rect.height)
-        
-        let contentOffset = CGPoint(x: rect.origin.x * originalImage.size.width, y: rect.origin.y * originalImage.size.height)
+        self.imageScrollView.zoomScale = min(1.0 / rect.width, 1.0 / rect.height) * self.imageScrollView.minimumZoomScale
+        let isvb = self.imageScrollView.bounds
+        let contentOffset = CGPoint(x: (isvb.width / rect.width) * rect.minX, y: (isvb.height / rect.height) * rect.minY)
         self.imageScrollView.contentOffset = contentOffset
     }
     
@@ -254,6 +248,40 @@ public class ImageCropView: CommonFlexView, UIGestureRecognizerDelegate {
         return rect
     }
 
+    private func getImageRelativeCroppingRect() -> CGRect {
+        guard let image = self.originalImage else { return CGRect(x: 0, y: 0, width: 0, height: 0) }
+        var cropRect = self.cropRect
+        
+        // Step 1: check and correct the crop rect.
+        let imageSize = image.size
+        let x = cropRect.minX
+        let y = cropRect.minY
+        let width = cropRect.width
+        let height = cropRect.height
+        
+        let imageOrientation = image.imageOrientation
+        if imageOrientation == .right || imageOrientation == .rightMirrored {
+            cropRect.origin.x = y
+            cropRect.origin.y = round(imageSize.width - cropRect.width - x)
+            cropRect.size.width = height
+            cropRect.size.height = width
+        } else if imageOrientation == .left || imageOrientation == .leftMirrored {
+            cropRect.origin.x = round(imageSize.height - cropRect.height - y)
+            cropRect.origin.y = x
+            cropRect.size.width = height
+            cropRect.size.height = width
+        } else if imageOrientation == .down || imageOrientation == .downMirrored {
+            cropRect.origin.x = round(imageSize.width - cropRect.width - x)
+            cropRect.origin.y = round(imageSize.height - cropRect.height - y)
+        }
+        
+        let imageScale = image.scale
+        cropRect = cropRect.applying(CGAffineTransform(scaleX: imageScale, y: imageScale))
+        
+        let relCropRect = CGRect(x: cropRect.minX / imageSize.width, y: cropRect.minY / imageSize.height, width: cropRect.width / imageSize.width, height: cropRect.height / imageSize.height)
+        return relCropRect
+    }
+    
     fileprivate var rectForClipPath: CGRect {
         return overlayView.frame
     }
@@ -429,8 +457,7 @@ public class ImageCropView: CommonFlexView, UIGestureRecognizerDelegate {
     }
 
     fileprivate func updateMaskRect() {
-        // TODO: must adhere to fitting settings
-        self.maskRect = CGRectHelper.AspectFitRectInRect(CGRect(x: 0, y: 0, width: 1, height: 1), rtarget: self.getViewRect())
+        self.maskRect = Helper.getMaskRect(inRect: self.getViewRect())
     }
 
     fileprivate func updateMaskPath() {

@@ -42,5 +42,12 @@ class MainMediaControlPanel: MediaControlPanel {
             }
             flexView.addMenu(leftMenu)
         }
+        if FlexMediaPickerConfiguration.allowLocationSelection {
+            let rightMenu = CommonIconViewMenu(size: CGSize(width: 120, height: flexView.footerSize * 0.8), hPos: .right, vPos: .footer, menuIconSize: 36)
+            _ = rightMenu.createIconMenuItem(imageName: "location", iconSize: 36) {
+                self.actionActivationHandler?(.location)
+            }
+            flexView.addMenu(rightMenu)
+        }
     }
 }

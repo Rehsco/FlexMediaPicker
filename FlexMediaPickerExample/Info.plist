@@ -26,6 +26,8 @@
 	<string>Using microphone for this demo</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>The app needs access to your photolibrary</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>In order to add location images and add locations to photos you need to grant access to locations</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

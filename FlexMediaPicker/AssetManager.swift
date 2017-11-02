@@ -102,6 +102,7 @@ open class AssetManager {
         for asset in assets {
             imageManager.requestImage(for: asset, targetSize: size, contentMode: .aspectFill, options: requestOptions) { image, _ in
                 if let image = image {
+                    NSLog("Image found by PHImageManager for id \(asset.localIdentifier). Size = \(image.size)")
                     images.append(image)
                 }
             }
