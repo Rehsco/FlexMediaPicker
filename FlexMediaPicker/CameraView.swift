@@ -6,14 +6,12 @@ import UIKit
 import AVFoundation
 import PhotosUI
 import MJRFlexStyleComponents
-import CoreLocation
 
 protocol CameraViewDelegate: class {
-    
     func cameraNotAvailable()
 }
 
-class CameraView: FlexView, CLLocationManagerDelegate, CameraManDelegate {
+class CameraView: FlexView, CameraManDelegate {
     private var videoCamRecording: Bool = false
     private var recordingInfoLabel: FlexLabel?
 
@@ -202,7 +200,7 @@ class CameraView: FlexView, CLLocationManagerDelegate, CameraManDelegate {
     }
     
     public func displayView() {
-        previewLayer?.connection.videoOrientation = Helper.videoOrientation() // .portrait
+        previewLayer?.connection.videoOrientation = Helper.videoOrientation()
         if FlexMediaPickerConfiguration.recordLocationOnPhoto {
             locationService.startLocationMessagingUse()
         }

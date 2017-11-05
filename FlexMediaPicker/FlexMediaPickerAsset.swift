@@ -45,7 +45,13 @@ open class FlexMediaPickerAsset {
     
     /// Image
     public var cropRect: CGRect = CGRect(x: 0, y: 0, width: 1, height: 1) // Relative to image size
-    
+
+    /// Audio
+    public var audioURL: URL?
+    public var currentTimeOffset: Double = 0
+    public var minTimeOffset: Double = 0
+    public var maxTimeOffset: Double = 1
+
     public init(thumbnail: UIImage, asset: PHAsset) {
         self.uuid = UUID().uuidString
         self.thumbnail = thumbnail
@@ -65,9 +71,20 @@ open class FlexMediaPickerAsset {
         self.videoURL = videoURL
         self.addedTime = Date()
     }
-
+    
+    public init(thumbnail: UIImage, audioURL: URL) {
+        self.uuid = UUID().uuidString
+        self.thumbnail = thumbnail
+        self.audioURL = audioURL
+        self.addedTime = Date()
+    }
+    
     func isAssetBased() -> Bool {
         return self.asset != nil
+    }
+    
+    func isVideoOrAudio() -> Bool {
+        return self.isVideo() || self.isAudio()
     }
     
     func isVideo() -> Bool {
@@ -75,6 +92,16 @@ open class FlexMediaPickerAsset {
             return true
         }
         if let ass = self.asset, ass.mediaType == .video {
+            return true
+        }
+        return false
+    }
+
+    func isAudio() -> Bool {
+        if self.audioURL != nil {
+            return true
+        }
+        if let ass = self.asset, ass.mediaType == .audio {
             return true
         }
         return false

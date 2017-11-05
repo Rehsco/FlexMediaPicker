@@ -11,10 +11,18 @@
 		5B3DB3231F7FB8D300D864DE /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3DB3211F7FB8D300D864DE /* UIViewExtensions.swift */; };
 		5B3DB3281F7FFB1200D864DE /* VideoPlaybackControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3DB3271F7FFB1200D864DE /* VideoPlaybackControlPanel.swift */; };
 		5B3DB3291F7FFB1200D864DE /* VideoPlaybackControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3DB3271F7FFB1200D864DE /* VideoPlaybackControlPanel.swift */; };
+		5B8809111FAF10F2001F26E8 /* AudioSampler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8809101FAF10F2001F26E8 /* AudioSampler.swift */; };
+		5B8809121FAF10F2001F26E8 /* AudioSampler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8809101FAF10F2001F26E8 /* AudioSampler.swift */; };
 		5BBFFABB1F51796500C08350 /* FlexMediaPickerAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBFFABA1F51796500C08350 /* FlexMediaPickerAsset.swift */; };
 		5BBFFABC1F51796500C08350 /* FlexMediaPickerAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBFFABA1F51796500C08350 /* FlexMediaPickerAsset.swift */; };
 		5BBFFABE1F51DF7500C08350 /* MediaControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBFFABD1F51DF7500C08350 /* MediaControlPanel.swift */; };
 		5BBFFABF1F51DF7500C08350 /* MediaControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBFFABD1F51DF7500C08350 /* MediaControlPanel.swift */; };
+		5BC11D011FADB34000BBC03B /* MicrophoneMan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC11D001FADB34000BBC03B /* MicrophoneMan.swift */; };
+		5BC11D021FADB34000BBC03B /* MicrophoneMan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC11D001FADB34000BBC03B /* MicrophoneMan.swift */; };
+		5BC11D041FADCB1900BBC03B /* VoiceRecorderMediaControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC11D031FADCB1900BBC03B /* VoiceRecorderMediaControlPanel.swift */; };
+		5BC11D051FADCB1900BBC03B /* VoiceRecorderMediaControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC11D031FADCB1900BBC03B /* VoiceRecorderMediaControlPanel.swift */; };
+		5BC11D071FADCCF200BBC03B /* VoiceRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC11D061FADCCF200BBC03B /* VoiceRecorderView.swift */; };
+		5BC11D081FADCCF200BBC03B /* VoiceRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC11D061FADCCF200BBC03B /* VoiceRecorderView.swift */; };
 		5BC3EF891FA72A4B00D21B14 /* CGGeometryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF881FA72A4B00D21B14 /* CGGeometryExtension.swift */; };
 		5BC3EF8A1FA72A4B00D21B14 /* CGGeometryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF881FA72A4B00D21B14 /* CGGeometryExtension.swift */; };
 		5BC3EF8C1FA72A6900D21B14 /* RSKImageScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF8B1FA72A6900D21B14 /* RSKImageScrollView.swift */; };
@@ -81,8 +89,6 @@
 		5BDC841A1F52CC8F00BF45B5 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC84181F52CC8F00BF45B5 /* Helper.swift */; };
 		5BDC841C1F52CE8B00BF45B5 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC841B1F52CE8B00BF45B5 /* CameraView.swift */; };
 		5BDC841D1F52CE8B00BF45B5 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC841B1F52CE8B00BF45B5 /* CameraView.swift */; };
-		5BDC841F1F52CFFF00BF45B5 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC841E1F52CFFF00BF45B5 /* LocationManager.swift */; };
-		5BDC84201F52CFFF00BF45B5 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC841E1F52CFFF00BF45B5 /* LocationManager.swift */; };
 		5BDF22FA1F7F9A65000A6B7E /* ImageSlideShowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDF22F91F7F9A65000A6B7E /* ImageSlideShowView.swift */; };
 		5BDF22FB1F7F9A65000A6B7E /* ImageSlideShowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDF22F91F7F9A65000A6B7E /* ImageSlideShowView.swift */; };
 		5BE0F1741FA203B300BEC1CB /* UIScrollViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE0F1731FA203B300BEC1CB /* UIScrollViewExtensions.swift */; };
@@ -99,8 +105,12 @@
 		19BFF1510DF1A710A8C8385C /* Pods-FlexMediaPicker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlexMediaPicker.release.xcconfig"; path = "Pods/Target Support Files/Pods-FlexMediaPicker/Pods-FlexMediaPicker.release.xcconfig"; sourceTree = "<group>"; };
 		5B3DB3211F7FB8D300D864DE /* UIViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtensions.swift; sourceTree = "<group>"; };
 		5B3DB3271F7FFB1200D864DE /* VideoPlaybackControlPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlaybackControlPanel.swift; sourceTree = "<group>"; };
+		5B8809101FAF10F2001F26E8 /* AudioSampler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSampler.swift; sourceTree = "<group>"; };
 		5BBFFABA1F51796500C08350 /* FlexMediaPickerAsset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlexMediaPickerAsset.swift; sourceTree = "<group>"; };
 		5BBFFABD1F51DF7500C08350 /* MediaControlPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaControlPanel.swift; sourceTree = "<group>"; };
+		5BC11D001FADB34000BBC03B /* MicrophoneMan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneMan.swift; sourceTree = "<group>"; };
+		5BC11D031FADCB1900BBC03B /* VoiceRecorderMediaControlPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceRecorderMediaControlPanel.swift; sourceTree = "<group>"; };
+		5BC11D061FADCCF200BBC03B /* VoiceRecorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceRecorderView.swift; sourceTree = "<group>"; };
 		5BC3EF881FA72A4B00D21B14 /* CGGeometryExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGGeometryExtension.swift; sourceTree = "<group>"; };
 		5BC3EF8B1FA72A6900D21B14 /* RSKImageScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSKImageScrollView.swift; sourceTree = "<group>"; };
 		5BC3EF8E1FA72A9800D21B14 /* RSKTouchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSKTouchView.swift; sourceTree = "<group>"; };
@@ -141,7 +151,6 @@
 		5BDC84141F52CC3000BF45B5 /* CameraMan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraMan.swift; sourceTree = "<group>"; };
 		5BDC84181F52CC8F00BF45B5 /* Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		5BDC841B1F52CE8B00BF45B5 /* CameraView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
-		5BDC841E1F52CFFF00BF45B5 /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		5BDF22F91F7F9A65000A6B7E /* ImageSlideShowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSlideShowView.swift; sourceTree = "<group>"; };
 		5BE0F1731FA203B300BEC1CB /* UIScrollViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIScrollViewExtensions.swift; sourceTree = "<group>"; };
 		5BE45C581F7C004000322FCC /* ImageAssetImageSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAssetImageSource.swift; sourceTree = "<group>"; };
@@ -192,8 +201,19 @@
 				5BC6D9471F763E570051B0A3 /* MainMediaControlPanel.swift */,
 				5BC6D94A1F763EB00051B0A3 /* CameraMediaControlPanel.swift */,
 				5B3DB3271F7FFB1200D864DE /* VideoPlaybackControlPanel.swift */,
+				5BC11D031FADCB1900BBC03B /* VoiceRecorderMediaControlPanel.swift */,
 			);
 			name = "Control Panels";
+			sourceTree = "<group>";
+		};
+		5BC11CFF1FADB2B600BBC03B /* Voice Recorder */ = {
+			isa = PBXGroup;
+			children = (
+				5B8809101FAF10F2001F26E8 /* AudioSampler.swift */,
+				5BC11D001FADB34000BBC03B /* MicrophoneMan.swift */,
+				5BC11D061FADCCF200BBC03B /* VoiceRecorderView.swift */,
+			);
+			name = "Voice Recorder";
 			sourceTree = "<group>";
 		};
 		5BC3EF871FA72A3100D21B14 /* Image Crop View */ = {
@@ -258,6 +278,7 @@
 			children = (
 				5BDC84171F52CC8300BF45B5 /* Helper */,
 				5BC5628D1F50435B00A848F2 /* Base UI */,
+				5BC11CFF1FADB2B600BBC03B /* Voice Recorder */,
 				5BDC84131F52CC2300BF45B5 /* Camera */,
 				5BDF22F81F7F9A3E000A6B7E /* Media Viewer */,
 				5BBFFAC01F51DF8000C08350 /* Control Panels */,
@@ -333,7 +354,6 @@
 		5BDC84131F52CC2300BF45B5 /* Camera */ = {
 			isa = PBXGroup;
 			children = (
-				5BDC841E1F52CFFF00BF45B5 /* LocationManager.swift */,
 				5BDC84141F52CC3000BF45B5 /* CameraMan.swift */,
 				5BDC841B1F52CE8B00BF45B5 /* CameraView.swift */,
 				5BD79AB81F66879A0023CE21 /* VideoWriter.swift */,
@@ -522,6 +542,7 @@
 				"${BUILT_PRODUCTS_DIR}/Player/Player.framework",
 				"${BUILT_PRODUCTS_DIR}/StyledLabel/StyledLabel.framework",
 				"${BUILT_PRODUCTS_DIR}/StyledOverlay/StyledOverlay.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftSiriWaveformView/SwiftSiriWaveformView.framework",
 				"${BUILT_PRODUCTS_DIR}/TaskQueue/TaskQueue.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -534,6 +555,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Player.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/StyledLabel.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/StyledOverlay.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftSiriWaveformView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TaskQueue.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -606,9 +628,11 @@
 				5BD6281C1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift in Sources */,
 				5BC3EF891FA72A4B00D21B14 /* CGGeometryExtension.swift in Sources */,
 				5BDC841C1F52CE8B00BF45B5 /* CameraView.swift in Sources */,
+				5B8809111FAF10F2001F26E8 /* AudioSampler.swift in Sources */,
 				5BCB66451F81549800AB9F4E /* VideoTimeSliderView.swift in Sources */,
 				5BC6D94B1F763EB00051B0A3 /* CameraMediaControlPanel.swift in Sources */,
 				5BBFFABE1F51DF7500C08350 /* MediaControlPanel.swift in Sources */,
+				5BC11D011FADB34000BBC03B /* MicrophoneMan.swift in Sources */,
 				5BC562831F503A9A00A848F2 /* AssetManager.swift in Sources */,
 				5BCE9C261FAB79A2008D2E31 /* LocationService.swift in Sources */,
 				5BD1E6E61F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift in Sources */,
@@ -619,15 +643,16 @@
 				5BC5629B1F5059E400A848F2 /* ImagesCollectionView.swift in Sources */,
 				5BC3EF921FA72AF000D21B14 /* ImageCropView.swift in Sources */,
 				5BC562981F50599700A848F2 /* UIImageExtensions.swift in Sources */,
+				5BC11D041FADCB1900BBC03B /* VoiceRecorderMediaControlPanel.swift in Sources */,
 				5BC3EF8F1FA72A9800D21B14 /* RSKTouchView.swift in Sources */,
 				5BC5628F1F50436700A848F2 /* CommonFlexCollectionViewController.swift in Sources */,
 				5BDF22FA1F7F9A65000A6B7E /* ImageSlideShowView.swift in Sources */,
 				5BC5629E1F506EF300A848F2 /* BusyViewFactory.swift in Sources */,
-				5BDC841F1F52CFFF00BF45B5 /* LocationManager.swift in Sources */,
 				5BC6D9481F763E570051B0A3 /* MainMediaControlPanel.swift in Sources */,
 				5BE45C591F7C004000322FCC /* ImageAssetImageSource.swift in Sources */,
 				5BC5628B1F50412900A848F2 /* FlexMediaPickerViewController.swift in Sources */,
 				5BC6D94E1F763F190051B0A3 /* CamVidSwitch.swift in Sources */,
+				5BC11D071FADCCF200BBC03B /* VoiceRecorderView.swift in Sources */,
 				5BE0F1741FA203B300BEC1CB /* UIScrollViewExtensions.swift in Sources */,
 				5BC667811FA4D948004D517D /* CGRectHelper.swift in Sources */,
 				5BC3EF8C1FA72A6900D21B14 /* RSKImageScrollView.swift in Sources */,
@@ -643,6 +668,7 @@
 			files = (
 				5BC3EF931FA72AF000D21B14 /* ImageCropView.swift in Sources */,
 				5BC562901F50436700A848F2 /* CommonFlexCollectionViewController.swift in Sources */,
+				5BC11D021FADB34000BBC03B /* MicrophoneMan.swift in Sources */,
 				5BCE9C2A1FAB7E2A008D2E31 /* LocationMapView.swift in Sources */,
 				5B3DB3291F7FFB1200D864DE /* VideoPlaybackControlPanel.swift in Sources */,
 				5BCB66461F81549800AB9F4E /* VideoTimeSliderView.swift in Sources */,
@@ -651,10 +677,10 @@
 				5BC562721F50394700A848F2 /* ViewController.swift in Sources */,
 				5B3DB3221F7FB8D300D864DE /* UIViewExtensions.swift in Sources */,
 				5BDC841D1F52CE8B00BF45B5 /* CameraView.swift in Sources */,
-				5BDC84201F52CFFF00BF45B5 /* LocationManager.swift in Sources */,
 				5BC5629F1F506EF300A848F2 /* BusyViewFactory.swift in Sources */,
 				5BD6281D1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift in Sources */,
 				5BC3EF8A1FA72A4B00D21B14 /* CGGeometryExtension.swift in Sources */,
+				5BC11D051FADCB1900BBC03B /* VoiceRecorderMediaControlPanel.swift in Sources */,
 				5BC6677F1FA480FE004D517D /* StyledActionOverlayExtension.swift in Sources */,
 				5BE0F1751FA203B300BEC1CB /* UIScrollViewExtensions.swift in Sources */,
 				5BC5629C1F5059E400A848F2 /* ImagesCollectionView.swift in Sources */,
@@ -680,7 +706,9 @@
 				5BC3EF8D1FA72A6900D21B14 /* RSKImageScrollView.swift in Sources */,
 				5BC667821FA4D948004D517D /* CGRectHelper.swift in Sources */,
 				5BC6D94F1F763F190051B0A3 /* CamVidSwitch.swift in Sources */,
+				5B8809121FAF10F2001F26E8 /* AudioSampler.swift in Sources */,
 				5BD1E6E71F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift in Sources */,
+				5BC11D081FADCCF200BBC03B /* VoiceRecorderView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

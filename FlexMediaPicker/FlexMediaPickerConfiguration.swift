@@ -58,6 +58,9 @@ public class FlexMediaPickerConfiguration {
     public static var upperProgressLabelTextColor = UIColor.white
     public static var lowerProgressLabelTextColor = UIColor.white
 
+    public static var audioWaveformColor = UIColor(white: 0.35, alpha: 1.0)
+    public static var audioWaveformHighlightColor = UIColor.white
+
     // MARK: Styled
     
     public static var camVidSwitchStyle = FlexShapeStyle(style: .rounded)
@@ -133,6 +136,11 @@ public class FlexMediaPickerConfiguration {
     // Currently available: scaleToFit and scaleToFill
     public static var imageMaskFitting: FlexImageShapeFit = .scaleToFit
 
+    public static var voiceRecordingSampleImageSize = CGSize(width: 256, height: 128)
+    public static var voiceRecordingUpdateMetricsInterval: TimeInterval = 0.06
+    // This must be at least <voiceRecordingUpdateMetricsInterval>
+    public static var voiceRecordingSamplingInterval: TimeInterval = 0.12
+    
     // MARK: Custom behaviour
     
     public static var statusBarHidden = true

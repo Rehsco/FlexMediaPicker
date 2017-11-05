@@ -63,7 +63,8 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     private var imageSlideshowView: ImageSlideShowView?
 
     private var cameraView: CameraView?
-    
+    private var voiceRecorderView: VoiceRecorderView?
+
     private var imageSources: [ImageAssetImageSource] = []
     private var selectedAssetsView: SelectedAssetsCollectionView?
     
@@ -164,29 +165,11 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                 action in
                 switch action {
                 case .camera:
-                    if self.cameraView == nil {
-                        self.cameraView = CameraView(frame: self.view.bounds)
-                        self.view.insertSubview(self.cameraView!, at: 1)
-                        self.cameraView?.headerFooterAdaptToMenu = false
-                        self.cameraView?.displayView()
-                        self.cameraView?.didGetPhoto = {
-                            image, location in
-                            self.addNewImage(image, location: location)
-                        }
-                        self.cameraView?.cancelCameraViewHandler = {
-                            self.cameraView?.removeFromSuperview()
-                            self.cameraView = nil
-                        }
-                        self.cameraView?.didRecordVideo = {
-                            mpa in
-                            self.addSelectedAsset(mpa)
-                        }
-                        self.layoutSupplementaryViews(to: self.view.bounds.size)
-                    }
+                    self.showCameraView()
                 case .location:
                     self.addCurrentLocationAsImage()
                 case .microphone:
-                    break
+                    self.showVoiceRecorderView()
                 case .cameraTake:
                     break
                 case .videocamMode:
@@ -288,6 +271,50 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             return CGRect(x: self.view.bounds.size.width - (120 + 64), y: 0, width: 120, height: self.view.bounds.size.height)
         }
         return CGRect(x: 0, y: self.view.bounds.size.height - (120 + 64), width: self.view.bounds.size.width, height: 120)
+    }
+    
+    // MARK: - Camera View
+    
+    private func showCameraView() {
+        if self.cameraView == nil {
+            self.cameraView = CameraView(frame: self.view.bounds)
+            self.view.insertSubview(self.cameraView!, at: 1)
+            self.cameraView?.headerFooterAdaptToMenu = false
+            self.cameraView?.displayView()
+            self.cameraView?.didGetPhoto = {
+                image, location in
+                self.addNewImage(image, location: location)
+            }
+            self.cameraView?.cancelCameraViewHandler = {
+                self.cameraView?.removeFromSuperview()
+                self.cameraView = nil
+            }
+            self.cameraView?.didRecordVideo = {
+                mpa in
+                self.addSelectedAsset(mpa)
+            }
+            self.layoutSupplementaryViews(to: self.view.bounds.size)
+        }
+    }
+    
+    // MARK: - Voice Recording
+    
+    private func showVoiceRecorderView() {
+        if self.voiceRecorderView == nil {
+            self.voiceRecorderView = VoiceRecorderView(frame: self.view.bounds)
+            self.view.insertSubview(self.voiceRecorderView!, at: 1)
+            self.voiceRecorderView?.headerFooterAdaptToMenu = false
+            self.voiceRecorderView?.displayView()
+            self.voiceRecorderView?.cancelVoiceRecorderViewHandler = {
+                self.voiceRecorderView?.removeFromSuperview()
+                self.voiceRecorderView = nil
+            }
+            self.voiceRecorderView?.didRecordAudio = {
+                mpa in
+                self.addSelectedAsset(mpa)
+            }
+            self.layoutSupplementaryViews(to: self.view.bounds.size)
+        }
     }
     
     // MARK: - Item Access
@@ -484,7 +511,9 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     
     func addSelectedAsset(_ asset: PHAsset, thumbnail: UIImage) {
         let sAsset = AssetManager.persistence.createAssetCollectionAsset(thumbnail: thumbnail, asset: asset)
-        sAsset.cropRect = self.detectFaceRect(inImage: thumbnail)
+        if !sAsset.isVideoOrAudio() {
+            sAsset.cropRect = self.detectFaceRect(inImage: thumbnail)
+        }
         self.addSelectedAsset(sAsset)
     }
 
@@ -690,7 +719,13 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                 var idx = 0
                 for selAsset in allSelectedAssets {
                     let ref = selAsset.asset?.localIdentifier ?? UUID().uuidString
-                    let thumbnail = self.maskImage(selAsset.thumbnail, cropRect: selAsset.cropRect)
+                    let thumbnail: UIImage?
+                    if selAsset.isVideo() || selAsset.isAudio() {
+                        thumbnail = selAsset.thumbnail
+                    }
+                    else {
+                        thumbnail = self.maskImage(selAsset.thumbnail, cropRect: selAsset.cropRect)
+                    }
                     let fitem = ImagesCollectionItem(reference: ref, icon: thumbnail)
                     fitem.canMoveItem = false
                     fitem.imageViewFitting = .scaleToFit
@@ -716,11 +751,15 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     
     private func applyAcceptEnabling() {
         var numApplicableSelected = 0
-        // TODO: must be extended to allow VoiceRecordings
         let allSelectedAssets = AssetManager.persistence.getAllAssets()
         for sa in allSelectedAssets {
             if sa.isVideo() {
                 if FlexMediaPickerConfiguration.allowVideoSelection {
+                    numApplicableSelected += 1
+                }
+            }
+            else if sa.isAudio() {
+                if FlexMediaPickerConfiguration.allowVoiceRecording {
                     numApplicableSelected += 1
                 }
             }
@@ -738,6 +777,11 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         for sa in allSelectedAssets {
             if sa.isVideo() {
                 if FlexMediaPickerConfiguration.allowVideoSelection {
+                    returnableAssets.append(sa)
+                }
+            }
+            else if sa.isAudio() {
+                if FlexMediaPickerConfiguration.allowVoiceRecording {
                     returnableAssets.append(sa)
                 }
             }
@@ -776,10 +820,14 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     // MARK: - Fullscreen Preview
     
     func showImage(byIndex idx: Int) {
+        // TODO: Stop recording before switching to viewer: ask to confirm
+        
         if self.imageSlideshowView == nil {
             self.createImageSlideShowView()
         }
         if let issv = self.imageSlideshowView {
+            self.voiceRecorderView?.showHide(hide: true)
+            self.cameraView?.showHide(hide: true)
             issv.isHidden = false
             issv.imageSlideshow?.setImageInputs(self.imageSources)
             issv.setCurrentPage(idx, animated: false)
@@ -816,6 +864,13 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     // MARK: - Locations
 
     private func addCurrentLocationAsImage() {
+        self.getCurrentLocationAsImage() {
+            image in
+            self.addNewImage(image, location: nil)
+        }
+    }
+
+    private func getCurrentLocationAsImage(completionHandler: @escaping (UIImage)->Void) {
         if let loc = locationService.currentLocation {
             let mapView = LocationMapView(frame: CGRect(origin: .zero , size: FlexMediaPickerConfiguration.locationImageSize))
             mapView.setSingleLocation(loc, tag: "My location")
@@ -825,7 +880,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                     NSLog("Error creating location snapshot image: \(e.localizedDescription)")
                 }
                 else if let thumbnail = image {
-                    self.addNewImage(thumbnail, location: nil)
+                    completionHandler(thumbnail)
                 }
                 else {
                     NSLog("Location snapshort returned neither image nor an error!")

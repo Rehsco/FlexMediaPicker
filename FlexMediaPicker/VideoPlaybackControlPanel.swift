@@ -31,9 +31,9 @@ import UIKit
 import MJRFlexStyleComponents
 
 enum VideoPlaybackPanelState {
-    case videoFrameStep
-    case videoTimeSlider
-    case noVideo
+    case audio
+    case video
+    case other
 }
 
 class VideoPlaybackControlPanel: FlexFooterView {
@@ -44,7 +44,7 @@ class VideoPlaybackControlPanel: FlexFooterView {
 
     private var frameStepper: FlexSnapStepper?
     
-    var panelState: VideoPlaybackPanelState = .noVideo {
+    var panelState: VideoPlaybackPanelState = .other {
         didSet {
             self.showHide(hide: self.isHidden)
         }
@@ -64,13 +64,20 @@ class VideoPlaybackControlPanel: FlexFooterView {
 
     override func showHide(hide: Bool, completionHandler: (()->Void)? = nil) {
         super.showHide(hide: hide, completionHandler: completionHandler)
-        if self.panelState == .noVideo {
+        if self.panelState == .other {
             self.playMenu?.viewMenu?.showHide(hide: true)
             self.cameraMenu?.viewMenu?.showHide(hide: true)
+            self.frameStepper?.showHide(hide: true)
+        }
+        if self.panelState == .audio {
+            self.playMenu?.viewMenu?.showHide(hide: hide)
+            self.cameraMenu?.viewMenu?.showHide(hide: true)
+            self.frameStepper?.showHide(hide: true)
         }
         else {
             self.playMenu?.viewMenu?.showHide(hide: hide)
             self.cameraMenu?.viewMenu?.showHide(hide: hide)
+            self.frameStepper?.showHide(hide: hide)
         }
     }
  /*

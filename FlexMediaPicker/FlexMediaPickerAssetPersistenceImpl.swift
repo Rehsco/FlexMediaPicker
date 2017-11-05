@@ -45,7 +45,13 @@ open class FlexMediaPickerAssetPersistenceImpl: FlexMediaPickerAssetPersistence 
         assetMap[asset.uuid] = asset
         return asset
     }
-
+    
+    open func createAudioRecordAsset(thumbnail: UIImage, audioUrl: URL) -> FlexMediaPickerAsset {
+        let asset = FlexMediaPickerAsset(thumbnail: thumbnail, audioURL: audioUrl)
+        assetMap[asset.uuid] = asset
+        return asset
+    }
+    
     open func createImageAsset(thumbnail: UIImage, image: UIImage) -> FlexMediaPickerAsset {
         let asset = FlexMediaPickerAsset(thumbnail: thumbnail)
         assetMap[asset.uuid] = asset

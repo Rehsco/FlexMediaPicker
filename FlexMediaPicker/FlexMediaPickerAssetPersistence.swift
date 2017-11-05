@@ -33,7 +33,8 @@ import Photos
 public protocol FlexMediaPickerAssetPersistence {
 
     func createVideoRecordAsset(thumbnail: UIImage, videoUrl: URL) -> FlexMediaPickerAsset
-    
+    func createAudioRecordAsset(thumbnail: UIImage, audioUrl: URL) -> FlexMediaPickerAsset
+
     func createImageAsset(thumbnail: UIImage, image: UIImage) -> FlexMediaPickerAsset
     func createAssetCollectionAsset(thumbnail: UIImage, asset: PHAsset) -> FlexMediaPickerAsset
     

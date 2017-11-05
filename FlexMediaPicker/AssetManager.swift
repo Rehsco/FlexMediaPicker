@@ -110,15 +110,20 @@ open class AssetManager {
         return images
     }
     
-    open static func resolveVideoURL(forMediaAsset mpa: FlexMediaPickerAsset, resolvedURLHandler: @escaping ((URL)->Void)) {
+    open static func resolveURL(forMediaAsset mpa: FlexMediaPickerAsset, resolvedURLHandler: @escaping ((URL)->Void)) {
         if let asset = mpa.asset {
-            self.resolveVideoAsset(asset, resolvedURLHandler: resolvedURLHandler)
+            if asset.mediaType == .video {
+                self.resolveVideoAsset(asset, resolvedURLHandler: resolvedURLHandler)
+            }
         }
         else if let url = mpa.videoURL {
             resolvedURLHandler(url)
         }
+        else if let url = mpa.audioURL {
+            resolvedURLHandler(url)
+        }
     }
-    
+
     open static func resolveVideoAsset(_ asset: PHAsset, resolvedURLHandler: @escaping ((URL)->Void)) {
         PHCachingImageManager().requestAVAsset(forVideo: asset, options: nil) { (asset, audioMix, args) in
             if let asset = asset as? AVURLAsset {
@@ -126,7 +131,7 @@ open class AssetManager {
             }
         }
     }
-    
+
     open static func savePhoto(_ image: UIImage, location: CLLocation?, completion: ((PHAsset?) -> Void)? = nil) {
         func retrieveImageWithIdentifer(localIdentifier:String, completion: (PHAsset?) -> Void) {
             let fetchOptions = PHFetchOptions()
@@ -203,7 +208,7 @@ open class AssetManager {
     }
     
     open static func reencodeVideo(forMediaAsset mpa: FlexMediaPickerAsset, progressHandler: ((Float)->Void)? = nil, completedURLHandler: @escaping ((URL)->Void)) {
-        AssetManager.resolveVideoURL(forMediaAsset: mpa) { url in
+        AssetManager.resolveURL(forMediaAsset: mpa) { url in
             let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0] as URL
             let fileURL = documentsDirectory.appendingPathComponent("\(mpa.uuid).mp4")
             let startOffset = self.getTimeForVideoFrame(mpa.minFrame, videoURL: url)
