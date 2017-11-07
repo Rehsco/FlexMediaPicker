@@ -51,32 +51,7 @@ class CameraView: FlexView, CameraManDelegate {
         
         return view
     }()
-    
-    lazy var noCameraLabel: UILabel = { [unowned self] in
-        let label = UILabel()
-        label.font = FlexMediaPickerConfiguration.noCameraFont
-        label.textColor = FlexMediaPickerConfiguration.noCameraColor
-        label.text = FlexMediaPickerConfiguration.noCameraTitle
-        label.sizeToFit()
-        
-        return label
-        }()
-    
-    lazy var noCameraButton: UIButton = { [unowned self] in
-        let button = UIButton(type: .system)
-        let title = Helper.applyFontAndColorToString(FlexMediaPickerConfiguration.settingsFont, color: FlexMediaPickerConfiguration.settingsColor, text: FlexMediaPickerConfiguration.settingsTitle)
-        
-        button.setAttributedTitle(title, for: UIControlState())
-        button.contentEdgeInsets = UIEdgeInsets(top: 5.0, left: 10.0, bottom: 5.0, right: 10.0)
-        button.sizeToFit()
-        button.layer.borderColor = FlexMediaPickerConfiguration.settingsColor.cgColor
-        button.layer.borderWidth = 1
-        button.layer.cornerRadius = 4
-        button.addTarget(self, action: #selector(settingsButtonDidTap), for: .touchUpInside)
-        
-        return button
-        }()
-    
+
     lazy var tapGestureRecognizer: UITapGestureRecognizer = { [unowned self] in
         let gesture = UITapGestureRecognizer()
         gesture.addTarget(self, action: #selector(tapGestureRecognizerHandler(_:)))
@@ -231,14 +206,6 @@ class CameraView: FlexView, CameraManDelegate {
         
         let bb = self.getViewRect()
         
-        let centerX = bb.width / 2
-        
-        noCameraLabel.center = CGPoint(x: centerX,
-                                       y: bb.height / 2 - 80)
-        
-        noCameraButton.center = CGPoint(x: centerX,
-                                        y: noCameraLabel.frame.maxY + 20)
-        
         blurView.frame = bb
         containerView.frame = bb
         capturedImageView.frame = bb
@@ -246,16 +213,6 @@ class CameraView: FlexView, CameraManDelegate {
         
         previewLayer?.connection.videoOrientation = Helper.videoOrientation()
         self.recordingInfoLabel?.frame = CGRect(x: 0, y: 0, width: self.bounds.size.width, height: FlexMediaPickerConfiguration.headerHeight)
-    }
-    
-    // MARK: - Actions
-    
-    func settingsButtonDidTap() {
-        DispatchQueue.main.async {
-            if let settingsURL = URL(string: UIApplicationOpenSettingsURLString) {
-                UIApplication.shared.open(settingsURL, options: [:], completionHandler: nil)
-            }
-        }
     }
     
     // MARK: - Camera actions
@@ -370,19 +327,6 @@ class CameraView: FlexView, CameraManDelegate {
     }
     
     // MARK: - Private helpers
-    
-    func showNoCamera(_ show: Bool) {
-        [noCameraButton, noCameraLabel].forEach {
-            show ? self.addSubview($0) : $0.removeFromSuperview()
-        }
-    }
-    
-    // CameraManDelegate
-    func cameraManNotAvailable(_ cameraMan: CameraMan) {
-        showNoCamera(true)
-        focusImageView.isHidden = true
-        delegate?.cameraNotAvailable()
-    }
     
     func cameraMan(_ cameraMan: CameraMan, didChangeInput input: AVCaptureDeviceInput) {
 /*        if !FlexMediaPickerConfiguration.flashButtonAlwaysHidden {

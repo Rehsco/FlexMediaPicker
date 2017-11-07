@@ -9,6 +9,7 @@ pod 'ImagePersistence'
 pod 'TaskQueue'
 pod 'Player', '~> 0.7.0' ## Swift 4: 0.8.0+
 pod 'SwiftSiriWaveformView', '2.1'
+pod 'SCLAlertView', '0.7.0'
 
 target 'FlexMediaPicker' do
 end

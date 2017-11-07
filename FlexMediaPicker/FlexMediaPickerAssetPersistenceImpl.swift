@@ -30,15 +30,23 @@
 import UIKit
 import Photos
 import ImagePersistence
+import AVFoundation
 
-open class FlexMediaPickerAssetPersistenceImpl: FlexMediaPickerAssetPersistence {    
+open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPersistence, AVAudioRecorderDelegate {
     private var assetMap: [String: FlexMediaPickerAsset] = [:]
     private var videoWriter: VideoWriter?
+    private var audioRecorder: AVAudioRecorder?
+    private var currentAudioFileURL: URL?
     private var fileIndex = 0
     private var exportSession: AVAssetExportSession?
     private var progressUpdateTimer: Timer?
     
+    open var audioSampler = AudioSampler()
+    private var lastPowerSampleTime: TimeInterval = 0
+
     open var imagePersistence: ImagePersistenceInterface = FlexMediaPickerImagePersistenceImpl()!
+    
+    // MARK: - Asset Management
     
     open func createVideoRecordAsset(thumbnail: UIImage, videoUrl: URL) -> FlexMediaPickerAsset {
         let asset = FlexMediaPickerAsset(thumbnail: thumbnail, videoURL: videoUrl)
@@ -110,20 +118,23 @@ open class FlexMediaPickerAssetPersistenceImpl: FlexMediaPickerAssetPersistence 
         }
     }
 
+    // MARK: - Video
+    
     open func isVideoRecorderCreated() -> Bool {
         return self.videoWriter != nil
     }
     
     open func startRecordVideo(height:Int, width:Int, channels:Int, samples:Float64) {
         let fileManager = FileManager()
-        if fileManager.fileExists(atPath: self.filePath()) {
+        let url = self.videoFileUrl()
+        if fileManager.fileExists(atPath: url.path) {
             do {
-                try fileManager.removeItem(atPath: self.filePath())
+                try fileManager.removeItem(atPath: url.path)
             } catch _ {
             }
         }
         NSLog("setup video writer with \(width), \(height)")
-        self.videoWriter = VideoWriter(fileUrl: self.filePathUrl(), height: height, width: width, channels: channels, samples: samples)
+        self.videoWriter = VideoWriter(fileUrl: url, height: height, width: width, channels: channels, samples: samples)
     }
     
     open func writeVideoData(sample: CMSampleBuffer, isVideo: Bool) {
@@ -133,7 +144,7 @@ open class FlexMediaPickerAssetPersistenceImpl: FlexMediaPickerAssetPersistence 
     open func stopRecordVideo(finishedHandler: @escaping ((FlexMediaPickerAsset?)->Void)) {
         self.videoWriter?.finish {
             if FlexMediaPickerConfiguration.storeRecordedVideosToAssetLibrary {
-                AssetManager.storeVideo(forURL: self.filePathUrl(), completion: { videoAsset in
+                AssetManager.storeVideo(forURL: self.videoFileUrl(), completion: { videoAsset in
                     if let asset = videoAsset {
                         AssetManager.resolveVideoAsset(asset, resolvedURLHandler: { url in
                             if let thumbnail = AssetManager.getThumbnailForVideoAsset(url: url) {
@@ -146,37 +157,107 @@ open class FlexMediaPickerAssetPersistenceImpl: FlexMediaPickerAssetPersistence 
                 })
             }
             else {
-                if let thumbnail = AssetManager.getThumbnailForVideoAsset(url: self.filePathUrl()) {
-                    finishedHandler(self.createVideoRecordAsset(thumbnail: thumbnail, videoUrl: self.filePathUrl()))
+                let url = self.videoFileUrl()
+                if let thumbnail = AssetManager.getThumbnailForVideoAsset(url: url) {
+                    finishedHandler(self.createVideoRecordAsset(thumbnail: thumbnail, videoUrl: url))
                 }
             }
         }
     }
     
-    // MARK: - Helper
+    // MARK: - Audio
     
-    func filePath() -> String {
-        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-        let documentsDirectory = paths[0] as String
-        let filePath : String = "\(documentsDirectory)/video\(self.fileIndex).mp4"
-        return filePath
+    open func prepareAudioRecording() -> Bool {
+        let session = AVAudioSession.sharedInstance()
+        do {
+            try session.setCategory(AVAudioSessionCategoryPlayAndRecord, with: .defaultToSpeaker)
+            try session.setActive(true)
+            let settings = [
+                AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
+                AVSampleRateKey: 44100,
+                AVNumberOfChannelsKey: 2,
+                AVEncoderAudioQualityKey:AVAudioQuality.high.rawValue
+            ]
+            self.currentAudioFileURL = self.audioFileUrl()
+            audioRecorder = try AVAudioRecorder(url: self.currentAudioFileURL!, settings: settings)
+            audioRecorder?.delegate = self
+            audioRecorder?.isMeteringEnabled = true
+            audioRecorder?.prepareToRecord()
+        }
+        catch let error {
+            NSLog("Voice recorder creation error: \(error.localizedDescription)")
+            return false
+        }
+        return true
     }
     
-    func filePathUrl() -> URL! {
-        return URL(fileURLWithPath: self.filePath())
+    open func startAudioRecording() -> Bool {
+        self.audioSampler.reset()
+        if self.prepareAudioRecording() {
+            self.audioRecorder?.record()
+            return true
+        }
+        return false
     }
-
+    
+    open func updateAudioMeter() -> (Float, TimeInterval) {
+        if let ar = self.audioRecorder {
+            if ar.isRecording {
+                ar.updateMeters()
+                let avgp = ar.averagePower(forChannel: 0)
+                let timeElapsed = ar.currentTime
+                
+                let normPower = CGFloat(pow (10, avgp / 35))
+                let sample = Float(normPower * 100)
+                
+                if timeElapsed - self.lastPowerSampleTime > FlexMediaPickerConfiguration.voiceRecordingSamplingInterval {
+                    self.lastPowerSampleTime = timeElapsed
+                    self.audioSampler.addSample(sample, isSamplingIntervalReached: true)
+                }
+                else {
+                    self.audioSampler.addSample(sample, isSamplingIntervalReached: false)
+                }
+                return (avgp, timeElapsed)
+            }
+            else {
+                return (ar.averagePower(forChannel: 0), 0.0)
+            }
+        }
+        return (0.0, 0.0)
+    }
+    
+    open func stopAudioRecording(_ success: Bool = true, finishedHandler: @escaping ((FlexMediaPickerAsset?)->Void)) {
+        if success {
+            self.audioRecorder?.stop()
+            if let url = self.currentAudioFileURL {
+                if let thumbnail = self.audioSampler.generateImageFromSamples() {
+                    finishedHandler(AssetManager.persistence.createAudioRecordAsset(thumbnail: thumbnail, audioUrl: url))
+                }
+            }
+        }
+        else {
+            finishedHandler(nil)
+        }
+    }
+    
+    public func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
+        // TODO: This is executed when starting the recorder with a time limit
+        if !flag {
+            self.stopAudioRecording(false) {
+                _ in
+            }
+        }
+    }
+    
     /// Crop video
 
-    // TODO: Need to use a progress indication handler
     open func encodeVideo(_ videoURL: URL, targetURL: URL, fromTime: CMTime? = nil, duration: CMTime? = nil, presetName: String = AVAssetExportPresetPassthrough, progressHandler: ((Float)->Void)? = nil, exportFinishedHandler: @escaping ((URL?)->Void))  {
         self.progressUpdateTimer?.invalidate()
         
         let avAsset = AVURLAsset(url: videoURL, options: nil)
         let startDate = Foundation.Date()
         
-        //Create Export session
-        /// Seems that you can set the preset name to for example: AVAssetExportPreset640x480 for 480p export
+        // Create Export session
         self.exportSession = AVAssetExportSession(asset: avAsset, presetName: presetName)
 
         deleteFile(targetURL)
@@ -218,10 +299,27 @@ open class FlexMediaPickerAssetPersistenceImpl: FlexMediaPickerAssetPersistence 
         }
     }
     
-    func deleteFile(_ filePath:URL) {
-        guard FileManager.default.fileExists(atPath: filePath.path) else {
-            return
-        }
+    // MARK: - Helper
+    
+    open func videoFileUrl() -> URL {
+        let url = getDocumentsDirectory().appendingPathComponent("/FlexMediaPicker\(self.fileIndex).mp4")
+        return url
+    }
+    
+    open func audioFileUrl() -> URL {
+        let filename = "\(UUID().uuidString).m4a"
+        let filePath = getDocumentsDirectory().appendingPathComponent(filename)
+        return filePath
+    }
+    
+    open func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let documentsDirectory = paths[0]
+        return documentsDirectory
+    }
+    
+    open func deleteFile(_ filePath:URL) {
+        guard FileManager.default.fileExists(atPath: filePath.path) else { return }
         
         do {
             try FileManager.default.removeItem(atPath: filePath.path)

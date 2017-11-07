@@ -50,7 +50,8 @@ extension UIImage {
     
     convenience init?(color: UIColor, size: CGSize = CGSize(width: 1, height: 1)) {
         let rect = CGRect(origin: .zero, size: size)
-        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
+        let scale = UIScreen.main.scale
+        UIGraphicsBeginImageContextWithOptions(rect.size, false, scale)
         color.setFill()
         UIRectFill(rect)
         let image = UIGraphicsGetImageFromCurrentImageContext()
@@ -137,7 +138,7 @@ extension UIImage {
     func maskImageWithPathAndCrop(_ path: UIBezierPath) -> UIImage {
         let newSize = path.cgPath.boundingBox.size
         
-        UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0)
+        UIGraphicsBeginImageContextWithOptions(newSize, false, self.scale)
         let context = UIGraphicsGetCurrentContext()
         
         self.draw(in: CGRect(origin: CGPoint.zero, size: newSize), blendMode: .copy, alpha: 1.0)
@@ -157,7 +158,7 @@ extension UIImage {
     }
 
     func maskImageWithPath(_ path: UIBezierPath) -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(self.size, false, 0.0)
+        UIGraphicsBeginImageContextWithOptions(self.size, false, self.scale)
         let context = UIGraphicsGetCurrentContext()
         
         self.draw(in: CGRect(origin: CGPoint.zero, size: self.size), blendMode: .copy, alpha: 1.0)
@@ -199,6 +200,48 @@ extension UIImage {
         UIGraphicsEndImageContext()
         
         return scaledImage!
+    }
+    
+    func addText(drawText text: String, textColor: UIColor = UIColor.white, font: UIFont? = nil) -> UIImage {
+        let textFont = font ?? UIFont.systemFont(ofSize: 24)
+        
+        UIGraphicsBeginImageContextWithOptions(self.size, false, self.scale)
+
+        self.draw(in: CGRect(origin: CGPoint.zero, size: self.size))
+
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = .center
+        
+        let textFontAttributes = [
+            NSFontAttributeName: textFont,
+            NSForegroundColorAttributeName: textColor,
+            NSParagraphStyleAttributeName: paragraphStyle,
+            ] as [String : Any]
+        
+        let tHeight = text.heightWithConstrainedWidth(self.size.width, font: textFont)
+        
+        let rect = CGRect(origin: CGPoint(x: 0, y: (self.size.height - tHeight) * 0.5), size: CGSize(width: self.size.width, height: tHeight))
+        text.draw(in: rect, withAttributes: textFontAttributes)
+        
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return newImage!
+    }
+    
+    /// Returns a new image with this image and the given image to the right of it
+    func appendImage(_ image: UIImage) -> UIImage {
+        let newSize = CGSize(width: self.size.width + image.size.width, height: max(self.size.height, image.size.height))
+        
+        UIGraphicsBeginImageContextWithOptions(newSize, false, self.scale)
+        
+        self.draw(at: CGPoint(x: 0, y: (newSize.height - self.size.height) * 0.5))
+        image.draw(at: CGPoint(x: self.size.width, y: (newSize.height - image.size.height) * 0.5))
+
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return newImage!
     }
     
     func fixOrientation() -> UIImage {

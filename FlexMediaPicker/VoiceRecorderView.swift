@@ -46,7 +46,12 @@ class VoiceRecorderView: FlexView {
     
     var didRecordAudio: ((FlexMediaPickerAsset)->Void)?
     var cancelVoiceRecorderViewHandler: (()->Void)?
-    
+    var voiceRecordingFailedHandler: (()->Void)? {
+        didSet {
+            self.micMan.voiceRecordingFailedHandler = self.voiceRecordingFailedHandler
+        }
+    }
+
     public override init(frame: CGRect) {
         super.init(frame: frame)
         self.setupView()
@@ -88,7 +93,7 @@ class VoiceRecorderView: FlexView {
                 }
             }
         }
-        
+        micMan.voiceRecordingFailedHandler = self.voiceRecordingFailedHandler
         micMan.setup()
         
         self.headerSize = FlexMediaPickerConfiguration.headerHeight
@@ -120,21 +125,10 @@ class VoiceRecorderView: FlexView {
                 
             }
             ccp.backToImagesHandler = {
-                self.closeView()
                 self.cancelVoiceRecorderViewHandler?()
             }
         }
         self.footer.styleColor = FlexMediaPickerConfiguration.footerPanelColor
-
-    }
-    
-    public func displayView() {
-    }
-    
-    public func closeView() {
-    }
-    
-    private func setupPreviewLayer() {
     }
     
     // MARK: - Layout
@@ -142,25 +136,17 @@ class VoiceRecorderView: FlexView {
     override func layoutSubviews() {
         super.layoutSubviews()
         self.recordingInfoLabel?.frame = CGRect(x: 0, y: 0, width: self.bounds.size.width, height: FlexMediaPickerConfiguration.headerHeight)
+        let vr = self.getViewRect()
+        self.waveformView?.frame = vr
     }
     
     // MARK: - Actions
-    
-    func settingsButtonDidTap() {
-        DispatchQueue.main.async {
-            if let settingsURL = URL(string: UIApplicationOpenSettingsURLString) {
-                UIApplication.shared.open(settingsURL, options: [:], completionHandler: nil)
-            }
-        }
-    }
-    
-    // MARK: - Camera actions
-    
+
     private func startVoiceRecording() {
         micMan.startVoiceRecording()
     }
     
     private func stopVoiceRecording() {
-        micMan.stopVoiceRecording(success: true)
+        micMan.stopVoiceRecording()
     }
 }

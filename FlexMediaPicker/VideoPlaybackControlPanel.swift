@@ -69,7 +69,7 @@ class VideoPlaybackControlPanel: FlexFooterView {
             self.cameraMenu?.viewMenu?.showHide(hide: true)
             self.frameStepper?.showHide(hide: true)
         }
-        if self.panelState == .audio {
+        else if self.panelState == .audio {
             self.playMenu?.viewMenu?.showHide(hide: hide)
             self.cameraMenu?.viewMenu?.showHide(hide: true)
             self.frameStepper?.showHide(hide: true)
@@ -80,24 +80,7 @@ class VideoPlaybackControlPanel: FlexFooterView {
             self.frameStepper?.showHide(hide: hide)
         }
     }
- /*
-    func showMenu(visible: Bool = true) {
-        DispatchQueue.main.async {
-            if self.panelState == .noVideo {
-                self.playMenu?.viewMenu?.isHidden = true
-                self.playMenu?.viewMenu?.alpha = 0
-                self.cameraMenu?.viewMenu?.isHidden = true
-                self.cameraMenu?.viewMenu?.alpha = 0
-            }
-            else if !self.isHidden {
-                self.playMenu?.viewMenu?.isHidden = visible
-                self.playMenu?.viewMenu?.alpha = visible ? 0 : 1
-                self.cameraMenu?.viewMenu?.isHidden = visible
-                self.cameraMenu?.viewMenu?.alpha = visible ? 0 : 1
-            }
-        }
-    }
-   */
+    
     func setFrameValues(min: Double, current: Double, max: Double) {
         DispatchQueue.main.async {
             self.frameStepper?.minStepperValue = min

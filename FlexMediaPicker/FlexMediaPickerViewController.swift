@@ -53,7 +53,8 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     
     private var closeViewMenu: CommonIconViewMenu?
     private var backViewMenu: CommonIconViewMenu?
-
+    private var acceptMI: FlexMenuItem?
+    
     private var assetThumbnailCache = ImageCache()
     private var assetCollections: [PHAssetCollection] = []
     private var smartAssetCollections: [PHAssetCollection] = []
@@ -113,17 +114,13 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         self.contentView?.header.subCaption.labelFont = FlexMediaPickerConfiguration.headerSubCaptionFont
         self.contentView?.header.subCaption.labelTextColor = FlexMediaPickerConfiguration.headerTextColor
 
-        self.createIconMenu(width: 50, menuIconSize: 24)
-        self.rightViewMenu?.createAcceptIconMenuItem()
-        self.rightViewMenu?.menuSelectionHandler = {
-            type in
-            if type == .accept {
-                self.convertSelectedVideoAssets {
-                    let aa = self.getAcceptedAssets()
-                    self.mediaAcceptedHandler?(aa)
-                }
+        self.createIconMenu(width: 120, menuIconSize: 24)
+        self.acceptMI = self.rightViewMenu?.createIconMenuItem(imageName: "Accept", selectionHandler: {
+            self.convertSelectedVideoAssets {
+                let aa = self.getAcceptedAssets()
+                self.mediaAcceptedHandler?(aa)
             }
-        }
+        })
         self.contentView?.addMenu(self.rightViewMenu!)
         self.rightViewMenu?.viewMenuItems[0].enabled = false
  
@@ -165,11 +162,25 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                 action in
                 switch action {
                 case .camera:
-                    self.showCameraView()
+                    cameraService.checkPermission(permissionGrantedHandler: { accessGranted in
+                        if accessGranted {
+                            self.showCameraView()
+                        }
+                    })
                 case .location:
-                    self.addCurrentLocationAsImage()
+                    if LocationService.isCurrentlyAuthorized() {
+                        self.addCurrentLocationAsImage()
+                    }
+                    else {
+                        locationService.checkAuthorization(true)
+                    }
                 case .microphone:
-                    self.showVoiceRecorderView()
+                    if audioService.isAudioRecordingGranted {
+                        self.showVoiceRecorderView()
+                    }
+                    else {
+                        audioService.requestPermission()
+                    }
                 case .cameraTake:
                     break
                 case .videocamMode:
@@ -202,6 +213,9 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         if FlexMediaPickerConfiguration.allowLocationSelection || FlexMediaPickerConfiguration.recordLocationOnPhoto {
             locationService.checkAuthorization(true)
         }
+        if FlexMediaPickerConfiguration.allowVoiceRecording {
+            audioService.checkPermission()
+        }
         self.checkStatus()
         self.layoutSupplementaryViews(to: self.view.bounds.size)
     }
@@ -226,13 +240,13 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             else {
                 (self.selectedAssetsView?.itemCollectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.scrollDirection = .horizontal
             }
-            self.selectedAssetsView?.setNeedsLayout()
         }
         else {
             self.cameraView?.headerPosition = .top
             (self.selectedAssetsView?.itemCollectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.scrollDirection = .horizontal
-            self.selectedAssetsView?.setNeedsLayout()
         }
+        self.selectedAssetsView?.setNeedsLayout()
+        self.selectedAssetsView?.itemCollectionView.reloadData()
     }
     
     override open func refreshView() {
@@ -262,7 +276,8 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         self.cameraView?.setNeedsLayout()
         
         self.imageSlideshowView?.frame = self.view.bounds
-        
+        self.voiceRecorderView?.frame = self.view.bounds
+
         super.refreshView()
     }
     
@@ -304,7 +319,6 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             self.voiceRecorderView = VoiceRecorderView(frame: self.view.bounds)
             self.view.insertSubview(self.voiceRecorderView!, at: 1)
             self.voiceRecorderView?.headerFooterAdaptToMenu = false
-            self.voiceRecorderView?.displayView()
             self.voiceRecorderView?.cancelVoiceRecorderViewHandler = {
                 self.voiceRecorderView?.removeFromSuperview()
                 self.voiceRecorderView = nil
@@ -313,6 +327,9 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                 mpa in
                 self.addSelectedAsset(mpa)
             }
+            self.voiceRecorderView?.voiceRecordingFailedHandler = {
+                // TODO: Notify
+            }
             self.layoutSupplementaryViews(to: self.view.bounds.size)
         }
     }
@@ -320,44 +337,16 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     // MARK: - Item Access
     
     func checkStatus() {
-        let currentStatus = PHPhotoLibrary.authorizationStatus()
-        guard currentStatus != .authorized else {
-            self.permissionGranted()
-            return
-        }
-        
-        if currentStatus == .notDetermined { self.closeView() }
-        
-        PHPhotoLibrary.requestAuthorization { (authorizationStatus) -> Void in
-            DispatchQueue.main.async {
-                if authorizationStatus == .denied {
-                    self.presentAskPermissionAlert()
-                } else if authorizationStatus == .authorized {
-                    self.permissionGranted()
-                }
+        photosService.checkStatus { accessGranted in
+            if accessGranted {
+                self.permissionGranted()
+            }
+            else {
+                self.closeView()
             }
         }
     }
     
-    func presentAskPermissionAlert() {
-        let alertController = UIAlertController(title: FlexMediaPickerConfiguration.requestPermissionTitle, message: FlexMediaPickerConfiguration.requestPermissionMessage, preferredStyle: .alert)
-        
-        let alertAction = UIAlertAction(title: FlexMediaPickerConfiguration.OKButtonTitle, style: .default) { _ in
-            if let settingsURL = URL(string: UIApplicationOpenSettingsURLString) {
-                UIApplication.shared.open(settingsURL, options: [:], completionHandler: nil)
-            }
-        }
-        
-        let cancelAction = UIAlertAction(title: FlexMediaPickerConfiguration.cancelButtonTitle, style: .cancel) { _ in
-            self.dismiss(animated: true, completion: nil)
-        }
-        
-        alertController.addAction(alertAction)
-        alertController.addAction(cancelAction)
-        
-        present(alertController, animated: true, completion: nil)
-    }
-
     func permissionGranted() {
         AssetManager.fetchAssetCollections { collections in
             self.assetCollections = collections
@@ -767,7 +756,20 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                 numApplicableSelected += 1
             }
         }
-        self.rightViewMenu?.viewMenuItems[0].enabled = (numApplicableSelected > 0)
+        self.acceptMI?.enabled = (numApplicableSelected > 0)
+        if numApplicableSelected > 0 {
+            let mask = StyledShapeLayer.createShape(.rounded, bounds: CGRect(x: 0, y: 0, width: 36, height: 24), color: .black)
+            let nImage = UIImage(color: FlexMediaPickerConfiguration.selectedItemColor, size: CGSize(width: 36, height: 24))
+            let numImage = nImage?.addText(drawText: "\(numApplicableSelected)", font: FlexMediaPickerConfiguration.selectedMediaNumberFont)
+            let maskPath = UIBezierPath(cgPath: mask.path!)
+            let roundedImage = numImage?.maskImageWithPathAndCrop(maskPath)
+            if let acceptImage = UIImage(named: "Accept_24pt")?.tint(FlexMediaPickerConfiguration.iconsColor) {
+                if let finalImage = roundedImage?.appendImage(acceptImage) {
+                    self.acceptMI?.thumbIcon = finalImage
+                    self.rightViewMenu?.viewMenu?.thumbSize = finalImage.size
+                }
+            }
+        }
         self.rightViewMenu?.viewMenu?.setNeedsLayout()
     }
     

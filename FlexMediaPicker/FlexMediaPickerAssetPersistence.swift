@@ -48,6 +48,10 @@ public protocol FlexMediaPickerAssetPersistence {
     func stopRecordVideo(finishedHandler: @escaping ((FlexMediaPickerAsset?)->Void))
     func encodeVideo(_ videoURL: URL, targetURL: URL, fromTime: CMTime?, duration: CMTime?, presetName: String, progressHandler: ((Float)->Void)?, exportFinishedHandler: @escaping ((URL?)->Void))
 
+    func startAudioRecording() -> Bool
+    func updateAudioMeter() -> (Float, TimeInterval)
+    func stopAudioRecording(_ success: Bool, finishedHandler: @escaping ((FlexMediaPickerAsset?)->Void))
+
     func getAllAssets() -> [FlexMediaPickerAsset]
     func getAsset(forLocalIdentifier id: String) -> FlexMediaPickerAsset?
 }

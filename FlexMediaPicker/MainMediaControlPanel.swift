@@ -31,23 +31,37 @@ import UIKit
 import MJRFlexStyleComponents
 
 class MainMediaControlPanel: MediaControlPanel {
+    private var rightMenu: CommonIconViewMenu?
+    private var leftMenu: CommonIconViewMenu?
+
     private var micItem: FlexMenuItem?
-    
+    private var locItem: FlexMenuItem?
+
     override func setupMenu(in flexView: FlexView) {
         super.setupMenu(in: flexView)
         if FlexMediaPickerConfiguration.allowVoiceRecording {
-            let leftMenu = CommonIconViewMenu(size: CGSize(width: 120, height: flexView.footerSize * 0.8), hPos: .left, vPos: .footer, menuIconSize: 36)
-            self.micItem = leftMenu.createIconMenuItem(imageName: "micImage", iconSize: 36) {
+            self.leftMenu = CommonIconViewMenu(size: CGSize(width: 120, height: flexView.footerSize * 0.8), hPos: .left, vPos: .footer, menuIconSize: 36)
+            self.micItem = self.leftMenu?.createIconMenuItem(imageName: "micImage", iconSize: 36) {
                 self.actionActivationHandler?(.microphone)
             }
-            flexView.addMenu(leftMenu)
+            flexView.addMenu(self.leftMenu!)
         }
         if FlexMediaPickerConfiguration.allowLocationSelection {
-            let rightMenu = CommonIconViewMenu(size: CGSize(width: 120, height: flexView.footerSize * 0.8), hPos: .right, vPos: .footer, menuIconSize: 36)
-            _ = rightMenu.createIconMenuItem(imageName: "location", iconSize: 36) {
+            self.rightMenu = CommonIconViewMenu(size: CGSize(width: 120, height: flexView.footerSize * 0.8), hPos: .right, vPos: .footer, menuIconSize: 36)
+            self.locItem = self.rightMenu?.createIconMenuItem(imageName: "location", iconSize: 36) {
                 self.actionActivationHandler?(.location)
             }
-            flexView.addMenu(rightMenu)
+            flexView.addMenu(self.rightMenu!)
         }
+    }
+    
+    func setAudioRecordingAvailable(_ available: Bool) {
+        self.micItem?.enabled = available
+        self.leftMenu?.viewMenu?.setNeedsLayout()
+    }
+
+    func setLocationAvailable(_ available: Bool) {
+        self.locItem?.enabled = available
+        self.rightMenu?.viewMenu?.setNeedsLayout()
     }
 }

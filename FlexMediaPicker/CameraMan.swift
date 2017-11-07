@@ -8,7 +8,6 @@ import PhotosUI
 import AssetsLibrary
 
 protocol CameraManDelegate: class {
-    func cameraManNotAvailable(_ cameraMan: CameraMan)
     func cameraManDidStart(_ cameraMan: CameraMan)
     func cameraMan(_ cameraMan: CameraMan, didChangeInput input: AVCaptureDeviceInput)
 }
@@ -104,7 +103,7 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
     
     func setup(_ startOnFrontCamera: Bool = false) {
         self.startOnFrontCamera = startOnFrontCamera
-        checkPermission()
+        self.start()
     }
     
     func setupDevices() {
@@ -146,34 +145,7 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
             }
         }
     }
-    
-    // MARK: - Permission
-    
-    func checkPermission() {
-        let status = AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo)
-        
-        switch status {
-        case .authorized:
-            start()
-        case .notDetermined:
-            requestPermission()
-        default:
-            delegate?.cameraManNotAvailable(self)
-        }
-    }
-    
-    func requestPermission() {
-        AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo) { granted in
-            DispatchQueue.main.async {
-                if granted {
-                    self.start()
-                } else {
-                    self.delegate?.cameraManNotAvailable(self)
-                }
-            }
-        }
-    }
-    
+
     // MARK: - Session
     
     var currentInput: AVCaptureDeviceInput?
@@ -458,6 +430,7 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
     }
     
     // MARK: - Configure
+    
     func configure(_ block: () -> Void) {
         session.beginConfiguration()
         block()

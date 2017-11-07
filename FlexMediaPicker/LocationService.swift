@@ -29,16 +29,17 @@
 
 import CoreLocation
 import UIKit
+import SCLAlertView
 
 let locationService = LocationService()
 
-class LocationService: NSObject, CLLocationManagerDelegate  {
+open class LocationService: NSObject, CLLocationManagerDelegate  {
     let manager = CLLocationManager()
     private(set) var currentLongitude: String?
     private(set) var currentLatitude: String?
     private(set) var currentLocation: CLLocation?
     
-    func startLocationMessagingUse() {
+    public func startLocationMessagingUse() {
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyBest
         manager.requestWhenInUseAuthorization()
@@ -54,7 +55,7 @@ class LocationService: NSObject, CLLocationManagerDelegate  {
         }
     }
     
-    func checkAuthorization(_ fullAccessRequired: Bool) {
+    public func checkAuthorization(_ fullAccessRequired: Bool) {
         switch CLLocationManager.authorizationStatus() {
         case .authorizedWhenInUse, .authorizedAlways:
             self.startLocationMessagingUse()
@@ -63,30 +64,20 @@ class LocationService: NSObject, CLLocationManagerDelegate  {
             self.startLocationMessagingUse()
         case .restricted, .denied:
             if fullAccessRequired {
-                let alertController = UIAlertController(
-                    title: "Location Access Disabled",
-                    message: "In order to use locations, please open this app's settings and enable location access.",
-                    preferredStyle: .alert)
-                
-                let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-                alertController.addAction(cancelAction)
-                
-                let openAction = UIAlertAction(title: "Open Settings", style: .default) { (action) in
+                let alert = SCLAlertView()
+                alert.addButton("Open Settings") {
                     if let url = URL(string:UIApplicationOpenSettingsURLString) {
                         UIApplication.shared.open(url)
                     }
                 }
-                alertController.addAction(openAction)
-                
-                let appDelegate = UIApplication.shared.delegate as! AppDelegate
-                appDelegate.window?.rootViewController?.present(alertController, animated: true, completion: nil)
+                let _ = alert.showTitle("Location Access Disabled", subTitle: "In order to use locations, please open this app's settings and enable location access.", style: SCLAlertViewStyle.error)
             }
         }
     }
     
     // MARK: - Location Manager Delegate
     
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let newLocation = locations.last {
             let currentLocation = newLocation
             self.currentLocation = newLocation
