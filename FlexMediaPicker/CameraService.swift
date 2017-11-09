@@ -29,7 +29,6 @@
 
 import UIKit
 import AVFoundation
-import SCLAlertView
 
 let cameraService = CameraService()
 
@@ -47,7 +46,7 @@ open class CameraService: NSObject {
                     if granted {
                         permissionGrantedHandler(true)
                     } else {
-                        self.presentAskPermissionAlert()
+                        AlertViewFactory.showSettingsRequest(title: "Camera Access Disabled", message: "In order to take photos and video, please open this app's settings and enable camera access.")
                         permissionGrantedHandler(false)
                     }
                 }
@@ -55,15 +54,5 @@ open class CameraService: NSObject {
         default:
             permissionGrantedHandler(false)
         }
-    }
-    
-    func presentAskPermissionAlert() {
-        let alert = SCLAlertView()
-        alert.addButton("Open Settings") {
-            if let url = URL(string:UIApplicationOpenSettingsURLString) {
-                UIApplication.shared.open(url)
-            }
-        }
-        let _ = alert.showTitle("Camera Access Disabled", subTitle: "In order to take photos and video, please open this app's settings and enable camera access.", style: SCLAlertViewStyle.error)
     }
 }

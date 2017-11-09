@@ -46,7 +46,8 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
     private var meterTimer: Timer?
 
     private var assetInfoLabel: FlexLabel?
-    
+    private var assetWarningLabel: FlexTextView?
+
     private var timeSliderPanel: VideoTimeSliderView?
     private let posUpdateTimer = PositionUpdateTimer()
     private var shouldUpdateTimeOffset: Bool = false
@@ -141,6 +142,16 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
         self.assetInfoLabel?.labelFont = FlexMediaPickerConfiguration.headerFont
         self.assetInfoLabel?.labelTextAlignment = .center
         self.header.addSubview(self.assetInfoLabel!)
+        
+        self.assetWarningLabel = FlexTextView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        self.assetWarningLabel?.textView.textColor = FlexMediaPickerConfiguration.warningLabelTextColor
+        self.assetWarningLabel?.textView.font = FlexMediaPickerConfiguration.warningLabelFont
+        self.assetWarningLabel?.textView.textAlignment = .center
+        self.assetWarningLabel?.isHidden = true
+        self.assetWarningLabel?.textView.backgroundColor = .clear
+        self.assetWarningLabel?.textView.isEditable = false
+        self.assetWarningLabel?.textView.isSelectable = false
+        self.addSubview(self.assetWarningLabel!)
         
         self.createBackOrCloseLeftMenu() {
             self.closeView()
@@ -289,6 +300,9 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
         self.player?.view.frame = self.bounds
         self.assetInfoLabel?.frame = self.header.bounds
         self.timeSliderPanel?.frame = CGRect(x: 0, y: FlexMediaPickerConfiguration.headerHeight, width: self.bounds.size.width, height: FlexMediaPickerConfiguration.timeSliderPanelHeight)
+        let warnBaseRect = CGRect(x: self.header.bounds.minX, y: self.header.bounds.minY, width: self.header.bounds.width, height: self.header.bounds.height * 2.0)
+        let warnLabelRect = warnBaseRect.offsetBy(dx: 0, dy: self.header.bounds.height).offsetBy(dx: 0, dy: FlexMediaPickerConfiguration.timeSliderPanelHeight)
+        self.assetWarningLabel?.frame = warnLabelRect
     }
     
     private func closeView() {
@@ -411,6 +425,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
             let imageAsset = imageAssets[index]
             self.currentAsset = imageAsset.asset
             self.currentImageSource = imageAsset
+            self.assetWarningLabel?.isHidden = true
 
             imageAsset.imageFromVideoLoadedHandler = {
                 asset in
@@ -426,6 +441,12 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
                         self.footerText = " "
                         self.assetInfoLabel?.label.text = Helper.stringFromTimeInterval(interval: 0)
                         self.initiateVideoValues(withURL: url)
+                        
+                        if !FlexMediaPickerConfiguration.allowVideoSelection {
+                            self.assetWarningLabel?.textView.attributedText = Helper.getWarningLabel(withText: "Videos not accepted, but you can use frames as images.")
+                            self.assetWarningLabel?.textView.textAlignment = .center
+                            self.assetWarningLabel?.isHidden = false
+                        }
                     }
                 })
             }

@@ -11,7 +11,6 @@ public class FlexMediaPickerConfiguration {
     // MARK: Colors
     
     public static var styleColor = UIColor(red: 0.15, green: 0.19, blue: 0.24, alpha: 1)
-    public static var selectedAssetsStyleColor = UIColor(red: 0.09, green: 0.11, blue: 0.13, alpha: 0.7)
     public static var selectedItemColor = UIColor(red: 0.25, green: 0.29, blue: 0.34, alpha: 1)
     public static var gallerySeparatorColor = UIColor.black.withAlphaComponent(0.6)
     public static var headerColor = UIColor(red: 0.09, green: 0.11, blue: 0.13, alpha: 1)
@@ -25,6 +24,9 @@ public class FlexMediaPickerConfiguration {
     public static var iconsColor = UIColor.white
     public static var disabledIconsColor = UIColor(white: 0.6, alpha: 1.0)
 
+    public static var selectedMediaStyleColor = UIColor(red: 0.09, green: 0.11, blue: 0.13, alpha: 0.7)
+    public static var selectedMediaCaptionColor = UIColor(white: 0.85, alpha: 1.0)
+
     public static var centerActionButtonStyleColor = UIColor(red: 0.25, green: 0.29, blue: 0.34, alpha: 1)
     
     public static var takeButtonColor = UIColor(white: 0.95, alpha: 1.0)
@@ -34,7 +36,12 @@ public class FlexMediaPickerConfiguration {
     public static var takeButtonRingColor = UIColor(white: 0.85, alpha: 1.0)
 
     public static var overlayMaskColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.55)
-    
+
+    public static var alertStyleColor = UIColor(red: 0.15, green: 0.19, blue: 0.24, alpha: 1)
+    public static var alertTitleColor = UIColor.white
+    public static var alertSecondaryColor = UIColor(red: 0.25, green: 0.29, blue: 0.34, alpha: 1)
+    public static var alertButtonColor = UIColor(red: 0.09, green: 0.11, blue: 0.13, alpha: 1)
+
     /// When recording and switching to camera
     public static var takeButtonRecordingBorderColorWhileInCameraMode = UIColor(red: 0.95, green: 0.19, blue: 0.14, alpha: 1)
     public static var takeButtonRecordingColorWhileInCameraMode = UIColor(white: 0.95, alpha: 1.0)
@@ -60,6 +67,9 @@ public class FlexMediaPickerConfiguration {
 
     public static var audioWaveformColor = UIColor(white: 0.35, alpha: 1.0)
     public static var audioWaveformHighlightColor = UIColor.white
+    
+    public static var warningIconTintColor = UIColor(red: 1.0, green: 0.84, blue: 0.0, alpha: 1.0)
+    public static var warningLabelTextColor = UIColor.white
 
     // MARK: Styled
     
@@ -91,7 +101,14 @@ public class FlexMediaPickerConfiguration {
     public static var lowerProgressLabelFont = UIFont.systemFont(ofSize: 14, weight: UIFontWeightRegular)
 
     public static var selectedMediaNumberFont = UIFont.systemFont(ofSize: 32, weight: UIFontWeightRegular)
-    
+    public static var selectedMediaCaptionFont = UIFont.systemFont(ofSize: 12, weight: UIFontWeightRegular)
+
+    public static var alertTitleFont = UIFont.systemFont(ofSize: 16, weight: UIFontWeightMedium)
+    public static var alertTextFont = UIFont.systemFont(ofSize: 12, weight: UIFontWeightRegular)
+    public static var alertButtonFont = UIFont.systemFont(ofSize: 14, weight: UIFontWeightMedium)
+
+    public static var warningLabelFont = UIFont.systemFont(ofSize: 14, weight: UIFontWeightRegular)
+
     // MARK: Titles
 
     public static var mediaTitle = "Media Library"
@@ -143,6 +160,8 @@ public class FlexMediaPickerConfiguration {
     // This must be at least <voiceRecordingUpdateMetricsInterval>
     public static var voiceRecordingSamplingInterval: TimeInterval = 0.12
     
+    public static var selectedMediaAcceptedCountImageMargin: CGFloat = 2
+    
     // MARK: Custom behaviour
     
     public static var statusBarHidden = true
@@ -152,7 +171,7 @@ public class FlexMediaPickerConfiguration {
     public static var managesAudioSession = true
 
     public static var allowMultipleSelection = true
-    public static var allowVideoSelection = true
+    public static var allowVideoSelection = false
     public static var allowVoiceRecording = true
     public static var allowLocationSelection = true
 

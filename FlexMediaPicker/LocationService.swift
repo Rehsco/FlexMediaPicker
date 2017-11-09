@@ -29,7 +29,7 @@
 
 import CoreLocation
 import UIKit
-import SCLAlertView
+import MapKit
 
 let locationService = LocationService()
 
@@ -64,15 +64,71 @@ open class LocationService: NSObject, CLLocationManagerDelegate  {
             self.startLocationMessagingUse()
         case .restricted, .denied:
             if fullAccessRequired {
-                let alert = SCLAlertView()
-                alert.addButton("Open Settings") {
-                    if let url = URL(string:UIApplicationOpenSettingsURLString) {
-                        UIApplication.shared.open(url)
-                    }
-                }
-                let _ = alert.showTitle("Location Access Disabled", subTitle: "In order to use locations, please open this app's settings and enable location access.", style: SCLAlertViewStyle.error)
+                AlertViewFactory.showSettingsRequest(title: "Location Access Disabled", message: "In order to use locations, please open this app's settings and enable location access.")
             }
         }
+    }
+    
+    public func getCurrentLocationAsImage(completionHandler: @escaping (UIImage)->Void) {
+        if let loc = locationService.currentLocation {
+            let mapView = LocationMapView(frame: CGRect(origin: .zero , size: FlexMediaPickerConfiguration.locationImageSize))
+            mapView.setSingleLocation(loc, tag: "My location")
+            mapView.setMapAnnotations()
+            self.takeSnapshot(mapView, withCallback: { (image, error) in
+                if let e = error {
+                    NSLog("Error creating location snapshot image: \(e.localizedDescription)")
+                }
+                else if let thumbnail = image {
+                    completionHandler(thumbnail)
+                }
+                else {
+                    NSLog("Location snapshort returned neither image nor an error!")
+                }
+            })
+        }
+    }
+    
+    private func takeSnapshot(_ mapView: MKMapView, withCallback: @escaping (UIImage?, NSError?) -> ()) {
+        let options = MKMapSnapshotOptions()
+        options.region = mapView.region
+        options.size = mapView.frame.size
+        options.scale = UIScreen.main.scale
+        
+        let snapshotter = MKMapSnapshotter(options: options)
+        snapshotter.start(completionHandler: { snapshot, error in
+            guard snapshot != nil else {
+                withCallback(nil, error as NSError?)
+                return
+            }
+            
+            if let image = snapshot?.image {
+                let finalImageRect = CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height)
+                
+                UIGraphicsBeginImageContextWithOptions(image.size, true, image.scale)
+                
+                image.draw(at:CGPoint.zero)
+                
+                let pin = MKPinAnnotationView()
+                let pinImage = pin.image
+                for annotation in mapView.annotations {
+                    let point = snapshot?.point(for: annotation.coordinate)
+                    if let po = point {
+                        var p = po
+                        if finalImageRect.contains(p) {
+                            let pinCenterOffset = pin.centerOffset
+                            p.x -= pin.bounds.size.width / 2.0
+                            p.y -= pin.bounds.size.height / 2.0
+                            p.x += pinCenterOffset.x
+                            p.y += pinCenterOffset.y
+                            pinImage?.draw(at: p)
+                        }
+                    }
+                }
+                let finalImage = UIGraphicsGetImageFromCurrentImageContext()
+                UIGraphicsEndImageContext()
+                withCallback(finalImage, nil)
+            }
+        })
     }
     
     // MARK: - Location Manager Delegate

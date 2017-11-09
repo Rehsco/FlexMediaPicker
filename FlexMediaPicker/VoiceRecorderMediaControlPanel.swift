@@ -68,8 +68,8 @@ class VoiceRecorderMediaControlPanel: FlexFooterView {
         let leftMenu = CommonIconViewMenu(size: CGSize(width: 120, height: flexView.footerSize), hPos: .left, vPos: .footer, menuIconSize: 36)
         flexView.addMenu(leftMenu)
         
-        self.rightMenu = CommonIconViewMenu(size: CGSize(width: 50, height: flexView.footerSize), hPos: .right, vPos: .footer, menuIconSize: 36)
-        _ = rightMenu?.createIconMenuItem(imageName: "imageIcon", iconSize: 36) {
+        self.rightMenu = CommonIconViewMenu(size: CGSize(width: 50, height: flexView.footerSize), hPos: .right, vPos: .footer, menuIconSize: 24)
+        _ = rightMenu?.createIconMenuItem(imageName: "CloseView", iconSize: 24) {
             self.backToImagesHandler?()
         }
         flexView.addMenu(self.rightMenu!)

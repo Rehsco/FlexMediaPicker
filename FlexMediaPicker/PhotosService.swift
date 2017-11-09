@@ -29,7 +29,6 @@
 
 import UIKit
 import Photos
-import SCLAlertView
 
 let photosService = PhotosService()
 
@@ -39,14 +38,11 @@ open class PhotosService: NSObject {
         switch PHPhotoLibrary.authorizationStatus() {
         case .authorized:
             permissionGrantedHandler(true)
-        case .denied:
-            permissionGrantedHandler(false)
-            self.presentAskPermissionAlert()
-        case .notDetermined:
+        case .denied, .notDetermined:
             PHPhotoLibrary.requestAuthorization { authorizationStatus -> Void in
                 DispatchQueue.main.async {
                     if authorizationStatus == .denied {
-                        self.presentAskPermissionAlert()
+                        AlertViewFactory.showSettingsRequest(title: "Photos Access Disabled", message: "In order to access photos, please open this app's settings and enable photo access.")
                         permissionGrantedHandler(false)
                     } else if authorizationStatus == .authorized {
                         permissionGrantedHandler(true)
@@ -58,13 +54,77 @@ open class PhotosService: NSObject {
         }
     }
     
-    func presentAskPermissionAlert() {
-        let alert = SCLAlertView()
-        alert.addButton("Open Settings") {
-            if let url = URL(string:UIApplicationOpenSettingsURLString) {
-                UIApplication.shared.open(url)
+    // MARK: - Face detection
+    
+    func detectFaceRect(inImage image: UIImage) -> CGRect {
+        let maxDim = max(image.size.width, image.size.height)
+        // Default aspect ration - zero offset crop rect
+        let cropRect = CGRect(x: 0, y: 0, width: image.size.height / maxDim, height: image.size.width / maxDim)
+        
+        if !FlexMediaPickerConfiguration.maskImageAutoCropToDetectedFace {
+            return cropRect
+        }
+        
+        NSLog("face detection for image with dim \(image.size)")
+        
+        let resImage: UIImage
+        if image.size.width > image.size.height {
+            // Face detection has issue with portrait images, so resize to square
+            resImage = image.resized(newSize: CGSize(width: maxDim, height: maxDim))!
+        }
+        else {
+            resImage = image
+        }
+        NSLog("face detection for resimage with dim \(resImage.size)")
+        
+        guard let personciImage = CIImage(image: resImage) else {
+            return cropRect
+        }
+        
+        let ciImageSize = personciImage.extent.size
+        NSLog("ciimage with dim \(ciImageSize)")
+        var transform = CGAffineTransform(scaleX: 1, y: -1)
+        transform = transform.translatedBy(x: 0, y: -ciImageSize.height)
+        
+        let accuracy: [String : Any] = [CIDetectorAccuracy: CIDetectorAccuracyHigh, CIDetectorImageOrientation: self.imageOrientationToCG(orientation: .up)]
+        let faceDetector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: accuracy)
+        if let faces = faceDetector?.features(in: personciImage) {
+            var largestRect: CGRect = .zero
+            var largestArea: CGFloat = 0
+            for face in faces as! [CIFaceFeature] {
+                NSLog("Found bounds are \(face.bounds)")
+                // Apply the transform to convert the coordinates
+                let faceViewBounds = face.bounds.applying(transform)
+                if faceViewBounds.width * faceViewBounds.height > largestArea {
+                    largestArea = faceViewBounds.width * faceViewBounds.height
+                    largestRect = faceViewBounds
+                }
+            }
+            if largestArea > 0 {
+                return CGRect(x: largestRect.minX / ciImageSize.width, y: largestRect.minY / ciImageSize.height, width: largestRect.width / ciImageSize.width, height: largestRect.height / ciImageSize.height)
             }
         }
-        let _ = alert.showTitle("Photos Access Disabled", subTitle: "In order to access photos, please open this app's settings and enable photo access.", style: SCLAlertViewStyle.error)
+        return cropRect
+    }
+    
+    private func imageOrientationToCG(orientation:UIImageOrientation) -> CGImagePropertyOrientation {
+        switch (orientation) {
+        case .up:
+            return CGImagePropertyOrientation.up
+        case .upMirrored:
+            return CGImagePropertyOrientation.upMirrored
+        case .down:
+            return CGImagePropertyOrientation.down
+        case .downMirrored:
+            return CGImagePropertyOrientation.downMirrored
+        case .leftMirrored:
+            return CGImagePropertyOrientation.leftMirrored
+        case .right:
+            return CGImagePropertyOrientation.right
+        case .rightMirrored:
+            return CGImagePropertyOrientation.rightMirrored
+        case .left:
+            return CGImagePropertyOrientation.left
+        }
     }
 }

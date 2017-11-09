@@ -29,7 +29,6 @@
 
 import UIKit
 import AVFoundation
-import SCLAlertView
 
 let audioService = AudioService()
 
@@ -52,13 +51,7 @@ open class AudioService {
             DispatchQueue.main.async {
                 self.isAudioRecordingGranted = allowed
                 if !allowed {
-                    let alert = SCLAlertView()
-                    alert.addButton("Open Settings") {
-                        if let url = URL(string:UIApplicationOpenSettingsURLString) {
-                            UIApplication.shared.open(url)
-                        }
-                    }
-                    let _ = alert.showTitle("Microphone Access Disabled", subTitle: "In order to record audio, please open this app's settings and enable microphone access.", style: SCLAlertViewStyle.error)
+                    AlertViewFactory.showSettingsRequest(title: "Microphone Access Disabled", message: "In order to record audio, please open this app's settings and enable microphone access.")
                 }
             }
         }

@@ -30,9 +30,9 @@
 import UIKit
 import MJRFlexStyleComponents
 
-class ImagesCollectionView: FlexCollectionView {
+open class ImagesCollectionView: FlexCollectionView {
     
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    override open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = super.collectionView(collectionView, cellForItemAt: indexPath)
         if let fc = cell as? FlexBaseCollectionViewCell {
             fc.imageViewSize = self.thumbnailSize()

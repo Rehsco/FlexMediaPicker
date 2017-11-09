@@ -15,6 +15,12 @@
 		5B8809121FAF10F2001F26E8 /* AudioSampler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8809101FAF10F2001F26E8 /* AudioSampler.swift */; };
 		5B88355E1FB1AC0600782FB5 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B88355D1FB1AC0600782FB5 /* StringExtension.swift */; };
 		5B88355F1FB1AC0600782FB5 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B88355D1FB1AC0600782FB5 /* StringExtension.swift */; };
+		5B8835611FB1B2CB00782FB5 /* AlertViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8835601FB1B2CB00782FB5 /* AlertViewFactory.swift */; };
+		5B8835621FB1B2CB00782FB5 /* AlertViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8835601FB1B2CB00782FB5 /* AlertViewFactory.swift */; };
+		5B8835681FB1F6C800782FB5 /* SelectedAssetsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8835671FB1F6C800782FB5 /* SelectedAssetsCollectionView.swift */; };
+		5B8835691FB1F6C800782FB5 /* SelectedAssetsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8835671FB1F6C800782FB5 /* SelectedAssetsCollectionView.swift */; };
+		5B88356B1FB204F900782FB5 /* FlexMediaPickerStyling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B88356A1FB204F900782FB5 /* FlexMediaPickerStyling.swift */; };
+		5B88356C1FB204F900782FB5 /* FlexMediaPickerStyling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B88356A1FB204F900782FB5 /* FlexMediaPickerStyling.swift */; };
 		5BBFFABB1F51796500C08350 /* FlexMediaPickerAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBFFABA1F51796500C08350 /* FlexMediaPickerAsset.swift */; };
 		5BBFFABC1F51796500C08350 /* FlexMediaPickerAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBFFABA1F51796500C08350 /* FlexMediaPickerAsset.swift */; };
 		5BBFFABE1F51DF7500C08350 /* MediaControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBFFABD1F51DF7500C08350 /* MediaControlPanel.swift */; };
@@ -115,6 +121,9 @@
 		5B3DB3271F7FFB1200D864DE /* VideoPlaybackControlPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlaybackControlPanel.swift; sourceTree = "<group>"; };
 		5B8809101FAF10F2001F26E8 /* AudioSampler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSampler.swift; sourceTree = "<group>"; };
 		5B88355D1FB1AC0600782FB5 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
+		5B8835601FB1B2CB00782FB5 /* AlertViewFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertViewFactory.swift; sourceTree = "<group>"; };
+		5B8835671FB1F6C800782FB5 /* SelectedAssetsCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedAssetsCollectionView.swift; sourceTree = "<group>"; };
+		5B88356A1FB204F900782FB5 /* FlexMediaPickerStyling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexMediaPickerStyling.swift; sourceTree = "<group>"; };
 		5BBFFABA1F51796500C08350 /* FlexMediaPickerAsset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlexMediaPickerAsset.swift; sourceTree = "<group>"; };
 		5BBFFABD1F51DF7500C08350 /* MediaControlPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaControlPanel.swift; sourceTree = "<group>"; };
 		5BC11D001FADB34000BBC03B /* MicrophoneMan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneMan.swift; sourceTree = "<group>"; };
@@ -205,6 +214,45 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		5B8835631FB1F57600782FB5 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				5BBFFABA1F51796500C08350 /* FlexMediaPickerAsset.swift */,
+				5BE45C581F7C004000322FCC /* ImageAssetImageSource.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		5B8835641FB1F5B300782FB5 /* Device */ = {
+			isa = PBXGroup;
+			children = (
+				5BCE9C251FAB79A2008D2E31 /* LocationService.swift */,
+				5BC9193A1FB05D6900A37AC4 /* AudioService.swift */,
+				5BC9193D1FB065D800A37AC4 /* PhotosService.swift */,
+				5BC919401FB06A4B00A37AC4 /* CameraService.swift */,
+			);
+			name = Device;
+			sourceTree = "<group>";
+		};
+		5B8835651FB1F5D000782FB5 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				5BD6281B1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift */,
+				5BD6281E1F84C57F001DB4BA /* FlexMediaPickerAssetPersistenceImpl.swift */,
+				5BD1E6E51F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift */,
+				5BC562821F503A9A00A848F2 /* AssetManager.swift */,
+			);
+			name = Assets;
+			sourceTree = "<group>";
+		};
+		5B8835661FB1F67900782FB5 /* Selected Media View */ = {
+			isa = PBXGroup;
+			children = (
+				5B8835671FB1F6C800782FB5 /* SelectedAssetsCollectionView.swift */,
+			);
+			name = "Selected Media View";
+			sourceTree = "<group>";
+		};
 		5BBFFAC01F51DF8000C08350 /* Control Panels */ = {
 			isa = PBXGroup;
 			children = (
@@ -261,6 +309,7 @@
 		5BC562601F50392D00A848F2 /* FlexMediaPicker */ = {
 			isa = PBXGroup;
 			children = (
+				5B8835631FB1F57600782FB5 /* Model */,
 				5BCE9C241FAB798B008D2E31 /* Services */,
 				5BC562811F503A8700A848F2 /* Extensions */,
 				5BC562801F503A7100A848F2 /* UI */,
@@ -288,14 +337,15 @@
 		5BC562801F503A7100A848F2 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				5BC562881F503B6800A848F2 /* Config */,
 				5BDC84171F52CC8300BF45B5 /* Helper */,
 				5BC5628D1F50435B00A848F2 /* Base UI */,
 				5BC11CFF1FADB2B600BBC03B /* Voice Recorder */,
 				5BDC84131F52CC2300BF45B5 /* Camera */,
+				5BC3EF871FA72A3100D21B14 /* Image Crop View */,
+				5B8835661FB1F67900782FB5 /* Selected Media View */,
 				5BDF22F81F7F9A3E000A6B7E /* Media Viewer */,
 				5BBFFAC01F51DF8000C08350 /* Control Panels */,
-				5BC562891F503B7300A848F2 /* Assets */,
-				5BC562881F503B6800A848F2 /* Config */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -322,21 +372,10 @@
 			name = Config;
 			sourceTree = "<group>";
 		};
-		5BC562891F503B7300A848F2 /* Assets */ = {
-			isa = PBXGroup;
-			children = (
-				5BD628211F84C5C4001DB4BA /* Model */,
-				5BC562821F503A9A00A848F2 /* AssetManager.swift */,
-				5BD6281B1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift */,
-				5BD6281E1F84C57F001DB4BA /* FlexMediaPickerAssetPersistenceImpl.swift */,
-				5BD1E6E51F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift */,
-			);
-			name = Assets;
-			sourceTree = "<group>";
-		};
 		5BC5628D1F50435B00A848F2 /* Base UI */ = {
 			isa = PBXGroup;
 			children = (
+				5B8835601FB1B2CB00782FB5 /* AlertViewFactory.swift */,
 				5BC5629D1F506EF300A848F2 /* BusyViewFactory.swift */,
 				5BC562911F50437B00A848F2 /* CommonIconViewMenu.swift */,
 				5BC5628E1F50436700A848F2 /* CommonFlexCollectionViewController.swift */,
@@ -350,21 +389,10 @@
 		5BCE9C241FAB798B008D2E31 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				5BCE9C251FAB79A2008D2E31 /* LocationService.swift */,
-				5BC9193A1FB05D6900A37AC4 /* AudioService.swift */,
-				5BC9193D1FB065D800A37AC4 /* PhotosService.swift */,
-				5BC919401FB06A4B00A37AC4 /* CameraService.swift */,
+				5B8835651FB1F5D000782FB5 /* Assets */,
+				5B8835641FB1F5B300782FB5 /* Device */,
 			);
 			name = Services;
-			sourceTree = "<group>";
-		};
-		5BD628211F84C5C4001DB4BA /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				5BBFFABA1F51796500C08350 /* FlexMediaPickerAsset.swift */,
-				5BE45C581F7C004000322FCC /* ImageAssetImageSource.swift */,
-			);
-			name = Model;
 			sourceTree = "<group>";
 		};
 		5BDC84131F52CC2300BF45B5 /* Camera */ = {
@@ -382,6 +410,7 @@
 			children = (
 				5BCCDEC31F82A44A00914DC1 /* PositionUpdateTimer.swift */,
 				5BDC84181F52CC8F00BF45B5 /* Helper.swift */,
+				5B88356A1FB204F900782FB5 /* FlexMediaPickerStyling.swift */,
 			);
 			name = Helper;
 			sourceTree = "<group>";
@@ -389,7 +418,6 @@
 		5BDF22F81F7F9A3E000A6B7E /* Media Viewer */ = {
 			isa = PBXGroup;
 			children = (
-				5BC3EF871FA72A3100D21B14 /* Image Crop View */,
 				5BE57D141F83AE340037D4EF /* TimeSliderInfoView.swift */,
 				5BCB66441F81549800AB9F4E /* VideoTimeSliderView.swift */,
 				5BDF22F91F7F9A65000A6B7E /* ImageSlideShowView.swift */,
@@ -650,6 +678,7 @@
 				5B8809111FAF10F2001F26E8 /* AudioSampler.swift in Sources */,
 				5BCB66451F81549800AB9F4E /* VideoTimeSliderView.swift in Sources */,
 				5BC6D94B1F763EB00051B0A3 /* CameraMediaControlPanel.swift in Sources */,
+				5B88356B1FB204F900782FB5 /* FlexMediaPickerStyling.swift in Sources */,
 				5BBFFABE1F51DF7500C08350 /* MediaControlPanel.swift in Sources */,
 				5BC11D011FADB34000BBC03B /* MicrophoneMan.swift in Sources */,
 				5BC562831F503A9A00A848F2 /* AssetManager.swift in Sources */,
@@ -666,6 +695,7 @@
 				5BC9193B1FB05D6900A37AC4 /* AudioService.swift in Sources */,
 				5BC3EF8F1FA72A9800D21B14 /* RSKTouchView.swift in Sources */,
 				5BC5628F1F50436700A848F2 /* CommonFlexCollectionViewController.swift in Sources */,
+				5B8835611FB1B2CB00782FB5 /* AlertViewFactory.swift in Sources */,
 				5BDF22FA1F7F9A65000A6B7E /* ImageSlideShowView.swift in Sources */,
 				5BC5629E1F506EF300A848F2 /* BusyViewFactory.swift in Sources */,
 				5B88355E1FB1AC0600782FB5 /* StringExtension.swift in Sources */,
@@ -680,6 +710,7 @@
 				5BC3EF8C1FA72A6900D21B14 /* RSKImageScrollView.swift in Sources */,
 				5BCCDEC41F82A44A00914DC1 /* PositionUpdateTimer.swift in Sources */,
 				5BBFFABB1F51796500C08350 /* FlexMediaPickerAsset.swift in Sources */,
+				5B8835681FB1F6C800782FB5 /* SelectedAssetsCollectionView.swift in Sources */,
 				5BDC84191F52CC8F00BF45B5 /* Helper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -690,6 +721,7 @@
 			files = (
 				5BC3EF931FA72AF000D21B14 /* ImageCropView.swift in Sources */,
 				5BC562901F50436700A848F2 /* CommonFlexCollectionViewController.swift in Sources */,
+				5B88356C1FB204F900782FB5 /* FlexMediaPickerStyling.swift in Sources */,
 				5BC11D021FADB34000BBC03B /* MicrophoneMan.swift in Sources */,
 				5BCE9C2A1FAB7E2A008D2E31 /* LocationMapView.swift in Sources */,
 				5B3DB3291F7FFB1200D864DE /* VideoPlaybackControlPanel.swift in Sources */,
@@ -732,8 +764,10 @@
 				5BC3EF8D1FA72A6900D21B14 /* RSKImageScrollView.swift in Sources */,
 				5BC667821FA4D948004D517D /* CGRectHelper.swift in Sources */,
 				5BC6D94F1F763F190051B0A3 /* CamVidSwitch.swift in Sources */,
+				5B8835621FB1B2CB00782FB5 /* AlertViewFactory.swift in Sources */,
 				5B8809121FAF10F2001F26E8 /* AudioSampler.swift in Sources */,
 				5BD1E6E71F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift in Sources */,
+				5B8835691FB1F6C800782FB5 /* SelectedAssetsCollectionView.swift in Sources */,
 				5BC11D081FADCCF200BBC03B /* VoiceRecorderView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

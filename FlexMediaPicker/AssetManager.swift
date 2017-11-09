@@ -124,6 +124,18 @@ open class AssetManager {
         }
     }
 
+    open static func isAssetSelected(_ asset: PHAsset) -> Bool {
+        let selectedAssets = self.persistence.getAllAssets()
+        for ass in selectedAssets {
+            if let pha = ass.asset {
+                if pha.localIdentifier == asset.localIdentifier {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    
     open static func resolveVideoAsset(_ asset: PHAsset, resolvedURLHandler: @escaping ((URL)->Void)) {
         PHCachingImageManager().requestAVAsset(forVideo: asset, options: nil) { (asset, audioMix, args) in
             if let asset = asset as? AVURLAsset {
@@ -223,6 +235,15 @@ open class AssetManager {
     }
     
     // Helper
+    
+    open class  func duration(forMediaAsset mpa: FlexMediaPickerAsset, durationHandler: @escaping ((Float)->Void)) {
+        AssetManager.resolveURL(forMediaAsset: mpa) { url in
+            let asset = AVURLAsset(url: url)
+            let duration = asset.duration
+            let durationSeconds = CMTimeGetSeconds(duration)
+            durationHandler(Float(durationSeconds))
+        }
+    }
     
     open class func getTimeForVideoFrame(_ frame: Float64, videoURL: URL) -> CMTime {
         let asset = AVURLAsset(url: videoURL, options: nil)

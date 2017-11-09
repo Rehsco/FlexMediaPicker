@@ -6,7 +6,7 @@ import UIKit
 import AVFoundation
 import StyledLabel
 
-struct Helper {
+class Helper {
     
     static func rotationTransform() -> CGAffineTransform {
         switch UIDevice.current.orientation {
@@ -54,7 +54,15 @@ struct Helper {
         let seconds = ti % 60
         let minutes = (ti / 60) % 60
         let hours = (ti / 3600)
-        return NSString(format: "%0.2d:%0.2d:%0.2d",hours,minutes,seconds) as String
+        if minutes == 0 && hours == 0 {
+            return NSString(format: "%0.2ds",seconds) as String
+        }
+        else if hours == 0 {
+            return NSString(format: "%0.2d:%0.2d",minutes,seconds) as String
+        }
+        else {
+            return NSString(format: "%0.2d:%0.2d:%0.2d",hours,minutes,seconds) as String
+        }
     }
 
     static func getMaskRect(inRect rect: CGRect) -> CGRect {
@@ -65,4 +73,33 @@ struct Helper {
             return CGRectHelper.AspectFitRectInRect(CGRect(x: 0, y: 0, width: 1, height: 1), rtarget: rect)
         }
     }
+    
+    static func getWarningLabel(withText text: String, iconSize: Int = 18) -> NSAttributedString {
+        let baseText = Helper.applyFontAndColorToString(FlexMediaPickerConfiguration.warningLabelFont, color: FlexMediaPickerConfiguration.warningLabelTextColor, text: text)
+        if let warnIcon = Helper.getWarningIcon(size: iconSize) {
+            let iconText = Helper.imageToAttachmentImage(warnIcon, fontSize: FlexMediaPickerConfiguration.warningLabelFont.pointSize)
+            let tvt = NSMutableAttributedString(attributedString: iconText)
+            tvt.append(NSAttributedString(string: " "))
+            tvt.append(baseText)
+            return tvt
+        }
+        else {
+            return baseText
+        }
+    }
+    
+    static func getWarningIcon(size: Int = 18) -> UIImage? {
+        return UIImage(named: "warnIcon_\(size)pt", in: Bundle(for: Helper.self), compatibleWith: nil)?.tint(FlexMediaPickerConfiguration.warningIconTintColor)
+    }
+    
+    static func imageToAttachmentImage(_ image: UIImage, fontSize: CGFloat = 0) -> NSAttributedString {
+        let attachment = NSTextAttachment()
+        attachment.image = image
+        if fontSize > 0 {
+            let dy = fontSize - image.size.height
+            attachment.bounds = CGRect(x: 0, y: dy, width: image.size.width, height: image.size.height)
+        }
+        return NSAttributedString(attachment: attachment)
+    }
+
 }

@@ -106,8 +106,8 @@ class CameraMediaControlPanel: FlexFooterView {
         }
         flexView.addMenu(leftMenu)
         
-        let rightMenu = CommonIconViewMenu(size: CGSize(width: 50, height: flexView.footerSize), hPos: .right, vPos: .footer, menuIconSize: 36)
-        _ = rightMenu.createIconMenuItem(imageName: "imageIcon", iconSize: 36) {
+        let rightMenu = CommonIconViewMenu(size: CGSize(width: 50, height: flexView.footerSize), hPos: .right, vPos: .footer, menuIconSize: 24)
+        _ = rightMenu.createIconMenuItem(imageName: "CloseView", iconSize: 24) {
             self.backToImagesHandler?()
         }
         flexView.addMenu(rightMenu)

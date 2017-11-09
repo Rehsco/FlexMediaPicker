@@ -230,13 +230,13 @@ extension UIImage {
     }
     
     /// Returns a new image with this image and the given image to the right of it
-    func appendImage(_ image: UIImage) -> UIImage {
-        let newSize = CGSize(width: self.size.width + image.size.width, height: max(self.size.height, image.size.height))
+    func appendImage(_ image: UIImage, margin: CGFloat = 0.0) -> UIImage {
+        let newSize = CGSize(width: self.size.width + image.size.width + margin, height: max(self.size.height, image.size.height))
         
         UIGraphicsBeginImageContextWithOptions(newSize, false, self.scale)
         
         self.draw(at: CGPoint(x: 0, y: (newSize.height - self.size.height) * 0.5))
-        image.draw(at: CGPoint(x: self.size.width, y: (newSize.height - image.size.height) * 0.5))
+        image.draw(at: CGPoint(x: self.size.width + margin, y: (newSize.height - image.size.height) * 0.5))
 
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()

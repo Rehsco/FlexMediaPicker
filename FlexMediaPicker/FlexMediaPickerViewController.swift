@@ -39,8 +39,6 @@ import TaskQueue
 import StyledLabel
 import MapKit
 
-class SelectedAssetsCollectionView: ImagesCollectionView {}
-
 class ImageMediaCollectionView: ImagesCollectionView {
     private var mediaControlPanel = MainMediaControlPanel(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
     override var footer: FlexFooterView {
@@ -84,24 +82,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
 
         super.setupView()
 
-        let ccvcApp = FlexBaseCollectionViewCell.appearance(whenContainedInInstancesOf: [ImagesCollectionView.self])
-        ccvcApp.styleColor = .clear
-        
-        let stccApp = FlexPrimaryLabel.appearance(whenContainedInInstancesOf: [FlexFooterView.self, ImagesCollectionView.self])
-        stccApp.labelTextAlignment = .center
-        
-        let ccApp = ImagesCollectionCell.appearance()
-        ccApp.imageViewStyle = FlexShapeStyle(style: .roundedFixed(cornerRadius: 5))
-        ccApp.selectedStyleColor = FlexMediaPickerConfiguration.selectedItemColor
-        
-        let cellApp = FlexCellView.appearance(whenContainedInInstancesOf: [ImagesCollectionView.self])
-        cellApp.style = FlexShapeStyle(style: .roundedFixed(cornerRadius: 5))
-
-        let footerApp = MainMediaControlPanel.appearance(whenContainedInInstancesOf: [ImagesCollectionView.self])
-        footerApp.styleColor = FlexMediaPickerConfiguration.footerPanelColor
-
-        let cfooterApp = CameraMediaControlPanel.appearance(whenContainedInInstancesOf: [CameraView.self])
-        cfooterApp.styleColor = FlexMediaPickerConfiguration.footerPanelColor
+        FlexMediaPickerStyling.applyStyling()
         
         self.contentView = ImageMediaCollectionView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         self.contentView?.headerFooterAdaptToMenu = false
@@ -143,10 +124,9 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         self.selectedAssetsView = SelectedAssetsCollectionView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
         if let sav = self.selectedAssetsView {
             self.applyCollectionViewDefaultStyling(collectionView: sav)
-            sav.registerCell(ImagesCollectionItem.self, cellClass: ImagesCollectionCell.self)
+            sav.styleColor = FlexMediaPickerConfiguration.selectedMediaStyleColor
             (sav.itemCollectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.scrollDirection = .horizontal
             sav.centerCellsHorizontally = true
-            sav.styleColor = FlexMediaPickerConfiguration.selectedAssetsStyleColor
             sav.isHidden = true
             self.view.addSubview(sav)
         }
@@ -181,11 +161,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                     else {
                         audioService.requestPermission()
                     }
-                case .cameraTake:
-                    break
-                case .videocamMode:
-                    break
-                case .videocamTake:
+                default:
                     break
                 }
             }
@@ -261,11 +237,11 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         /// TODO: This must change for SafeAreaInsets and iPhone X
         if let sav = self.selectedAssetsView, !sav.isHidden {
             self.contentView?.viewMargins = UIEdgeInsetsMake(0, 0, 120, 0)
-            sav.frame = self.selectedAssetsViewRect()
         }
         else {
             self.contentView?.viewMargins = UIEdgeInsetsMake(0, 0, 0, 0)
         }
+        self.selectedAssetsView?.frame = self.selectedAssetsViewRect()
 
         var resBounds = self.view.bounds.offsetBy(dx: 0, dy: UIApplication.shared.statusBarFrame.height * 0.5).insetBy(dx: 0, dy: UIApplication.shared.statusBarFrame.height * 0.5)
         resBounds = CGRect(origin: resBounds.origin, size: CGSize(width: resBounds.size.width, height: resBounds.size.height-tabbarSize))
@@ -438,24 +414,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             self.addSelectedAsset(imageAsset)
         }
     }
-    
-    private func maskImage(_ image: UIImage, cropRect: CGRect) -> UIImage {
-        NSLog("Mask photo to cropRect \(cropRect) of image with size: \(image.size)")
-        if FlexMediaPickerConfiguration.maskImage {
-            let imgRect = CGRect(origin: .zero, size: image.size)
-            let imgCropRect = CGRect(x: cropRect.origin.x * imgRect.width, y: cropRect.origin.y * imgRect.height, width: cropRect.width * imgRect.width, height: cropRect.height * imgRect.height)
-            NSLog("imgCropRect: \(imgCropRect)")
-            let croppedImage = image.crop(toRect: imgCropRect)
-            let cimgRect = CGRect(origin: .zero, size: croppedImage.size)
-            NSLog("cimgRect: \(cimgRect)")
-            let maskRect = Helper.getMaskRect(inRect: cimgRect)
-            let maskShape = StyledShapeLayer.createShape(FlexMediaPickerConfiguration.imageMaskStyle.style, bounds: maskRect, color: .black)
-            let maskPath = UIBezierPath(cgPath: maskShape.path!)
-            return croppedImage.maskImageWithPath(maskPath)
-        }
-        return image
-    }
-    
+
     private func addSelectedAsset(_ asset: FlexMediaPickerAsset) {
         let ias = ImageAssetImageSource(asset: asset)
         self.imageSources.append(ias)
@@ -501,7 +460,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     func addSelectedAsset(_ asset: PHAsset, thumbnail: UIImage) {
         let sAsset = AssetManager.persistence.createAssetCollectionAsset(thumbnail: thumbnail, asset: asset)
         if !sAsset.isVideoOrAudio() {
-            sAsset.cropRect = self.detectFaceRect(inImage: thumbnail)
+            sAsset.cropRect = photosService.detectFaceRect(inImage: thumbnail)
         }
         self.addSelectedAsset(sAsset)
     }
@@ -522,80 +481,6 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             idx += 1
         }
         NSLog("Could not find image source to remove for uuid \(uuid)")
-    }
-    
-    // MARK: - Face detection
-    
-    func detectFaceRect(inImage image: UIImage) -> CGRect {
-        let maxDim = max(image.size.width, image.size.height)
-        // Default aspect ration - zero offset crop rect
-        let cropRect = CGRect(x: 0, y: 0, width: image.size.height / maxDim, height: image.size.width / maxDim)
-
-        if !FlexMediaPickerConfiguration.maskImageAutoCropToDetectedFace {
-            return cropRect
-        }
-        
-        NSLog("face detection for image with dim \(image.size)")
-
-        let resImage: UIImage
-        if image.size.width > image.size.height {
-            // Face detection has issue with portrait images, so resize to square
-            resImage = image.resized(newSize: CGSize(width: maxDim, height: maxDim))!
-        }
-        else {
-            resImage = image
-        }
-        NSLog("face detection for resimage with dim \(resImage.size)")
-
-        guard let personciImage = CIImage(image: resImage) else {
-            return cropRect
-        }
-        
-        let ciImageSize = personciImage.extent.size
-        NSLog("ciimage with dim \(ciImageSize)")
-        var transform = CGAffineTransform(scaleX: 1, y: -1)
-        transform = transform.translatedBy(x: 0, y: -ciImageSize.height)
-
-        let accuracy: [String : Any] = [CIDetectorAccuracy: CIDetectorAccuracyHigh, CIDetectorImageOrientation: self.imageOrientationToCG(orientation: .up)]
-        let faceDetector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: accuracy)
-        if let faces = faceDetector?.features(in: personciImage) {
-            var largestRect: CGRect = .zero
-            var largestArea: CGFloat = 0
-            for face in faces as! [CIFaceFeature] {
-                NSLog("Found bounds are \(face.bounds)")
-                // Apply the transform to convert the coordinates
-                let faceViewBounds = face.bounds.applying(transform)
-                if faceViewBounds.width * faceViewBounds.height > largestArea {
-                    largestArea = faceViewBounds.width * faceViewBounds.height
-                    largestRect = faceViewBounds
-                }
-            }
-            if largestArea > 0 {
-                return CGRect(x: largestRect.minX / ciImageSize.width, y: largestRect.minY / ciImageSize.height, width: largestRect.width / ciImageSize.width, height: largestRect.height / ciImageSize.height)
-            }
-        }
-        return cropRect
-    }
-    
-    private func imageOrientationToCG(orientation:UIImageOrientation) -> CGImagePropertyOrientation {
-        switch (orientation) {
-        case .up:
-            return CGImagePropertyOrientation.up
-        case .upMirrored:
-            return CGImagePropertyOrientation.upMirrored
-        case .down:
-            return CGImagePropertyOrientation.down
-        case .downMirrored:
-            return CGImagePropertyOrientation.downMirrored
-        case .leftMirrored:
-            return CGImagePropertyOrientation.leftMirrored
-        case .right:
-            return CGImagePropertyOrientation.right
-        case .rightMirrored:
-            return CGImagePropertyOrientation.rightMirrored
-        case .left:
-            return CGImagePropertyOrientation.left
-        }
     }
     
     // MARK: - Internal View Model
@@ -658,11 +543,23 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                     if let icon = fitem.icon {
                         self.addSelectedAsset(imageAsset, thumbnail: icon)
                     }
+                    fitem.isSelected = true
+                    self.updateCellForItem(uuid: fitem.reference)
                 }
                 fitem.itemDeselectionActionHandler = {
                     if let asset = AssetManager.persistence.getAsset(forLocalIdentifier: imageAsset.localIdentifier) {
                         self.removeSelectedAsset(asset)
                     }
+                    fitem.isSelected = false
+                    self.updateCellForItem(uuid: fitem.reference)
+                }
+                fitem.subTitle = NSAttributedString(string: "")
+                if imageAsset.mediaType == .audio || imageAsset.mediaType == .video {
+                    let timeStr = Helper.stringFromTimeInterval(interval: imageAsset.duration)
+                    fitem.secondarySubTitle = Helper.applyFontAndColorToString(FlexMediaPickerConfiguration.selectedMediaCaptionFont, color: FlexMediaPickerConfiguration.selectedMediaCaptionColor, text: timeStr)
+                }
+                if AssetManager.isAssetSelected(imageAsset) {
+                    fitem.isSelected = true
                 }
                 self.contentView?.addItem(secRef, item: fitem)
             }
@@ -699,78 +596,65 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     // MARK: - Selected Assets View
     
     func populateSelectedAssetView() {
-        DispatchQueue.main.async {
-            self.applyAcceptEnabling()
-            if let sav = self.selectedAssetsView {
-                sav.removeAllSections()
-                let savSecRef = sav.addSection()
-                let allSelectedAssets = AssetManager.persistence.getAllAssets()
-                var idx = 0
-                for selAsset in allSelectedAssets {
-                    let ref = selAsset.asset?.localIdentifier ?? UUID().uuidString
-                    let thumbnail: UIImage?
-                    if selAsset.isVideo() || selAsset.isAudio() {
-                        thumbnail = selAsset.thumbnail
-                    }
-                    else {
-                        thumbnail = self.maskImage(selAsset.thumbnail, cropRect: selAsset.cropRect)
-                    }
-                    let fitem = ImagesCollectionItem(reference: ref, icon: thumbnail)
-                    fitem.canMoveItem = false
-                    fitem.imageViewFitting = .scaleToFit
-                    fitem.contentInteractionWillSelectItem = true
-                    fitem.autoDeselectCellAfter = .milliseconds(300)
-                    fitem.imageIndex = idx
-                    fitem.itemSelectionActionHandler = {
-                        self.showImage(byIndex: fitem.imageIndex)
-                    }
-                    sav.addItem(savSecRef, item: fitem)
-                    idx += 1
-                }
-                sav.itemCollectionView.reloadData()
-                if allSelectedAssets.count > 0 && sav.isHidden == true {
-                    self.showSelectedAssetView()
-                }
-                if allSelectedAssets.count == 0 && sav.isHidden == false {
-                    self.hideSelectedAssetView()
-                }
-            }
+        self.applyAcceptEnabling()
+        self.selectedAssetsView?.populate() {
+            imageIndex in
+            self.showImage(byIndex: imageIndex)
         }
     }
     
     private func applyAcceptEnabling() {
-        var numApplicableSelected = 0
-        let allSelectedAssets = AssetManager.persistence.getAllAssets()
-        for sa in allSelectedAssets {
-            if sa.isVideo() {
-                if FlexMediaPickerConfiguration.allowVideoSelection {
+        DispatchQueue.main.async {
+            var numApplicableSelected = 0
+            let allSelectedAssets = AssetManager.persistence.getAllAssets()
+            for sa in allSelectedAssets {
+                if sa.isVideo() {
+                    if FlexMediaPickerConfiguration.allowVideoSelection {
+                        numApplicableSelected += 1
+                    }
+                }
+                else if sa.isAudio() {
+                    if FlexMediaPickerConfiguration.allowVoiceRecording {
+                        numApplicableSelected += 1
+                    }
+                }
+                else {
                     numApplicableSelected += 1
                 }
             }
-            else if sa.isAudio() {
-                if FlexMediaPickerConfiguration.allowVoiceRecording {
-                    numApplicableSelected += 1
+            self.acceptMI?.enabled = (numApplicableSelected > 0)
+            if numApplicableSelected > 0 {
+                /*
+                let roundedrect = UIBezierPath()
+                roundedrect.move(to: CGPoint(x: 492, y: 93))
+//                roundedrect.addCurve(to: CGPoint(x: 422, y: 184), controlPoint1: CGPoint(x: 481, y: 93), controlPoint2: CGPoint(x: 422, y: 157))
+//                roundedrect.addCurve(to: CGPoint(x: 492, y: 274), controlPoint1: CGPoint(x: 422, y: 210), controlPoint2: CGPoint(x: 481, y: 274))
+                roundedrect.addLine(to: CGPoint(x: 422, y: 184))
+                roundedrect.addLine(to: CGPoint(x: 492, y: 274))
+                roundedrect.addLine(to: CGPoint(x: 659, y: 274))
+                roundedrect.addCurve(to: CGPoint(x: 679, y: 254), controlPoint1: CGPoint(x: 670, y: 274), controlPoint2: CGPoint(x: 679, y: 265))
+                roundedrect.addLine(to: CGPoint(x: 679, y: 113))
+                roundedrect.addCurve(to: CGPoint(x: 659, y: 93), controlPoint1: CGPoint(x: 679, y: 102), controlPoint2: CGPoint(x: 670, y: 93))
+                roundedrect.close()
+                
+                
+                let mask = StyledShapeLayer.createShape(.custom(path: roundedrect), bounds: CGRect(x: 0, y: 0, width: 36, height: 24), color: .black)
+ */
+                let mask = StyledShapeLayer.createShape(.rounded, bounds: CGRect(x: 0, y: 0, width: 36, height: 24), color: .black)
+                let nImage = UIImage(color: FlexMediaPickerConfiguration.selectedItemColor, size: CGSize(width: 36, height: 24))
+                let numImage = nImage?.addText(drawText: "\(numApplicableSelected)", font: FlexMediaPickerConfiguration.selectedMediaNumberFont)
+                let maskPath = UIBezierPath(cgPath: mask.path!)
+                let roundedImage = numImage?.maskImageWithPathAndCrop(maskPath)
+                if let acceptImage = UIImage(named: "Accept_24pt")?.tint(FlexMediaPickerConfiguration.iconsColor) {
+                    if let finalImage = roundedImage?.appendImage(acceptImage, margin: FlexMediaPickerConfiguration.selectedMediaAcceptedCountImageMargin) {
+                        self.acceptMI?.thumbIcon = finalImage
+                        self.rightViewMenu?.viewMenu?.thumbSize = finalImage.size
+                    }
                 }
             }
-            else {
-                numApplicableSelected += 1
-            }
+            self.selectedAssetsView?.showHide(hide: allSelectedAssets.count == 0)
+            self.rightViewMenu?.viewMenu?.setNeedsLayout()
         }
-        self.acceptMI?.enabled = (numApplicableSelected > 0)
-        if numApplicableSelected > 0 {
-            let mask = StyledShapeLayer.createShape(.rounded, bounds: CGRect(x: 0, y: 0, width: 36, height: 24), color: .black)
-            let nImage = UIImage(color: FlexMediaPickerConfiguration.selectedItemColor, size: CGSize(width: 36, height: 24))
-            let numImage = nImage?.addText(drawText: "\(numApplicableSelected)", font: FlexMediaPickerConfiguration.selectedMediaNumberFont)
-            let maskPath = UIBezierPath(cgPath: mask.path!)
-            let roundedImage = numImage?.maskImageWithPathAndCrop(maskPath)
-            if let acceptImage = UIImage(named: "Accept_24pt")?.tint(FlexMediaPickerConfiguration.iconsColor) {
-                if let finalImage = roundedImage?.appendImage(acceptImage) {
-                    self.acceptMI?.thumbIcon = finalImage
-                    self.rightViewMenu?.viewMenu?.thumbSize = finalImage.size
-                }
-            }
-        }
-        self.rightViewMenu?.viewMenu?.setNeedsLayout()
     }
     
     private func getAcceptedAssets() -> [FlexMediaPickerAsset] {
@@ -792,31 +676,6 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             }
         }
         return returnableAssets
-    }
-    
-    func showSelectedAssetView() {
-        if let sav = self.selectedAssetsView, !sav.isHidden {
-            return
-        }
-        self.selectedAssetsView?.alpha = 0
-        self.selectedAssetsView?.isHidden = false
-        self.refreshView()
-        UIView.animate(withDuration: 0.3, animations: {
-            self.selectedAssetsView?.alpha = 1
-        })
-    }
-
-    func hideSelectedAssetView() {
-        if let sav = self.selectedAssetsView, sav.isHidden {
-            return
-        }
-        self.selectedAssetsView?.alpha = 1
-        UIView.animate(withDuration: 0.3, animations: {
-            self.selectedAssetsView?.alpha = 0
-        }) { _ in
-            self.selectedAssetsView?.isHidden = true
-            self.refreshView()
-        }
     }
     
     // MARK: - Fullscreen Preview
@@ -866,80 +725,20 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     // MARK: - Locations
 
     private func addCurrentLocationAsImage() {
-        self.getCurrentLocationAsImage() {
+        locationService.getCurrentLocationAsImage() {
             image in
             self.addNewImage(image, location: nil)
         }
-    }
-
-    private func getCurrentLocationAsImage(completionHandler: @escaping (UIImage)->Void) {
-        if let loc = locationService.currentLocation {
-            let mapView = LocationMapView(frame: CGRect(origin: .zero , size: FlexMediaPickerConfiguration.locationImageSize))
-            mapView.setSingleLocation(loc, tag: "My location")
-            mapView.setMapAnnotations()
-            self.takeSnapshot(mapView, withCallback: { (image, error) in
-                if let e = error {
-                    NSLog("Error creating location snapshot image: \(e.localizedDescription)")
-                }
-                else if let thumbnail = image {
-                    completionHandler(thumbnail)
-                }
-                else {
-                    NSLog("Location snapshort returned neither image nor an error!")
-                }
-            })
-        }
-    }
-    
-    private func takeSnapshot(_ mapView: MKMapView, withCallback: @escaping (UIImage?, NSError?) -> ()) {
-        let options = MKMapSnapshotOptions()
-        options.region = mapView.region
-        options.size = mapView.frame.size
-        options.scale = UIScreen.main.scale
-        
-        let snapshotter = MKMapSnapshotter(options: options)
-        snapshotter.start(completionHandler: { snapshot, error in
-            guard snapshot != nil else {
-                withCallback(nil, error as NSError?)
-                return
-            }
-            
-            if let image = snapshot?.image {
-                let finalImageRect = CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height)
-                
-                UIGraphicsBeginImageContextWithOptions(image.size, true, image.scale)
-                
-                image.draw(at:CGPoint.zero)
-                
-                let pin = MKPinAnnotationView()
-                let pinImage = pin.image
-                for annotation in mapView.annotations {
-                    let point = snapshot?.point(for: annotation.coordinate)
-                    if let po = point {
-                        var p = po
-                        if finalImageRect.contains(p) {
-                            let pinCenterOffset = pin.centerOffset
-                            p.x -= pin.bounds.size.width / 2.0
-                            p.y -= pin.bounds.size.height / 2.0
-                            p.x += pinCenterOffset.x
-                            p.y += pinCenterOffset.y
-                            pinImage?.draw(at: p)
-                        }
-                    }
-                }
-                let finalImage = UIGraphicsGetImageFromCurrentImageContext()
-                UIGraphicsEndImageContext()
-                withCallback(finalImage, nil)
-            }
-        })
     }
     
     // MARK: - Helper
     
     func updateCellForItem(uuid: String) {
-        if let ip = self.contentView?.getIndexPathForItem(uuid) {
-            if let cell = self.contentView?.itemCollectionView.cellForItem(at: ip) {
-                cell.setNeedsLayout()
+        DispatchQueue.main.async {
+            if let ip = self.contentView?.getIndexPathForItem(uuid) {
+                if let cell = self.contentView?.itemCollectionView.cellForItem(at: ip) {
+                    cell.setNeedsLayout()
+                }
             }
         }
     }
