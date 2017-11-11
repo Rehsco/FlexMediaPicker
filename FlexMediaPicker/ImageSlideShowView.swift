@@ -564,7 +564,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
         DispatchQueue.main.async {
             if let player = self.audioPlayer {
                 player.currentTime = offset * player.duration
-                self.assetInfoLabel?.label.text = Helper.stringFromTimeInterval(interval: player.currentTime)
+                self.assetInfoLabel?.label.text = Helper.stringFromTimeInterval(interval: offset * player.duration)
             }
         }
     }
@@ -609,12 +609,28 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
     // MARK: - AVPlayerDelegate
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        if self.currentAVOffset >= self.maximumAVOffset {
-            self.currentAVOffset = self.minimumAVOffset
-            self.classDidUpdateTimeOffsets()
-            self.updateAudioTime(toOffset: self.minimumAVOffset)
-            self.timeSliderPanel?.currentTimeOffset = self.currentAVOffset
+        self.finishAudioPlay()
+/*
+        if let ap = self.audioPlayer {
+            let fraction = Double(ap.currentTime) / Double(ap.duration)
+            if !fraction.isNaN {
+                self.currentAVOffset = fraction
+                if self.currentAVOffset >= self.maximumAVOffset || self.currentAVOffset < self.minimumAVOffset {
+                    self.currentAVOffset = self.minimumAVOffset
+                    self.classDidUpdateTimeOffsets()
+                    self.updateAudioTime(toOffset: self.minimumAVOffset)
+                    self.timeSliderPanel?.currentTimeOffset = self.currentAVOffset
+                }
+            }
         }
+ */
+    }
+    
+    private func finishAudioPlay() {
+        self.currentAVOffset = self.minimumAVOffset
+        self.classDidUpdateTimeOffsets()
+        self.updateAudioTime(toOffset: self.minimumAVOffset)
+        self.timeSliderPanel?.currentTimeOffset = self.currentAVOffset
         self.videoControlPanel.isPlaying = false
     }
     
@@ -624,7 +640,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
             if !fraction.isNaN {
                 if fraction >= self.maximumAVOffset {
                     ap.stop()
-                    self.videoControlPanel.isPlaying = false
+                    self.finishAudioPlay()
                 }
                 else {
                     self.currentAVOffset = min(max(fraction, self.minimumAVOffset), self.maximumAVOffset)

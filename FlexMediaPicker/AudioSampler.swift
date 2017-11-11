@@ -63,11 +63,12 @@ open class AudioSampler {
     
     open func generateImageFromSamples() -> UIImage? {
         NSLog("max power amp: \(self.maxPowerSampled) in no of samples: \(self.powerSamples.count)")
+        let margin: CGFloat = 4
         let vrImageSampleSize = FlexMediaPickerConfiguration.voiceRecordingSampleImageSize
         guard self.powerSamples.count > 0 && self.maxPowerSampled > 0 else {
             return UIImage(color: .white, size: vrImageSampleSize)
         }
-        let ampFactor = Float((vrImageSampleSize.height - 4.0) / 2.0) / self.maxPowerSampled
+        let ampFactor = Float((vrImageSampleSize.height - 2.0 * margin) / 2.0) / self.maxPowerSampled
         let density = Float(vrImageSampleSize.width) / Float(self.powerSamples.count)
         
         // Prepare buckets
