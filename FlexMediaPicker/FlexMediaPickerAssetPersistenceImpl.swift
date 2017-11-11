@@ -249,6 +249,54 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
         }
     }
     
+    open func cropAudio(_ audioURL: URL, targetURL: URL, fromTime: CMTime? = nil, duration: CMTime? = nil, progressHandler: ((Float)->Void)? = nil, exportFinishedHandler: @escaping ((URL?)->Void)) {
+        self.progressUpdateTimer?.invalidate()
+        
+        let avAsset = AVURLAsset(url: audioURL, options: nil)
+        let startDate = Foundation.Date()
+        
+        // Create Export session
+        self.exportSession = AVAssetExportSession(asset: avAsset, presetName: AVAssetExportPresetAppleM4A)
+        
+        deleteFile(targetURL)
+        
+        exportSession?.outputURL = targetURL
+        exportSession?.outputFileType = AVFileTypeAppleM4A
+        exportSession?.shouldOptimizeForNetworkUse = true
+        let start = fromTime ?? CMTimeMakeWithSeconds(0.0, 0)
+        let range = CMTimeRangeMake(start, duration ?? avAsset.duration)
+        exportSession?.timeRange = range
+
+        exportSession?.exportAsynchronously(completionHandler: {() -> Void in
+            self.progressUpdateTimer?.invalidate()
+            switch self.exportSession!.status {
+            case .failed:
+                NSLog("\(String(describing: self.exportSession!.error))")
+            case .cancelled:
+                NSLog("Export canceled")
+            case .completed:
+                // Audio conversion finished
+                let endDate = Foundation.Date()
+                
+                let time = endDate.timeIntervalSince(startDate)
+                NSLog("\(time)")
+                NSLog("Audio Crop Successful!")
+                NSLog(self.exportSession!.outputURL!.absoluteString)
+                exportFinishedHandler(self.exportSession?.outputURL)
+            default:
+                break
+            }
+        })
+        
+        DispatchQueue.main.async {
+            self.progressUpdateTimer = Timer.scheduledTimer(withTimeInterval: 0.025, repeats: true) { _ in
+                if let es = self.exportSession {
+                    progressHandler?(es.progress)
+                }
+            }
+        }
+    }
+    
     /// Crop video
 
     open func encodeVideo(_ videoURL: URL, targetURL: URL, fromTime: CMTime? = nil, duration: CMTime? = nil, presetName: String = AVAssetExportPresetPassthrough, progressHandler: ((Float)->Void)? = nil, exportFinishedHandler: @escaping ((URL?)->Void))  {

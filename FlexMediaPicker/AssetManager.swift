@@ -233,10 +233,27 @@ open class AssetManager {
             })
         }
     }
-    
+
+    open static func cropAudio(forMediaAsset mpa: FlexMediaPickerAsset, progressHandler: ((Float)->Void)? = nil, completedURLHandler: @escaping ((URL)->Void)) {
+        AssetManager.resolveURL(forMediaAsset: mpa) { url in
+            let asset = AVURLAsset(url: url)
+            let dur = asset.duration
+            let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0] as URL
+            let fileURL = documentsDirectory.appendingPathComponent("\(mpa.uuid).m4a")
+            let startOffset = CMTimeMakeWithSeconds(mpa.minTimeOffset * dur.seconds, dur.timescale)
+            let endOffset = CMTimeMakeWithSeconds(mpa.maxTimeOffset * dur.seconds, dur.timescale)
+            let duration = endOffset - startOffset
+            self.persistence.cropAudio(url, targetURL: fileURL, fromTime: startOffset, duration: duration, progressHandler: progressHandler, exportFinishedHandler: { url in
+                if let videoUrl = url {
+                    completedURLHandler(videoUrl)
+                }
+            })
+        }
+    }
+
     // Helper
     
-    open class  func duration(forMediaAsset mpa: FlexMediaPickerAsset, durationHandler: @escaping ((Float)->Void)) {
+    open class func duration(forMediaAsset mpa: FlexMediaPickerAsset, durationHandler: @escaping ((Float)->Void)) {
         AssetManager.resolveURL(forMediaAsset: mpa) { url in
             let asset = AVURLAsset(url: url)
             let duration = asset.duration

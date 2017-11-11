@@ -337,27 +337,31 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     // MARK: - Item handling
 
     private func convertSelectedVideoAssets(completedHandler: @escaping (()->Void)) {
-        if FlexMediaPickerConfiguration.allowVideoSelection {
-            let aAssets = self.getAcceptedAssets()
-            var assetsToConvert: [FlexMediaPickerAsset] = []
-            for aa in aAssets {
-                if aa.isVideo() {
-                    assetsToConvert.append(aa)
-                }
+        let aAssets = self.getAcceptedAssets()
+        var assetsToConvert: [FlexMediaPickerAsset] = []
+        for aa in aAssets {
+            // TODO: Only convert (audio / video) when required
+            if FlexMediaPickerConfiguration.allowVideoSelection && aa.isVideo() {
+                assetsToConvert.append(aa)
             }
+            if FlexMediaPickerConfiguration.allowVoiceRecording && aa.isAudio() {
+                assetsToConvert.append(aa)
+            }
+        }
+        
+        BusyViewFactory.showProgressOverlay(onView: nil, completionHandler: {
+            var idx = 1
+            let assetsConvertCount = assetsToConvert.count
+            let queue = TaskQueue()
             
-            BusyViewFactory.showProgressOverlay(onView: nil, completionHandler: {
-                var idx = 1
-                let assetsConvertCount = assetsToConvert.count
-                let queue = TaskQueue()
-                
-                for _ in 0..<assetsConvertCount {
-                    queue.tasks +=~ { result, next in
-                        BusyViewFactory.updateProgress(progress: 0, upperLabel: "Converting Videos", lowerLabel: "\(idx) of \(assetsConvertCount)")
-
-                        if let assetToConvert = assetsToConvert.first != nil ? assetsToConvert.removeFirst() : nil {
+            for _ in 0..<assetsConvertCount {
+                queue.tasks +=~ { result, next in
+                    BusyViewFactory.updateProgress(progress: 0, upperLabel: "Converting Media", lowerLabel: "\(idx) of \(assetsConvertCount)")
+                    
+                    if let assetToConvert = assetsToConvert.first != nil ? assetsToConvert.removeFirst() : nil {
+                        if assetToConvert.isVideo() {
                             AssetManager.reencodeVideo(forMediaAsset: assetToConvert, progressHandler: { progress in
-                                BusyViewFactory.updateProgress(progress: progress, upperLabel: "Converting Videos", lowerLabel: "\(idx) of \(assetsConvertCount)")
+                                BusyViewFactory.updateProgress(progress: progress, upperLabel: "Converting Video", lowerLabel: "\(idx) of \(assetsConvertCount)")
                             }, completedURLHandler: { url in
                                 AssetManager.storeVideo(forURL: url, completion: { _ in
                                     NSLog("re-encoded video stored to Photos (as test)")
@@ -365,23 +369,30 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                                 })
                             })
                         }
-                    }
-                    
-                    queue.tasks +=! {
-                        idx += 1
+                        else if assetToConvert.isAudio() {
+                            AssetManager.cropAudio(forMediaAsset: assetToConvert, progressHandler: { progress in
+                                BusyViewFactory.updateProgress(progress: progress, upperLabel: "Converting Audio", lowerLabel: "\(idx) of \(assetsConvertCount)")
+                            }, completedURLHandler: { url in
+                                AssetManager.storeVideo(forURL: url, completion: { _ in
+                                    NSLog("re-encoded audio stored to Photos (as test)")
+                                    next(nil)
+                                })
+                            })
+                        }
                     }
                 }
                 
-                queue.run {
-                    BusyViewFactory.hideProgressOverlay() {
-                        completedHandler()
-                    }
+                queue.tasks +=! {
+                    idx += 1
                 }
-            })
-        }
-        else {
-            completedHandler()
-        }
+            }
+            
+            queue.run {
+                BusyViewFactory.hideProgressOverlay() {
+                    completedHandler()
+                }
+            }
+        })
     }
     
     func fetchAssets(in collection: PHAssetCollection) {
