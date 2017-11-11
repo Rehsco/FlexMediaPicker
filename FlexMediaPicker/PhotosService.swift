@@ -101,7 +101,9 @@ open class PhotosService: NSObject {
                 }
             }
             if largestArea > 0 {
-                return CGRect(x: largestRect.minX / ciImageSize.width, y: largestRect.minY / ciImageSize.height, width: largestRect.width / ciImageSize.width, height: largestRect.height / ciImageSize.height)
+                let cRect = CGRect(x: largestRect.minX / ciImageSize.width, y: largestRect.minY / ciImageSize.height, width: largestRect.width / ciImageSize.width, height: largestRect.height / ciImageSize.height)
+                let scaledCropRect = cRect.insetBy(dx: (cRect.width - cRect.width * FlexMediaPickerConfiguration.faceDetectionCropScale) * 0.5, dy: (cRect.height - cRect.height * FlexMediaPickerConfiguration.faceDetectionCropScale) * 0.5)
+                return scaledCropRect
             }
         }
         return cropRect

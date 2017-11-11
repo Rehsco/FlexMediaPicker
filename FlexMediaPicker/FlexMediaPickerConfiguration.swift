@@ -154,6 +154,7 @@ public class FlexMediaPickerConfiguration {
     public static var imageCroppingMaxScale: CGFloat = 5.0
     // Currently available: scaleToFit and scaleToFill
     public static var imageMaskFitting: FlexImageShapeFit = .scaleToFit
+    public static var faceDetectionCropScale: CGFloat = 1.0
 
     public static var voiceRecordingSampleImageSize = CGSize(width: 256, height: 128)
     public static var voiceRecordingUpdateMetricsInterval: TimeInterval = 0.06
@@ -161,6 +162,7 @@ public class FlexMediaPickerConfiguration {
     public static var voiceRecordingSamplingInterval: TimeInterval = 0.12
     
     public static var selectedMediaAcceptedCountImageMargin: CGFloat = 2
+    
     
     // MARK: Custom behaviour
     
