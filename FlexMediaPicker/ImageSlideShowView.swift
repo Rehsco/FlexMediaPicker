@@ -610,20 +610,6 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         self.finishAudioPlay()
-/*
-        if let ap = self.audioPlayer {
-            let fraction = Double(ap.currentTime) / Double(ap.duration)
-            if !fraction.isNaN {
-                self.currentAVOffset = fraction
-                if self.currentAVOffset >= self.maximumAVOffset || self.currentAVOffset < self.minimumAVOffset {
-                    self.currentAVOffset = self.minimumAVOffset
-                    self.classDidUpdateTimeOffsets()
-                    self.updateAudioTime(toOffset: self.minimumAVOffset)
-                    self.timeSliderPanel?.currentTimeOffset = self.currentAVOffset
-                }
-            }
-        }
- */
     }
     
     private func finishAudioPlay() {
