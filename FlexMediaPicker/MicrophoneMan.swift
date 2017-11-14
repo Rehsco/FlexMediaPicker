@@ -31,9 +31,9 @@ import UIKit
 import AVFoundation
 
 open class MicrophoneMan: NSObject {
-    var meterTimer: Timer?
-    var isRecording = false
-    var isPaused = false
+    private var meterTimer: Timer?
+    private(set) var isRecording = false
+    private(set) var isPaused = false
 
     var recordingTimeUpdated: ((TimeInterval, Float)->Void)?
     var voiceRecordedEventHandler: ((FlexMediaPickerAsset)->Void)?
@@ -79,25 +79,20 @@ open class MicrophoneMan: NSObject {
         }
     }
     
-/*
     func pauseRecording() {
-        self.lockQueue.sync() {
-            if self.isCapturing{
-                NSLog("pause voice recording")
-                self.isPaused = true
-                self.isDiscontinue = true
-            }
+        if self.isRecording {
+            NSLog("pause voice recording")
+            self.isPaused = true
+            AssetManager.persistence.pauseAudioRecording()
         }
     }
     
     func resumeRecording() {
-        self.lockQueue.sync() {
-            if self.isCapturing{
-                NSLog("resume voice recording")
-                self.isPaused = false
-            }
+        if self.isRecording && self.isPaused {
+            NSLog("resume voice recording")
+            self.isPaused = false
+            AssetManager.persistence.resumeAudioRecording()
         }
     }
-  */
 
 }

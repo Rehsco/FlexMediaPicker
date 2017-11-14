@@ -79,8 +79,14 @@ class VoiceRecorderView: FlexView {
         micMan.recordingTimeUpdated = {
             timeElapsed, avgpower in
             DispatchQueue.main.async {
-                self.recordingInfoLabel?.label.text = Helper.stringFromTimeInterval(interval: timeElapsed)
-                self.recordingInfoLabel?.setNeedsLayout()
+                if self.micMan.isPaused {
+                    self.recordingInfoLabel?.label.text = "Paused at \(Helper.stringFromTimeInterval(interval: timeElapsed))"
+                    self.recordingInfoLabel?.setNeedsLayout()
+                }
+                else {
+                    self.recordingInfoLabel?.label.text = Helper.stringFromTimeInterval(interval: timeElapsed)
+                    self.recordingInfoLabel?.setNeedsLayout()
+                }
                 
                 // Update waveform
                 let normPower = CGFloat(pow (10, avgpower / 35))
@@ -126,6 +132,15 @@ class VoiceRecorderView: FlexView {
             }
             ccp.backToImagesHandler = {
                 self.cancelVoiceRecorderViewHandler?()
+            }
+            ccp.pausePressedHandler = {
+                isPaused in
+                if isPaused {
+                    self.micMan.pauseRecording()
+                }
+                else {
+                    self.micMan.resumeRecording()
+                }
             }
         }
         self.footer.styleColor = FlexMediaPickerConfiguration.footerPanelColor

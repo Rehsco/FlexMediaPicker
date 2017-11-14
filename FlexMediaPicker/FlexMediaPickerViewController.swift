@@ -291,23 +291,23 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     // MARK: - Voice Recording
     
     private func showVoiceRecorderView() {
-        if self.voiceRecorderView == nil {
-            self.voiceRecorderView = VoiceRecorderView(frame: self.view.bounds)
-            self.view.insertSubview(self.voiceRecorderView!, at: 1)
-            self.voiceRecorderView?.headerFooterAdaptToMenu = false
-            self.voiceRecorderView?.cancelVoiceRecorderViewHandler = {
-                self.voiceRecorderView?.removeFromSuperview()
-                self.voiceRecorderView = nil
-            }
-            self.voiceRecorderView?.didRecordAudio = {
-                mpa in
-                self.addSelectedAsset(mpa)
-            }
-            self.voiceRecorderView?.voiceRecordingFailedHandler = {
-                // TODO: Notify
-            }
-            self.layoutSupplementaryViews(to: self.view.bounds.size)
+        self.voiceRecorderView?.removeFromSuperview()
+
+        self.voiceRecorderView = VoiceRecorderView(frame: self.view.bounds)
+        self.view.insertSubview(self.voiceRecorderView!, at: 1)
+        self.voiceRecorderView?.headerFooterAdaptToMenu = false
+        self.voiceRecorderView?.cancelVoiceRecorderViewHandler = {
+            self.voiceRecorderView?.removeFromSuperview()
+            self.voiceRecorderView = nil
         }
+        self.voiceRecorderView?.didRecordAudio = {
+            mpa in
+            self.addSelectedAsset(mpa)
+        }
+        self.voiceRecorderView?.voiceRecordingFailedHandler = {
+            // TODO: Notify
+        }
+        self.layoutSupplementaryViews(to: self.view.bounds.size)
     }
     
     // MARK: - Item Access
@@ -610,6 +610,13 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         self.applyAcceptEnabling()
         self.selectedAssetsView?.populate() {
             imageIndex in
+            
+            self.voiceRecorderView?.removeFromSuperview()
+            self.voiceRecorderView = nil
+
+            self.cameraView?.removeFromSuperview()
+            self.cameraView = nil
+            
             self.showImage(byIndex: imageIndex)
         }
     }

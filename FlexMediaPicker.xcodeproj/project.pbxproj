@@ -11,8 +11,6 @@
 		5B3DB3231F7FB8D300D864DE /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3DB3211F7FB8D300D864DE /* UIViewExtensions.swift */; };
 		5B3DB3281F7FFB1200D864DE /* VideoPlaybackControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3DB3271F7FFB1200D864DE /* VideoPlaybackControlPanel.swift */; };
 		5B3DB3291F7FFB1200D864DE /* VideoPlaybackControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3DB3271F7FFB1200D864DE /* VideoPlaybackControlPanel.swift */; };
-		5B8809111FAF10F2001F26E8 /* AudioSampler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8809101FAF10F2001F26E8 /* AudioSampler.swift */; };
-		5B8809121FAF10F2001F26E8 /* AudioSampler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8809101FAF10F2001F26E8 /* AudioSampler.swift */; };
 		5B88355E1FB1AC0600782FB5 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B88355D1FB1AC0600782FB5 /* StringExtension.swift */; };
 		5B88355F1FB1AC0600782FB5 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B88355D1FB1AC0600782FB5 /* StringExtension.swift */; };
 		5B8835611FB1B2CB00782FB5 /* AlertViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8835601FB1B2CB00782FB5 /* AlertViewFactory.swift */; };
@@ -119,7 +117,6 @@
 		19BFF1510DF1A710A8C8385C /* Pods-FlexMediaPicker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlexMediaPicker.release.xcconfig"; path = "Pods/Target Support Files/Pods-FlexMediaPicker/Pods-FlexMediaPicker.release.xcconfig"; sourceTree = "<group>"; };
 		5B3DB3211F7FB8D300D864DE /* UIViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtensions.swift; sourceTree = "<group>"; };
 		5B3DB3271F7FFB1200D864DE /* VideoPlaybackControlPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlaybackControlPanel.swift; sourceTree = "<group>"; };
-		5B8809101FAF10F2001F26E8 /* AudioSampler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSampler.swift; sourceTree = "<group>"; };
 		5B88355D1FB1AC0600782FB5 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		5B8835601FB1B2CB00782FB5 /* AlertViewFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertViewFactory.swift; sourceTree = "<group>"; };
 		5B8835671FB1F6C800782FB5 /* SelectedAssetsCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedAssetsCollectionView.swift; sourceTree = "<group>"; };
@@ -269,7 +266,6 @@
 		5BC11CFF1FADB2B600BBC03B /* Voice Recorder */ = {
 			isa = PBXGroup;
 			children = (
-				5B8809101FAF10F2001F26E8 /* AudioSampler.swift */,
 				5BC11D001FADB34000BBC03B /* MicrophoneMan.swift */,
 				5BC11D061FADCCF200BBC03B /* VoiceRecorderView.swift */,
 			);
@@ -508,6 +504,11 @@
 						CreatedOnToolsVersion = 8.3.3;
 						DevelopmentTeam = V7Y9TF9C7U;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -578,6 +579,7 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-FlexMediaPickerExample/Pods-FlexMediaPickerExample-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/DSWaveformImage/DSWaveformImage.framework",
 				"${BUILT_PRODUCTS_DIR}/DateToolsSwift/DateToolsSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/DynamicColor/DynamicColor.framework",
 				"${BUILT_PRODUCTS_DIR}/ImagePersistence/ImagePersistence.framework",
@@ -592,6 +594,7 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DSWaveformImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DateToolsSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DynamicColor.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ImagePersistence.framework",
@@ -675,7 +678,6 @@
 				5BD6281C1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift in Sources */,
 				5BC3EF891FA72A4B00D21B14 /* CGGeometryExtension.swift in Sources */,
 				5BDC841C1F52CE8B00BF45B5 /* CameraView.swift in Sources */,
-				5B8809111FAF10F2001F26E8 /* AudioSampler.swift in Sources */,
 				5BCB66451F81549800AB9F4E /* VideoTimeSliderView.swift in Sources */,
 				5BC6D94B1F763EB00051B0A3 /* CameraMediaControlPanel.swift in Sources */,
 				5B88356B1FB204F900782FB5 /* FlexMediaPickerStyling.swift in Sources */,
@@ -765,7 +767,6 @@
 				5BC667821FA4D948004D517D /* CGRectHelper.swift in Sources */,
 				5BC6D94F1F763F190051B0A3 /* CamVidSwitch.swift in Sources */,
 				5B8835621FB1B2CB00782FB5 /* AlertViewFactory.swift in Sources */,
-				5B8809121FAF10F2001F26E8 /* AudioSampler.swift in Sources */,
 				5BD1E6E71F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift in Sources */,
 				5B8835691FB1F6C800782FB5 /* SelectedAssetsCollectionView.swift in Sources */,
 				5BC11D081FADCCF200BBC03B /* VoiceRecorderView.swift in Sources */,

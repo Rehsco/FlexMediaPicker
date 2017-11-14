@@ -100,7 +100,6 @@ class VideoPlaybackControlPanel: FlexFooterView {
         self.playPauseItem = self.playMenu?.createIconMenuItem(imageName: "playIcon", selectedImageName: "pauseIcon" , iconSize: 36) {
             self.isPlaying = !self.isPlaying
             self.playPressedHandler?(self.isPlaying)
-            self.playPauseItem?.selected = self.isPlaying
         }
         flexView.addMenu(self.playMenu!)
         

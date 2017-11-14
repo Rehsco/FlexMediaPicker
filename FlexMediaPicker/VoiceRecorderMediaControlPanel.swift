@@ -32,14 +32,26 @@ import MJRFlexStyleComponents
 
 class VoiceRecorderMediaControlPanel: FlexFooterView {
     private var rightMenu: CommonIconViewMenu?
+    private var leftMenu: CommonIconViewMenu?
     fileprivate var backTriggerButton: FlexLabel?
     private var ringTriggerButton: FlexLabel?
     fileprivate var triggerButton: FlexLabel?
-    
+    private var recordingPauseItem: FlexMenuItem?
+
     var backToImagesHandler: (()->Void)?
     var recAudioActionHandler: (()->Void)?
     
     var isRecording = false
+    
+    var isPaused: Bool = false {
+        didSet {
+            DispatchQueue.main.async {
+                self.recordingPauseItem?.selected = self.isPaused
+                self.leftMenu?.viewMenu?.setNeedsLayout()
+            }
+        }
+    }
+    var pausePressedHandler: ((Bool)->Void)?
     
     override func initView() {
         super.initView()
@@ -65,8 +77,13 @@ class VoiceRecorderMediaControlPanel: FlexFooterView {
     }
     
     func setupMenu(in flexView: FlexView) {
-        let leftMenu = CommonIconViewMenu(size: CGSize(width: 120, height: flexView.footerSize), hPos: .left, vPos: .footer, menuIconSize: 36)
-        flexView.addMenu(leftMenu)
+        self.leftMenu = CommonIconViewMenu(size: CGSize(width: 120, height: flexView.footerSize), hPos: .left, vPos: .footer, menuIconSize: 36)
+        self.recordingPauseItem = self.leftMenu?.createIconMenuItem(imageName: "pauseIcon", selectedImageName: "pausedIcon", selectedIconTintColor: FlexMediaPickerConfiguration.pausedRecordingIconTintColor, iconSize: 36) {
+            self.isPaused = !self.isPaused
+            self.pausePressedHandler?(self.isPaused)
+        }
+        self.leftMenu?.viewMenu?.isHidden = true
+        flexView.addMenu(self.leftMenu!)
         
         self.rightMenu = CommonIconViewMenu(size: CGSize(width: 50, height: flexView.footerSize), hPos: .right, vPos: .footer, menuIconSize: 24)
         _ = rightMenu?.createIconMenuItem(imageName: "CloseView", iconSize: 24) {
@@ -90,9 +107,11 @@ class VoiceRecorderMediaControlPanel: FlexFooterView {
         super.showHide(hide: hide, completionHandler: completionHandler)
         if self.isRecording {
             self.rightMenu?.viewMenu?.showHide(hide: true)
+            self.leftMenu?.viewMenu?.showHide(hide: false)
         }
         else {
             self.rightMenu?.viewMenu?.showHide(hide: hide)
+            self.leftMenu?.viewMenu?.showHide(hide: true)
         }
     }
 }

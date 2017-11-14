@@ -31,18 +31,17 @@ import UIKit
 import Photos
 import ImagePersistence
 import AVFoundation
+import DSWaveformImage
 
 open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPersistence, AVAudioRecorderDelegate {
     private var assetMap: [String: FlexMediaPickerAsset] = [:]
     private var videoWriter: VideoWriter?
     private var audioRecorder: AVAudioRecorder?
+    private var audioRecordingPaused: Bool = false
     private var currentAudioFileURL: URL?
     private var fileIndex = 0
     private var exportSession: AVAssetExportSession?
     private var progressUpdateTimer: Timer?
-    
-    open var audioSampler = AudioSampler()
-    private var lastPowerSampleTime: TimeInterval = 0
 
     open var imagePersistence: ImagePersistenceInterface = FlexMediaPickerImagePersistenceImpl()!
     
@@ -192,9 +191,9 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
     }
     
     open func startAudioRecording() -> Bool {
-        self.audioSampler.reset()
         if self.prepareAudioRecording() {
             self.audioRecorder?.record()
+            self.audioRecordingPaused = false
             return true
         }
         return false
@@ -206,18 +205,11 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
                 ar.updateMeters()
                 let avgp = ar.averagePower(forChannel: 0)
                 let timeElapsed = ar.currentTime
-                
-                let normPower = CGFloat(pow (10, avgp / 35))
-                let sample = Float(normPower * 100)
-                
-                if timeElapsed - self.lastPowerSampleTime > FlexMediaPickerConfiguration.voiceRecordingSamplingInterval {
-                    self.lastPowerSampleTime = timeElapsed
-                    self.audioSampler.addSample(sample, isSamplingIntervalReached: true)
-                }
-                else {
-                    self.audioSampler.addSample(sample, isSamplingIntervalReached: false)
-                }
                 return (avgp, timeElapsed)
+            }
+            else if self.audioRecordingPaused {
+                let timeElapsed = ar.currentTime
+                return (ar.averagePower(forChannel: 0), timeElapsed)
             }
             else {
                 return (ar.averagePower(forChannel: 0), 0.0)
@@ -226,18 +218,39 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
         return (0.0, 0.0)
     }
     
+    open func pauseAudioRecording() {
+        if let ar = self.audioRecorder {
+            if ar.isRecording && !self.audioRecordingPaused {
+                ar.pause()
+                self.audioRecordingPaused = true
+            }
+        }
+    }
+
+    open func resumeAudioRecording() {
+        if self.audioRecordingPaused {
+            self.audioRecorder?.record()
+            self.audioRecordingPaused = false
+        }
+    }
+
     open func stopAudioRecording(_ success: Bool = true, finishedHandler: @escaping ((FlexMediaPickerAsset?)->Void)) {
         if success {
             self.audioRecorder?.stop()
-            if let url = self.currentAudioFileURL {
-                if let thumbnail = self.audioSampler.generateImageFromSamples() {
+            if let url = self.currentAudioFileURL, let waveform = Waveform(audioAssetURL: url) {
+                let configuration = WaveformConfiguration(size: FlexMediaPickerConfiguration.thumbnailSize,
+                                                          color: FlexMediaPickerConfiguration.recordingWaveformColor,
+                                                          style: .gradient,
+                                                          position: .middle,
+                                                          scale: UIScreen.main.scale,
+                                                          paddingFactor: 4.0)
+                if let thumbnail = UIImage(waveform: waveform, configuration: configuration) {
                     finishedHandler(AssetManager.persistence.createAudioRecordAsset(thumbnail: thumbnail, audioUrl: url))
+                    return
                 }
             }
         }
-        else {
-            finishedHandler(nil)
-        }
+        finishedHandler(nil)
     }
     
     public func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {

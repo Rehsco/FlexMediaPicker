@@ -67,6 +67,8 @@ public class FlexMediaPickerConfiguration {
 
     public static var audioWaveformColor = UIColor(white: 0.35, alpha: 1.0)
     public static var audioWaveformHighlightColor = UIColor.white
+    public static var recordingWaveformColor = UIColor(red: 0.25, green: 0.29, blue: 0.34, alpha: 1)
+    public static var pausedRecordingIconTintColor = UIColor(red: 0.95, green: 0.19, blue: 0.14, alpha: 1)
     
     public static var warningIconTintColor = UIColor(red: 1.0, green: 0.84, blue: 0.0, alpha: 1.0)
     public static var warningLabelTextColor = UIColor.white

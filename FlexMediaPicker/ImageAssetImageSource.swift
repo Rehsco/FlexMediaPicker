@@ -30,6 +30,7 @@
 import UIKit
 import ImageSlideshow
 import AVFoundation
+import DSWaveformImage
 
 class ImageAssetImageSource: InputSource {
     var hasFetchedImage: Bool = false
@@ -76,6 +77,23 @@ class ImageAssetImageSource: InputSource {
                 if let image = images.first {
                     completionHandler(image)
                 }
+            }
+            else if self.asset.isAudio() {
+                AssetManager.resolveURL(forMediaAsset: self.asset, resolvedURLHandler: {url in
+                    if let waveform = Waveform(audioAssetURL: url) {
+                        let configuration = WaveformConfiguration(size: UIScreen.main.bounds.size,
+                                                                  color: FlexMediaPickerConfiguration.recordingWaveformColor,
+                                                                  style: .gradient,
+                                                                  position: .middle,
+                                                                  scale: UIScreen.main.scale,
+                                                                  paddingFactor: 4.0)
+                        completionHandler(UIImage(waveform: waveform, configuration: configuration))
+                    }
+                    else {
+                        NSLog("There is no image")
+                        completionHandler(self.asset.thumbnail)
+                    }
+                })
             }
             else {
                 NSLog("There is no image")

@@ -165,12 +165,12 @@ public class CommonIconViewMenu: FlexViewMenu {
         }
     }
     
-    public func createIconMenuItem(imageName: String, selectedImageName: String? = nil, iconSize: Int? = nil, selectionHandler: @escaping (() -> Void)) -> FlexMenuItem {
+    public func createIconMenuItem(imageName: String, selectedImageName: String? = nil, selectedIconTintColor: UIColor? = nil, iconSize: Int? = nil, selectionHandler: @escaping (() -> Void)) -> FlexMenuItem {
         let size = iconSize ?? Int(menuIconSize)
         let ti1 = self.getImage(named: "\(imageName)_\(size)pt")?.tint(FlexMediaPickerConfiguration.iconsColor)
         var si1: UIImage?
         if let sin = selectedImageName {
-            si1 = self.getImage(named: "\(sin)_\(size)pt")?.tint(FlexMediaPickerConfiguration.iconsColor)
+            si1 = self.getImage(named: "\(sin)_\(size)pt")?.tint(selectedIconTintColor ?? FlexMediaPickerConfiguration.iconsColor)
         }
         let dis1 = self.getImage(named: "\(imageName)_\(size)pt")?.tint(FlexMediaPickerConfiguration.disabledIconsColor)
         let vm1 = FlexMenuItem(title: "", titleShortcut: "", color: UIColor.clear, thumbColor: UIColor.clear, thumbIcon: ti1, disabledThumbIcon: dis1, selectedThumbIcon: si1)
