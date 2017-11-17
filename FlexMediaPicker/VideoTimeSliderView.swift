@@ -146,6 +146,11 @@ class VideoTimeSliderView: FlexView {
         self.timeSlider?.updateThumbValue(atIndex: 2, value: max)
     }
     
+    func cleanup() {
+        self.timeSlider?.continuous = false
+        self.timeSlider = nil
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         self.timeSlider?.frame = UIEdgeInsetsInsetRect(self.bounds, UIEdgeInsetsMake(5, 20, 5, 20))

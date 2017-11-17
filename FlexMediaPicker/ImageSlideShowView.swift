@@ -71,10 +71,8 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
     var updateImageCroppingHandler: (()->Void)?
 
     deinit {
-        NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue: ScrollViewNotifications.ScrollViewBeginsZoom), object: nil)
-        NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue: ScrollViewNotifications.ScrollViewEndsZoom), object: nil)
-
-        self.posUpdateTimer.stop()
+        NSLog("\(#function) Media Viewer")
+        self.finalCleanup()
     }
     
     override init(frame: CGRect) {
@@ -279,6 +277,13 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
         NotificationCenter.default.addObserver(self, selector: #selector(self.scrollviewEndsZoom(_:)), name: Notification.Name(rawValue: ScrollViewNotifications.ScrollViewEndsZoom), object: nil)
     }
     
+    private func finalCleanup() {
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue: ScrollViewNotifications.ScrollViewBeginsZoom), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name(rawValue: ScrollViewNotifications.ScrollViewEndsZoom), object: nil)
+        
+        self.posUpdateTimer.stop()
+    }
+    
     func scrollviewBeginsZoom(_ sender: Any) {
         self.player?.view.isHidden = true
     }
@@ -306,12 +311,16 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
     }
     
     private func closeView() {
+        self.timeSliderPanel?.cleanup()
         self.player?.stop()
-        self.audioPlayer?.stop()
         self.player?.url = nil
+        self.player = nil
+        self.audioPlayer?.stop()
+        self.audioPlayer = nil
         self.currentAsset = nil
         self.movieAsset = nil
         self.currentImageSource = nil
+        self.finalCleanup()
         self.closeHandler?()
     }
     

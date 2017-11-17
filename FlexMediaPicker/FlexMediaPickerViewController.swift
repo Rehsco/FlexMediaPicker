@@ -720,7 +720,8 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             issv.imageSlideshow?.setImageInputs(self.imageSources)
             self.view.insertSubview(issv, at: 1)
             issv.closeHandler = {
-                self.imageSlideshowView?.isHidden = true
+                self.imageSlideshowView?.removeFromSuperview()
+                self.imageSlideshowView = nil
             }
             issv.hideViewElementsHandler = { hide in
                 self.selectedAssetsView?.showHide(hide: hide)
