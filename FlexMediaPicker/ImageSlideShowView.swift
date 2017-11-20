@@ -52,7 +52,6 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
     private let posUpdateTimer = PositionUpdateTimer()
     private var shouldUpdateTimeOffset: Bool = false
     
-    private var removeMI: FlexMenuItem?
     private var cropMI: FlexMenuItem?
 
     private var overlayMaskLayer: CALayer?
@@ -64,10 +63,13 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
     var currentAVOffset: Double = 0
     var maximumAVOffset: Double = 1
 
+    /// Handlers
+    
     var closeHandler: (()->Void)?
     var hideViewElementsHandler: ((Bool)->Void)?
     var didGetPhoto: ((UIImage)->Void)?
     var removeOrTrashSelectedItem: ((FlexMediaPickerAsset)->Void)?
+    var focusedSelectedItem: ((FlexMediaPickerAsset)->Void)?
     var updateImageCroppingHandler: (()->Void)?
 
     deinit {
@@ -170,27 +172,6 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
                 }
             }
         })
-        self.removeMI = self.rightViewMenu?.createIconMenuItem(imageName: "RemoveItem", selectedImageName: "DeleteIcon", iconSize: 24, selectionHandler: {
-            if let ci = self.currentAsset {
-                self.removeOrTrashSelectedItem?(ci)
-                DispatchQueue.main.async {
-                    if let iss = self.imageSlideshow {
-                        let cp = iss.currentPage
-                        var sources = iss.images
-                        if sources.count < 2 {
-                            self.closeView()
-                        }
-                        else {
-                            sources.remove(at: cp)
-                            iss.setImageInputs(sources)
-                            let np = cp % sources.count
-                            iss.setCurrentPage(np, animated: true)
-                            self.updateCurrentPage(toIndex: np)
-                        }
-                    }
-                }
-            }
-        })
         self.addMenu(self.rightViewMenu!)
         
         self.footerSize = FlexMediaPickerConfiguration.footerHeight
@@ -275,6 +256,51 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.scrollviewBeginsZoom(_:)), name: Notification.Name(rawValue: ScrollViewNotifications.ScrollViewBeginsZoom), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.scrollviewEndsZoom(_:)), name: Notification.Name(rawValue: ScrollViewNotifications.ScrollViewEndsZoom), object: nil)
+    }
+    
+    open func removeAsset(byID id: String) {
+        DispatchQueue.main.async {
+            if let iss = self.imageSlideshow {
+                var sources = iss.images
+                if sources.count < 2 {
+                    self.closeView()
+                }
+                else if let pageIdx = self.getPageIndexForAsset(withID: id) {
+                    let cp = iss.currentPage
+                    sources.remove(at: pageIdx)
+                    iss.setImageInputs(sources)
+                    let np: Int
+                    if cp >= pageIdx {
+                        if cp > 0 {
+                            np = cp - 1
+                        }
+                        else {
+                            np = 0
+                        }
+                    }
+                    else {
+                        np = cp % sources.count
+                    }
+                    iss.setCurrentPage(np, animated: true)
+                    self.updateCurrentPage(toIndex: np)
+                }
+            }
+        }
+    }
+    
+    private func getPageIndexForAsset(withID id: String) -> Int? {
+        if let iss = self.imageSlideshow {
+            var pageIdx = 0
+            for src in iss.images {
+                if let asrc = src as? ImageAssetImageSource {
+                    if asrc.asset.uuid == id {
+                        return pageIdx
+                    }
+                    pageIdx += 1
+                }
+            }
+        }
+        return nil
     }
     
     private func finalCleanup() {
@@ -433,6 +459,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
         if let imageAssets = self.imageSlideshow?.images as? [ImageAssetImageSource] {
             let imageAsset = imageAssets[index]
             self.currentAsset = imageAsset.asset
+            self.focusedSelectedItem?(imageAsset.asset)
             self.currentImageSource = imageAsset
             self.assetWarningLabel?.isHidden = true
 
@@ -481,7 +508,6 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
             }
 
             DispatchQueue.main.async {
-                self.removeMI?.selected = !imageAsset.asset.isAssetBased()
                 self.cropMI?.selected = !imageAsset.asset.isVideoOrAudio() && FlexMediaPickerConfiguration.maskImage
                 self.rightViewMenu?.viewMenu?.setNeedsLayout()
             }

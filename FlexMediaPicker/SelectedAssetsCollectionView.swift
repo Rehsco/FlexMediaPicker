@@ -32,7 +32,16 @@ import MJRFlexStyleComponents
 import StyledLabel
 
 open class SelectedAssetsCollectionView: ImagesCollectionView {
-
+    var secRef: String?
+    
+    open var deleteOrRemoveItemHandler: ((String)->Void)?
+    
+    var shouldShowMenuForSelectedItem: Bool = false {
+        didSet {
+            self.updateItemMenu()
+        }
+    }
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         self.setupAssetsView()
@@ -46,14 +55,47 @@ open class SelectedAssetsCollectionView: ImagesCollectionView {
         self.registerCell(ImagesCollectionItem.self, cellClass: ImagesCollectionCell.self)
     }
     
-    open func populate(_ showImageHandler: @escaping ((Int)->Void)) {
+    open func updateItemMenu() {
+        DispatchQueue.main.async {
+            if self.shouldShowMenuForSelectedItem {
+            }
+        }
+    }
+    
+    open func selectedItemReference() -> String? {
+        if let selectedItemsIP = self.itemCollectionView.indexPathsForSelectedItems {
+            for ip in selectedItemsIP {
+                if let item = self.getItemForIndexPath(ip) {
+                    return item.reference
+                }
+            }
+        }
+        return nil
+    }
+    
+    open func focusOnItem(withReference reference: String) {
+        DispatchQueue.main.async {
+            if let ip = self.getIndexPathForItem(reference) {
+                if self.bounds.size.width > self.bounds.size.height {
+                    self.itemCollectionView.scrollToItem(at: ip, at: .centeredHorizontally, animated: true)
+                }
+                else {
+                    self.itemCollectionView.scrollToItem(at: ip, at: .centeredVertically, animated: true)
+                }
+//                self.selectItem(reference)
+            }
+        }
+    }
+    
+    open func populate(focusOnLastItem: Bool = false, showImageHandler: @escaping ((Int)->Void)) {
         DispatchQueue.main.async {
             self.removeAllSections()
-            let savSecRef = self.addSection()
+            self.secRef = self.addSection()
             let allSelectedAssets = AssetManager.persistence.getAllAssets()
             var idx = 0
+            var lastItem: ImagesCollectionItem? = nil
             for selAsset in allSelectedAssets {
-                let ref = selAsset.asset?.localIdentifier ?? UUID().uuidString
+                let ref = selAsset.uuid // selAsset.asset?.localIdentifier ?? UUID().uuidString
                 let thumbnail: UIImage?
                 if selAsset.isVideo() || selAsset.isAudio() {
                     thumbnail = selAsset.thumbnail
@@ -85,11 +127,23 @@ open class SelectedAssetsCollectionView: ImagesCollectionView {
                 fitem.imageIndex = idx
                 fitem.itemSelectionActionHandler = {
                     showImageHandler(fitem.imageIndex)
+                    self.focusOnItem(withReference: ref)
                 }
-                self.addItem(savSecRef, item: fitem)
+                let selectionItemMenu = CommonIconViewMenu(size: CGSize(width: 36, height: 36), hPos: .left, vPos: .header, menuIconSize: 24)
+                let imageName = selAsset.isAssetBased() ? "RemoveItem" : "DeleteIcon"
+                _ = selectionItemMenu.createIconMenuItem(imageName: imageName, iconSize: 24, selectionHandler: {
+                    self.deleteOrRemoveItemHandler?(fitem.reference)
+                })
+                fitem.itemMenu = selectionItemMenu
+                self.addItem(self.secRef!, item: fitem)
+
                 idx += 1
+                lastItem = fitem
             }
             self.itemCollectionView.reloadData()
+            if focusOnLastItem, let li = lastItem {
+                self.focusOnItem(withReference: li.reference)
+            }
         }
     }
     

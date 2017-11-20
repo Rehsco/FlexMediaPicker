@@ -50,5 +50,16 @@ open class ImagesCollectionView: FlexCollectionView {
 class ImagesCollectionItem: FlexBaseCollectionItem {
     var imageIndex: Int = 0
     var isGroup: Bool = false
+    var itemMenu: CommonIconViewMenu? = nil
 }
-class ImagesCollectionCell: FlexBaseCollectionViewCell {}
+
+class ImagesCollectionCell: FlexBaseCollectionViewCell {
+    
+    override func applySelectionStyles(_ fcv: FlexView) {
+        super.applySelectionStyles(fcv)
+        if let ici = self.item as? ImagesCollectionItem, let menu = ici.itemMenu, menu.viewMenu?.superview == nil {
+            fcv.addMenu(menu)
+        }
+    }
+    
+}

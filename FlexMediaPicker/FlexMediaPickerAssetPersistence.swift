@@ -57,4 +57,5 @@ public protocol FlexMediaPickerAssetPersistence {
 
     func getAllAssets() -> [FlexMediaPickerAsset]
     func getAsset(forLocalIdentifier id: String) -> FlexMediaPickerAsset?
+    func getAsset(forID id: String) -> FlexMediaPickerAsset?
 }

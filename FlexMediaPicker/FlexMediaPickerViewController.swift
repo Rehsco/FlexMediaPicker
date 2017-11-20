@@ -120,16 +120,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             }
         }
         
-        // The selected assets will be shown in a sub view
-        self.selectedAssetsView = SelectedAssetsCollectionView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
-        if let sav = self.selectedAssetsView {
-            self.applyCollectionViewDefaultStyling(collectionView: sav)
-            sav.styleColor = FlexMediaPickerConfiguration.selectedMediaStyleColor
-            (sav.itemCollectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.scrollDirection = .horizontal
-            sav.centerCellsHorizontally = true
-            sav.isHidden = true
-            self.view.addSubview(sav)
-        }
+        self.setupSelectedAssetsView()
         
         // Media Control panel at the bottom of the view
         self.contentView?.footerSize = FlexMediaPickerConfiguration.footerHeight
@@ -432,7 +423,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         if let issv = self.imageSlideshowView {
             issv.imageSlideshow?.setImageInputs(self.imageSources)
         }
-        self.populateSelectedAssetView()
+        self.populateSelectedAssetView(focusOnLastItem: true)
     }
 
     private func applyThumbnailSize() {
@@ -606,9 +597,28 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     
     // MARK: - Selected Assets View
     
-    func populateSelectedAssetView() {
+    func setupSelectedAssetsView() {
+        // The selected assets will be shown in a sub view
+        self.selectedAssetsView = SelectedAssetsCollectionView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        if let sav = self.selectedAssetsView {
+            self.applyCollectionViewDefaultStyling(collectionView: sav)
+            sav.styleColor = FlexMediaPickerConfiguration.selectedMediaStyleColor
+            (sav.itemCollectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.scrollDirection = .horizontal
+            sav.centerCellsHorizontally = true
+            sav.isHidden = true
+            sav.deleteOrRemoveItemHandler = {
+                assetRef in
+                if let asset = AssetManager.persistence.getAsset(forID: assetRef) {
+                    self.removeSelectedAsset(asset)
+                    self.imageSlideshowView?.removeAsset(byID: assetRef)
+                }
+            }
+            self.view.addSubview(sav)
+        }
+    }
+    func populateSelectedAssetView(focusOnLastItem: Bool = false) {
         self.applyAcceptEnabling()
-        self.selectedAssetsView?.populate() {
+        self.selectedAssetsView?.populate(focusOnLastItem: focusOnLastItem) {
             imageIndex in
             
             self.voiceRecorderView?.removeFromSuperview()
@@ -700,10 +710,10 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     
     func showImage(byIndex idx: Int) {
         // TODO: Stop recording before switching to viewer: ask to confirm
-        
         if self.imageSlideshowView == nil {
             self.createImageSlideShowView()
         }
+        self.selectedAssetsView?.shouldShowMenuForSelectedItem = true
         if let issv = self.imageSlideshowView {
             self.voiceRecorderView?.showHide(hide: true)
             self.cameraView?.showHide(hide: true)
@@ -722,6 +732,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             issv.closeHandler = {
                 self.imageSlideshowView?.removeFromSuperview()
                 self.imageSlideshowView = nil
+                self.selectedAssetsView?.shouldShowMenuForSelectedItem = false
             }
             issv.hideViewElementsHandler = { hide in
                 self.selectedAssetsView?.showHide(hide: hide)
@@ -736,6 +747,10 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             }
             issv.updateImageCroppingHandler = {
                 self.populateSelectedAssetView()
+            }
+            issv.focusedSelectedItem = {
+                asset in
+                self.selectedAssetsView?.focusOnItem(withReference: asset.uuid)
             }
             issv.hideViewElements(hide: true)
         }

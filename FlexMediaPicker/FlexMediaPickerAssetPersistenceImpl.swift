@@ -85,7 +85,17 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
         }
         return nil
     }
-    
+
+    open func getAsset(forID id: String) -> FlexMediaPickerAsset? {
+        let allAssets = self.getAllAssets()
+        for asset in allAssets {
+            if asset.uuid == id {
+                return asset
+            }
+        }
+        return nil
+    }
+
     open func imageFromAsset(withID id: String) -> UIImage? {
         if let asset = self.assetMap[id] {
             if asset.isAssetBased() {
