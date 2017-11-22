@@ -713,7 +713,6 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         if self.imageSlideshowView == nil {
             self.createImageSlideShowView()
         }
-        self.selectedAssetsView?.shouldShowMenuForSelectedItem = true
         if let issv = self.imageSlideshowView {
             self.voiceRecorderView?.showHide(hide: true)
             self.cameraView?.showHide(hide: true)
@@ -732,7 +731,6 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             issv.closeHandler = {
                 self.imageSlideshowView?.removeFromSuperview()
                 self.imageSlideshowView = nil
-                self.selectedAssetsView?.shouldShowMenuForSelectedItem = false
             }
             issv.hideViewElementsHandler = { hide in
                 self.selectedAssetsView?.showHide(hide: hide)

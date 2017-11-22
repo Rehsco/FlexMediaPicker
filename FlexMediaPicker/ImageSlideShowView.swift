@@ -157,7 +157,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
             self.closeView()
         }
         
-        self.rightViewMenu = CommonIconViewMenu(size: CGSize(width: 120, height: 36), hPos: .right, vPos: .header, menuIconSize: 24)
+        self.rightViewMenu = CommonIconViewMenu(size: CGSize(width: 50, height: 36), hPos: .right, vPos: .header, menuIconSize: 24)
         self.cropMI = self.rightViewMenu?.createIconMenuItem(imageName: "", selectedImageName: "crop", iconSize: 24, selectionHandler: {
             if let asset = self.currentAsset, let image = AssetManager.persistence.imageFromAsset(withID: asset.uuid) {
                 self.cropView = ImageCropView(frame: UIScreen.main.bounds, image: image, cropRect: asset.cropRect)

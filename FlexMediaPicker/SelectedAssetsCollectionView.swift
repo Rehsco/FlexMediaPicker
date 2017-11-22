@@ -33,14 +33,9 @@ import StyledLabel
 
 open class SelectedAssetsCollectionView: ImagesCollectionView {
     var secRef: String?
+    var allPopulatedItems: [ImagesCollectionItem] = []
     
     open var deleteOrRemoveItemHandler: ((String)->Void)?
-    
-    var shouldShowMenuForSelectedItem: Bool = false {
-        didSet {
-            self.updateItemMenu()
-        }
-    }
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -55,24 +50,6 @@ open class SelectedAssetsCollectionView: ImagesCollectionView {
         self.registerCell(ImagesCollectionItem.self, cellClass: ImagesCollectionCell.self)
     }
     
-    open func updateItemMenu() {
-        DispatchQueue.main.async {
-            if self.shouldShowMenuForSelectedItem {
-            }
-        }
-    }
-    
-    open func selectedItemReference() -> String? {
-        if let selectedItemsIP = self.itemCollectionView.indexPathsForSelectedItems {
-            for ip in selectedItemsIP {
-                if let item = self.getItemForIndexPath(ip) {
-                    return item.reference
-                }
-            }
-        }
-        return nil
-    }
-    
     open func focusOnItem(withReference reference: String) {
         DispatchQueue.main.async {
             if let ip = self.getIndexPathForItem(reference) {
@@ -82,7 +59,16 @@ open class SelectedAssetsCollectionView: ImagesCollectionView {
                 else {
                     self.itemCollectionView.scrollToItem(at: ip, at: .centeredVertically, animated: true)
                 }
-//                self.selectItem(reference)
+                self.allPopulatedItems.forEach({ item in
+                    NSLog("item \(item.reference) focus set to false")
+                    item.isFocused = false
+                    self.updateCellForItem(item.reference)
+                })
+                if let item = self.getItemForReference(reference) as? ImagesCollectionItem {
+                    item.isFocused = true
+                    NSLog("item \(item.reference) focus set to true")
+                    self.updateCellForItem(reference)
+                }
             }
         }
     }
@@ -90,6 +76,7 @@ open class SelectedAssetsCollectionView: ImagesCollectionView {
     open func populate(focusOnLastItem: Bool = false, showImageHandler: @escaping ((Int)->Void)) {
         DispatchQueue.main.async {
             self.removeAllSections()
+            self.allPopulatedItems = []
             self.secRef = self.addSection()
             let allSelectedAssets = AssetManager.persistence.getAllAssets()
             var idx = 0
@@ -139,6 +126,7 @@ open class SelectedAssetsCollectionView: ImagesCollectionView {
 
                 idx += 1
                 lastItem = fitem
+                self.allPopulatedItems.append(fitem)
             }
             self.itemCollectionView.reloadData()
             if focusOnLastItem, let li = lastItem {
