@@ -50,6 +50,12 @@ class VideoPlaybackControlPanel: FlexFooterView {
         }
     }
     
+    var frameSnapshotAvailable: Bool = true {
+        didSet {
+            self.cameraMenu?.viewMenu?.showHide(hide: self.isHidden || !frameSnapshotAvailable)
+        }
+    }
+    
     var isPlaying: Bool = false {
         didSet {
             DispatchQueue.main.async {
@@ -76,7 +82,7 @@ class VideoPlaybackControlPanel: FlexFooterView {
         }
         else {
             self.playMenu?.viewMenu?.showHide(hide: hide)
-            self.cameraMenu?.viewMenu?.showHide(hide: hide)
+            self.cameraMenu?.viewMenu?.showHide(hide: hide || !frameSnapshotAvailable)
             self.frameStepper?.showHide(hide: hide)
         }
     }

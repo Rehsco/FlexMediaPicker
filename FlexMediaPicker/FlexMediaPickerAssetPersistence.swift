@@ -55,6 +55,7 @@ public protocol FlexMediaPickerAssetPersistence {
     func resumeAudioRecording()
     func cropAudio(_ audioURL: URL, targetURL: URL, fromTime: CMTime?, duration: CMTime?, progressHandler: ((Float)->Void)?, exportFinishedHandler: @escaping ((URL?)->Void))
 
+    func numberOfAssets() -> Int
     func getAllAssets() -> [FlexMediaPickerAsset]
     func getAsset(forLocalIdentifier id: String) -> FlexMediaPickerAsset?
     func getAsset(forID id: String) -> FlexMediaPickerAsset?

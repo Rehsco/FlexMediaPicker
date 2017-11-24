@@ -92,6 +92,35 @@ class Helper {
         return UIImage(named: "warnIcon_\(size)pt", in: Bundle(for: Helper.self), compatibleWith: nil)?.tint(FlexMediaPickerConfiguration.warningIconTintColor)
     }
     
+    static func getAcceptedAssetCountIcon(acceptableAssetCount: Int) -> UIImage? {
+        /*
+         let roundedrect = UIBezierPath()
+         roundedrect.move(to: CGPoint(x: 492, y: 93))
+         //                roundedrect.addCurve(to: CGPoint(x: 422, y: 184), controlPoint1: CGPoint(x: 481, y: 93), controlPoint2: CGPoint(x: 422, y: 157))
+         //                roundedrect.addCurve(to: CGPoint(x: 492, y: 274), controlPoint1: CGPoint(x: 422, y: 210), controlPoint2: CGPoint(x: 481, y: 274))
+         roundedrect.addLine(to: CGPoint(x: 422, y: 184))
+         roundedrect.addLine(to: CGPoint(x: 492, y: 274))
+         roundedrect.addLine(to: CGPoint(x: 659, y: 274))
+         roundedrect.addCurve(to: CGPoint(x: 679, y: 254), controlPoint1: CGPoint(x: 670, y: 274), controlPoint2: CGPoint(x: 679, y: 265))
+         roundedrect.addLine(to: CGPoint(x: 679, y: 113))
+         roundedrect.addCurve(to: CGPoint(x: 659, y: 93), controlPoint1: CGPoint(x: 679, y: 102), controlPoint2: CGPoint(x: 670, y: 93))
+         roundedrect.close()
+         
+         
+         let mask = StyledShapeLayer.createShape(.custom(path: roundedrect), bounds: CGRect(x: 0, y: 0, width: 36, height: 24), color: .black)
+         */
+        
+        let mask = StyledShapeLayer.createShape(.rounded, bounds: CGRect(x: 0, y: 0, width: 36, height: 24), color: .black)
+        let nImage = UIImage(color: FlexMediaPickerConfiguration.selectedItemColor, size: CGSize(width: 36, height: 24))
+        let numImage = nImage?.addText(drawText: "\(acceptableAssetCount)", font: FlexMediaPickerConfiguration.selectedMediaNumberFont)
+        let maskPath = UIBezierPath(cgPath: mask.path!)
+        let roundedImage = numImage?.maskImageWithPathAndCrop(maskPath)
+        if let acceptImage = UIImage(named: "Accept_24pt")?.tint(FlexMediaPickerConfiguration.iconsColor) {
+            return roundedImage?.appendImage(acceptImage, margin: FlexMediaPickerConfiguration.selectedMediaAcceptedCountImageMargin)
+        }
+        return nil
+    }
+    
     static func imageToAttachmentImage(_ image: UIImage, fontSize: CGFloat = 0) -> NSAttributedString {
         let attachment = NSTextAttachment()
         attachment.image = image

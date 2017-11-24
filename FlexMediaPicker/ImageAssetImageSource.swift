@@ -37,8 +37,6 @@ class ImageAssetImageSource: InputSource {
     var imageViewRef: UIImageView?
     var asset: FlexMediaPickerAsset
     
-    var imageFromVideoLoadedHandler: ((FlexMediaPickerAsset)->Void)?
-    
     init(asset: FlexMediaPickerAsset) {
         self.asset = asset
     }
@@ -117,7 +115,6 @@ class ImageAssetImageSource: InputSource {
     private func frameImageFromVideo(url: URL, completionHandler: @escaping ((UIImage?)->Void)) {
         if let image = self.imageFromVideo(url: url) {
             completionHandler(image)
-            self.imageFromVideoLoadedHandler?(self.asset)
         }
     }
     

@@ -53,10 +53,11 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
     private var shouldUpdateTimeOffset: Bool = false
     
     private var cropMI: FlexMenuItem?
+    private var acceptMI: FlexMenuItem?
 
     private var overlayMaskLayer: CALayer?
     
-    var imageSlideshow: ImageSlideshow?
+    private var imageSlideshow: ImageSlideshow?
     
     /// The offsets are [0..1]
     var minimumAVOffset: Double = 0
@@ -66,9 +67,10 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
     /// Handlers
     
     var closeHandler: (()->Void)?
+    var acceptSelectedAssetsHandler: (()->Void)?
     var hideViewElementsHandler: ((Bool)->Void)?
     var didGetPhoto: ((UIImage)->Void)?
-    var removeOrTrashSelectedItem: ((FlexMediaPickerAsset)->Void)?
+    var removeOrTrashLastItem: (()->Void)?
     var focusedSelectedItem: ((FlexMediaPickerAsset)->Void)?
     var updateImageCroppingHandler: (()->Void)?
 
@@ -154,10 +156,19 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
         self.addSubview(self.assetWarningLabel!)
         
         self.createBackOrCloseLeftMenu() {
+            if !FlexMediaPickerConfiguration.allowMultipleSelection {
+                self.removeOrTrashLastItem?()
+            }
             self.closeView()
         }
         
-        self.rightViewMenu = CommonIconViewMenu(size: CGSize(width: 50, height: 36), hPos: .right, vPos: .header, menuIconSize: 24)
+        if !FlexMediaPickerConfiguration.allowMultipleSelection {
+            self.rightViewMenu = CommonIconViewMenu(size: CGSize(width: 160, height: 36), hPos: .right, vPos: .header, menuIconSize: 24)
+        }
+        else {
+            self.rightViewMenu = CommonIconViewMenu(size: CGSize(width: 50, height: 36), hPos: .right, vPos: .header, menuIconSize: 24)
+        }
+        
         self.cropMI = self.rightViewMenu?.createIconMenuItem(imageName: "", selectedImageName: "crop", iconSize: 24, selectionHandler: {
             if let asset = self.currentAsset, let image = AssetManager.persistence.imageFromAsset(withID: asset.uuid) {
                 self.cropView = ImageCropView(frame: UIScreen.main.bounds, image: image, cropRect: asset.cropRect)
@@ -172,6 +183,12 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
                 }
             }
         })
+        if !FlexMediaPickerConfiguration.allowMultipleSelection {
+            self.acceptMI = self.rightViewMenu?.createIconMenuItem(imageName: "Accept", selectionHandler: {
+                self.acceptSelectedAssetsHandler?()
+            })
+        }
+
         self.addMenu(self.rightViewMenu!)
         
         self.footerSize = FlexMediaPickerConfiguration.footerHeight
@@ -185,6 +202,8 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
             self.updateCurrentPage(toIndex: index)
         }
         
+        self.applyControlsEnabling()
+
         // Video Playback
         
         if let tvc = self.getTopViewController() {
@@ -258,6 +277,26 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
         NotificationCenter.default.addObserver(self, selector: #selector(self.scrollviewEndsZoom(_:)), name: Notification.Name(rawValue: ScrollViewNotifications.ScrollViewEndsZoom), object: nil)
     }
     
+    open func setAssets(_ assets: [FlexMediaPickerAsset]) {
+        var imageSources: [ImageAssetImageSource] = []
+        for asset in assets {
+            let ias = ImageAssetImageSource(asset: asset)
+            imageSources.append(ias)
+        }
+        self.imageSlideshow?.setImageInputs(imageSources)
+        self.applyControlsEnabling()
+    }
+    
+    open func addAsset(_ asset: FlexMediaPickerAsset) {
+        let ias = ImageAssetImageSource(asset: asset)
+        if let iss = self.imageSlideshow {
+            var sources = iss.images
+            sources.append(ias)
+            iss.setImageInputs(sources)
+            self.applyControlsEnabling()
+        }
+    }
+    
     open func removeAsset(byID id: String) {
         DispatchQueue.main.async {
             if let iss = self.imageSlideshow {
@@ -283,6 +322,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
                     }
                     iss.setCurrentPage(np, animated: true)
                     self.updateCurrentPage(toIndex: np)
+                    self.applyControlsEnabling()
                 }
             }
         }
@@ -463,10 +503,6 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
             self.currentImageSource = imageAsset
             self.assetWarningLabel?.isHidden = true
 
-            imageAsset.imageFromVideoLoadedHandler = {
-                asset in
-                // TODO
-            }
             self.player?.url = nil
             if imageAsset.asset.isVideo() {
                 AssetManager.resolveURL(forMediaAsset: imageAsset.asset, resolvedURLHandler: { url in
@@ -638,6 +674,27 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
                     iv.image = image
                 }
             }
+        }
+    }
+    
+    // MARK: - Asset Handling
+    
+    private func applyControlsEnabling() {
+        let numApplicableSelected = AssetManager.getAcceptableAssetCount()
+        if let ami = self.acceptMI {
+            DispatchQueue.main.async {
+                ami.enabled = (numApplicableSelected > 0)
+                if numApplicableSelected > 0 {
+                    if let aicImage = Helper.getAcceptedAssetCountIcon(acceptableAssetCount: numApplicableSelected) {
+                        ami.thumbIcon = aicImage
+                        self.rightViewMenu?.viewMenu?.thumbSize = aicImage.size
+                    }
+                }
+                self.rightViewMenu?.viewMenu?.setNeedsLayout()
+            }
+        }
+        if !FlexMediaPickerConfiguration.allowMultipleSelection {
+            self.videoControlPanel.frameSnapshotAvailable = numApplicableSelected < FlexMediaPickerConfiguration.numberItemsAllowed
         }
     }
     

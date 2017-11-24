@@ -60,17 +60,25 @@ open class SelectedAssetsCollectionView: ImagesCollectionView {
                     self.itemCollectionView.scrollToItem(at: ip, at: .centeredVertically, animated: true)
                 }
                 self.allPopulatedItems.forEach({ item in
-                    NSLog("item \(item.reference) focus set to false")
                     item.isFocused = false
                     self.updateCellForItem(item.reference)
                 })
                 if let item = self.getItemForReference(reference) as? ImagesCollectionItem {
                     item.isFocused = true
-                    NSLog("item \(item.reference) focus set to true")
                     self.updateCellForItem(reference)
                 }
             }
         }
+    }
+    
+    open func getFocusedMediaAsset() -> FlexMediaPickerAsset? {
+        for item in self.allPopulatedItems {
+            if item.isFocused {
+                let asset = AssetManager.persistence.getAsset(forID: item.reference)
+                return asset
+            }
+        }
+        return nil
     }
     
     open func populate(focusOnLastItem: Bool = false, showImageHandler: @escaping ((Int)->Void)) {

@@ -97,13 +97,10 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
 
         self.createIconMenu(width: 120, menuIconSize: 24)
         self.acceptMI = self.rightViewMenu?.createIconMenuItem(imageName: "Accept", selectionHandler: {
-            self.convertSelectedVideoAssets {
-                let aa = self.getAcceptedAssets()
-                self.mediaAcceptedHandler?(aa)
-            }
+            self.acceptSelectedAssets()
         })
         self.contentView?.addMenu(self.rightViewMenu!)
-        self.rightViewMenu?.viewMenuItems[0].enabled = false
+        self.acceptMI?.enabled = false
  
         self.createBackOrCloseLeftMenu(menuIconSize: 24)
         
@@ -328,7 +325,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     // MARK: - Item handling
 
     private func convertSelectedVideoAssets(completedHandler: @escaping (()->Void)) {
-        let aAssets = self.getAcceptedAssets()
+        let aAssets = AssetManager.getAcceptedAssets()
         var assetsToConvert: [FlexMediaPickerAsset] = []
         for aa in aAssets {
             // TODO: Only convert (audio / video) when required
@@ -418,12 +415,13 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     }
 
     private func addSelectedAsset(_ asset: FlexMediaPickerAsset) {
-        let ias = ImageAssetImageSource(asset: asset)
-        self.imageSources.append(ias)
-        if let issv = self.imageSlideshowView {
-            issv.imageSlideshow?.setImageInputs(self.imageSources)
-        }
+        self.imageSlideshowView?.addAsset(asset)
         self.populateSelectedAssetView(focusOnLastItem: true)
+        if !FlexMediaPickerConfiguration.allowMultipleSelection {
+            if AssetManager.persistence.numberOfAssets() >= FlexMediaPickerConfiguration.numberItemsAllowed {
+                self.showImage(byIndex: AssetManager.persistence.numberOfAssets()-1)
+            }
+        }
     }
 
     private func applyThumbnailSize() {
@@ -633,77 +631,24 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     
     private func applyAcceptEnabling() {
         DispatchQueue.main.async {
-            var numApplicableSelected = 0
-            let allSelectedAssets = AssetManager.persistence.getAllAssets()
-            for sa in allSelectedAssets {
-                if sa.isVideo() {
-                    if FlexMediaPickerConfiguration.allowVideoSelection {
-                        numApplicableSelected += 1
-                    }
-                }
-                else if sa.isAudio() {
-                    if FlexMediaPickerConfiguration.allowVoiceRecording {
-                        numApplicableSelected += 1
-                    }
-                }
-                else {
-                    numApplicableSelected += 1
-                }
-            }
+            let numApplicableSelected = AssetManager.getAcceptableAssetCount()
             self.acceptMI?.enabled = (numApplicableSelected > 0)
             if numApplicableSelected > 0 {
-                /*
-                let roundedrect = UIBezierPath()
-                roundedrect.move(to: CGPoint(x: 492, y: 93))
-//                roundedrect.addCurve(to: CGPoint(x: 422, y: 184), controlPoint1: CGPoint(x: 481, y: 93), controlPoint2: CGPoint(x: 422, y: 157))
-//                roundedrect.addCurve(to: CGPoint(x: 492, y: 274), controlPoint1: CGPoint(x: 422, y: 210), controlPoint2: CGPoint(x: 481, y: 274))
-                roundedrect.addLine(to: CGPoint(x: 422, y: 184))
-                roundedrect.addLine(to: CGPoint(x: 492, y: 274))
-                roundedrect.addLine(to: CGPoint(x: 659, y: 274))
-                roundedrect.addCurve(to: CGPoint(x: 679, y: 254), controlPoint1: CGPoint(x: 670, y: 274), controlPoint2: CGPoint(x: 679, y: 265))
-                roundedrect.addLine(to: CGPoint(x: 679, y: 113))
-                roundedrect.addCurve(to: CGPoint(x: 659, y: 93), controlPoint1: CGPoint(x: 679, y: 102), controlPoint2: CGPoint(x: 670, y: 93))
-                roundedrect.close()
-                
-                
-                let mask = StyledShapeLayer.createShape(.custom(path: roundedrect), bounds: CGRect(x: 0, y: 0, width: 36, height: 24), color: .black)
- */
-                let mask = StyledShapeLayer.createShape(.rounded, bounds: CGRect(x: 0, y: 0, width: 36, height: 24), color: .black)
-                let nImage = UIImage(color: FlexMediaPickerConfiguration.selectedItemColor, size: CGSize(width: 36, height: 24))
-                let numImage = nImage?.addText(drawText: "\(numApplicableSelected)", font: FlexMediaPickerConfiguration.selectedMediaNumberFont)
-                let maskPath = UIBezierPath(cgPath: mask.path!)
-                let roundedImage = numImage?.maskImageWithPathAndCrop(maskPath)
-                if let acceptImage = UIImage(named: "Accept_24pt")?.tint(FlexMediaPickerConfiguration.iconsColor) {
-                    if let finalImage = roundedImage?.appendImage(acceptImage, margin: FlexMediaPickerConfiguration.selectedMediaAcceptedCountImageMargin) {
-                        self.acceptMI?.thumbIcon = finalImage
-                        self.rightViewMenu?.viewMenu?.thumbSize = finalImage.size
-                    }
+                if let aicImage = Helper.getAcceptedAssetCountIcon(acceptableAssetCount: numApplicableSelected) {
+                    self.acceptMI?.thumbIcon = aicImage
+                    self.rightViewMenu?.viewMenu?.thumbSize = aicImage.size
                 }
             }
-            self.selectedAssetsView?.showHide(hide: allSelectedAssets.count == 0)
+            self.selectedAssetsView?.showHide(hide: AssetManager.persistence.numberOfAssets() == 0)
             self.rightViewMenu?.viewMenu?.setNeedsLayout()
         }
     }
     
-    private func getAcceptedAssets() -> [FlexMediaPickerAsset] {
-        var returnableAssets: [FlexMediaPickerAsset] = []
-        let allSelectedAssets = AssetManager.persistence.getAllAssets()
-        for sa in allSelectedAssets {
-            if sa.isVideo() {
-                if FlexMediaPickerConfiguration.allowVideoSelection {
-                    returnableAssets.append(sa)
-                }
-            }
-            else if sa.isAudio() {
-                if FlexMediaPickerConfiguration.allowVoiceRecording {
-                    returnableAssets.append(sa)
-                }
-            }
-            else {
-                returnableAssets.append(sa)
-            }
+    private func acceptSelectedAssets() {
+        self.convertSelectedVideoAssets {
+            let aa = AssetManager.getAcceptedAssets()
+            self.mediaAcceptedHandler?(aa)
         }
-        return returnableAssets
     }
     
     // MARK: - Fullscreen Preview
@@ -717,7 +662,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             self.voiceRecorderView?.showHide(hide: true)
             self.cameraView?.showHide(hide: true)
             issv.isHidden = false
-            issv.imageSlideshow?.setImageInputs(self.imageSources)
+            issv.setAssets(AssetManager.persistence.getAllAssets())
             issv.setCurrentPage(idx, animated: false)
         }
     }
@@ -726,7 +671,6 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         self.imageSlideshowView = ImageSlideShowView(frame: self.view.bounds)
         if let issv = self.imageSlideshowView {
             issv.styleColor = FlexMediaPickerConfiguration.styleColor
-            issv.imageSlideshow?.setImageInputs(self.imageSources)
             self.view.insertSubview(issv, at: 1)
             issv.closeHandler = {
                 self.imageSlideshowView?.removeFromSuperview()
@@ -739,9 +683,10 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                 image in
                 self.addNewImage(image, location: nil)
             }
-            issv.removeOrTrashSelectedItem = {
-                asset in
-                self.removeSelectedAsset(asset)
+            issv.removeOrTrashLastItem = {
+                if let asset = AssetManager.persistence.getAllAssets().last {
+                    self.removeSelectedAsset(asset)
+                }
             }
             issv.updateImageCroppingHandler = {
                 self.populateSelectedAssetView()
@@ -750,6 +695,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                 asset in
                 self.selectedAssetsView?.focusOnItem(withReference: asset.uuid)
             }
+            issv.acceptSelectedAssetsHandler = self.acceptSelectedAssets
             issv.hideViewElements(hide: true)
         }
     }

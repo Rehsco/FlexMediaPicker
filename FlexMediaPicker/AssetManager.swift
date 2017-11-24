@@ -136,6 +136,48 @@ open class AssetManager {
         return false
     }
     
+    open static func getAcceptableAssetCount() -> Int {
+        var numApplicableSelected = 0
+        let allSelectedAssets = self.persistence.getAllAssets()
+        for sa in allSelectedAssets {
+            if sa.isVideo() {
+                if FlexMediaPickerConfiguration.allowVideoSelection {
+                    numApplicableSelected += 1
+                }
+            }
+            else if sa.isAudio() {
+                if FlexMediaPickerConfiguration.allowVoiceRecording {
+                    numApplicableSelected += 1
+                }
+            }
+            else {
+                numApplicableSelected += 1
+            }
+        }
+        return numApplicableSelected
+    }
+    
+    open static func getAcceptedAssets() -> [FlexMediaPickerAsset] {
+        var returnableAssets: [FlexMediaPickerAsset] = []
+        let allSelectedAssets = self.persistence.getAllAssets()
+        for sa in allSelectedAssets {
+            if sa.isVideo() {
+                if FlexMediaPickerConfiguration.allowVideoSelection {
+                    returnableAssets.append(sa)
+                }
+            }
+            else if sa.isAudio() {
+                if FlexMediaPickerConfiguration.allowVoiceRecording {
+                    returnableAssets.append(sa)
+                }
+            }
+            else {
+                returnableAssets.append(sa)
+            }
+        }
+        return returnableAssets
+    }
+    
     open static func resolveVideoAsset(_ asset: PHAsset, resolvedURLHandler: @escaping ((URL)->Void)) {
         PHCachingImageManager().requestAVAsset(forVideo: asset, options: nil) { (asset, audioMix, args) in
             if let asset = asset as? AVURLAsset {

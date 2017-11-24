@@ -174,7 +174,7 @@ public class FlexMediaPickerConfiguration {
     public static var flashButtonAlwaysHidden = false
     public static var managesAudioSession = true
 
-    public static var allowMultipleSelection = true
+    public static var allowMultipleSelection = false
     public static var allowVideoSelection = false
     public static var allowVoiceRecording = true
     public static var allowLocationSelection = true
@@ -197,7 +197,7 @@ public class FlexMediaPickerConfiguration {
     // MARK: Limits
 
     /// 0 means unlimited numbers allowed, when allowMultipleSelection = true
-    public static var numberItemsAllowed = 0
+    public static var numberItemsAllowed = 1
 
     
     public init() {}

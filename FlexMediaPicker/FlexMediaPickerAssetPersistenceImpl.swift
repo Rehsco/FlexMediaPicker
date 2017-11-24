@@ -76,6 +76,10 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
         return Array(self.assetMap.values).sorted(by: { $0.addedTime < $1.addedTime })
     }
     
+    open func numberOfAssets() -> Int {
+        return self.assetMap.count
+    }
+    
     open func getAsset(forLocalIdentifier id: String) -> FlexMediaPickerAsset? {
         let allAssets = self.getAllAssets()
         for asset in allAssets {
