@@ -403,27 +403,4 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
             fatalError("Unable to delete file: \(error) : \(#function).")
         }
     }
-    
-    /// Resource provider instead of URL based playback code
-    /*
-    func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
-        if let data = self.videoData {
-            DispatchQueue.main.async { () -> Void in
-                if let infoRequest = loadingRequest.contentInformationRequest {
-                    infoRequest.contentType = "public.mpeg-4" // UTI
-                    infoRequest.contentLength = Int64(data.count)
-                    infoRequest.isByteRangeAccessSupported = true
-                }
-                if let request = loadingRequest.dataRequest {
-                    let range = Range(uncheckedBounds: (Int(request.requestedOffset), Int(request.requestedOffset) + request.requestedLength))
-                    let part = data.subdata(in: range)
-                    request.respond(with: part)
-                }
-                loadingRequest.finishLoading()
-            }
-            return true
-        }
-        return false
-    }
- */
 }

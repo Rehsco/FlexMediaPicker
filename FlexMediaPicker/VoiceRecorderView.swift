@@ -87,7 +87,19 @@ class VoiceRecorderView: FlexView {
                     self.recordingInfoLabel?.label.text = Helper.stringFromTimeInterval(interval: timeElapsed)
                     self.recordingInfoLabel?.setNeedsLayout()
                 }
-                
+
+                if FlexMediaPickerConfiguration.maxAudioRecordingTime > 0 {
+                    if FlexMediaPickerConfiguration.maxAudioRecordingTime - timeElapsed <= FlexMediaPickerConfiguration.secondWarningForRecordingLimitAtTimeLeft {
+                        self.recordingInfoLabel?.labelTextColor = FlexMediaPickerConfiguration.secondWarningOfRecordingTimeColor
+                    }
+                    else if FlexMediaPickerConfiguration.maxAudioRecordingTime - timeElapsed <= FlexMediaPickerConfiguration.firstWarningForRecordingLimitAtTimeLeft {
+                        self.recordingInfoLabel?.labelTextColor = FlexMediaPickerConfiguration.firstWarningOfRecordingTimeColor
+                    }
+                    else {
+                        self.recordingInfoLabel?.labelTextColor = FlexMediaPickerConfiguration.headerTextColor
+                    }
+                }
+
                 // Update waveform
                 let normPower = CGFloat(pow (10, avgpower / 35))
                 self.waveformView?.amplitude = normPower

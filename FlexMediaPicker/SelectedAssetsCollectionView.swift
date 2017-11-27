@@ -144,7 +144,6 @@ open class SelectedAssetsCollectionView: ImagesCollectionView {
     }
     
     private func maskImage(_ image: UIImage, cropRect: CGRect) -> UIImage {
-        NSLog("Mask photo to cropRect \(cropRect) of image with size: \(image.size)")
         if FlexMediaPickerConfiguration.maskImage {
             let imgRect = CGRect(origin: .zero, size: image.size)
             let imgCropRect = CGRect(x: cropRect.origin.x * imgRect.width, y: cropRect.origin.y * imgRect.height, width: cropRect.width * imgRect.width, height: cropRect.height * imgRect.height)

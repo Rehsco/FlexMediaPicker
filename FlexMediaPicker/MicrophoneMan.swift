@@ -65,6 +65,13 @@ open class MicrophoneMan: NSObject {
     @objc func updateAudioMeter(timer: Timer) {
         let (power, time) = AssetManager.persistence.updateAudioMeter()
         self.recordingTimeUpdated?(time, power)
+        
+        if self.isRecording && FlexMediaPickerConfiguration.maxAudioRecordingTime > 0 && time >= FlexMediaPickerConfiguration.maxAudioRecordingTime {
+            self.stopVoiceRecording()
+            self.isRecording = false
+            
+            // TODO: Should inform user of auto recording stop!
+        }
     }
     
     func stopVoiceRecording() {

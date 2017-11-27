@@ -113,16 +113,13 @@ class ImageAssetImageSource: InputSource {
     }
     
     private func frameImageFromVideo(url: URL, completionHandler: @escaping ((UIImage?)->Void)) {
-        if let image = self.imageFromVideo(url: url) {
-            completionHandler(image)
-        }
+        self.imageFromVideo(url: url, completionHandler: completionHandler)
     }
     
     func imageFromVideoURL(completionHandler: @escaping ((UIImage?)->Void)) {
         self.getVideoURL { url in
             if let url = url {
-                let image = self.imageFromVideo(url: url)
-                completionHandler(image)
+                self.imageFromVideo(url: url, completionHandler: completionHandler)
             }
             else {
                 completionHandler(nil)
@@ -130,7 +127,7 @@ class ImageAssetImageSource: InputSource {
         }
     }
     
-    func imageFromVideo(url: URL) -> UIImage? {
+    func imageFromVideo(url: URL, completionHandler: @escaping ((UIImage?)->Void)) {
         do {
             let asset = AVURLAsset(url: url, options: nil)
             let movieTracks = asset.tracks(withMediaType: AVMediaTypeVideo)
@@ -138,8 +135,9 @@ class ImageAssetImageSource: InputSource {
                 let durationSeconds = CMTimeGetSeconds(asset.duration)
                 let totalFrames: Float64 = durationSeconds * Float64(movieTrack.nominalFrameRate)
                 
-                let secondsIn: Float64 = (self.asset.currentFrame/totalFrames)*durationSeconds
-                let imageTimeEstimate: CMTime = CMTimeMakeWithSeconds(secondsIn, 600)
+                let frame = max(2, self.asset.currentFrame)
+                let secondsIn: Float64 = (frame/totalFrames)*durationSeconds
+                let imageTimeEstimate = CMTimeMakeWithSeconds(secondsIn, 600)
                 
                 let imgGenerator = AVAssetImageGenerator(asset: asset)
                 imgGenerator.requestedTimeToleranceBefore = kCMTimeZero
@@ -148,12 +146,11 @@ class ImageAssetImageSource: InputSource {
                 var actTime: CMTime = CMTimeMake(0, 1)
                 let cgImage = try imgGenerator.copyCGImage(at: imageTimeEstimate, actualTime: &actTime)
                 let image = UIImage(cgImage: cgImage)
-                return image
+                completionHandler(image)
             }
         } catch let error as NSError {
             print("Error generating video image: \(error)")
         }
-        return nil
     }
     
 }

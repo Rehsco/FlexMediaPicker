@@ -65,8 +65,6 @@ open class PhotosService: NSObject {
             return cropRect
         }
         
-        NSLog("face detection for image with dim \(image.size)")
-        
         let resImage: UIImage
         if image.size.width > image.size.height {
             // Face detection has issue with portrait images, so resize to square
@@ -75,14 +73,12 @@ open class PhotosService: NSObject {
         else {
             resImage = image
         }
-        NSLog("face detection for resimage with dim \(resImage.size)")
         
         guard let personciImage = CIImage(image: resImage) else {
             return cropRect
         }
         
         let ciImageSize = personciImage.extent.size
-        NSLog("ciimage with dim \(ciImageSize)")
         var transform = CGAffineTransform(scaleX: 1, y: -1)
         transform = transform.translatedBy(x: 0, y: -ciImageSize.height)
         
@@ -92,7 +88,6 @@ open class PhotosService: NSObject {
             var largestRect: CGRect = .zero
             var largestArea: CGFloat = 0
             for face in faces as! [CIFaceFeature] {
-                NSLog("Found bounds are \(face.bounds)")
                 // Apply the transform to convert the coordinates
                 let faceViewBounds = face.bounds.applying(transform)
                 if faceViewBounds.width * faceViewBounds.height > largestArea {

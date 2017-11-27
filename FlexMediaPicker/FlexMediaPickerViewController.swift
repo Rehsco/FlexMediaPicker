@@ -255,25 +255,25 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     // MARK: - Camera View
     
     private func showCameraView() {
-        if self.cameraView == nil {
-            self.cameraView = CameraView(frame: self.view.bounds)
-            self.view.insertSubview(self.cameraView!, at: 1)
-            self.cameraView?.headerFooterAdaptToMenu = false
-            self.cameraView?.displayView()
-            self.cameraView?.didGetPhoto = {
-                image, location in
-                self.addNewImage(image, location: location)
-            }
-            self.cameraView?.cancelCameraViewHandler = {
-                self.cameraView?.removeFromSuperview()
-                self.cameraView = nil
-            }
-            self.cameraView?.didRecordVideo = {
-                mpa in
-                self.addSelectedAsset(mpa)
-            }
-            self.layoutSupplementaryViews(to: self.view.bounds.size)
+        self.cameraView?.removeFromSuperview()
+
+        self.cameraView = CameraView(frame: self.view.bounds)
+        self.view.insertSubview(self.cameraView!, at: 1)
+        self.cameraView?.headerFooterAdaptToMenu = false
+        self.cameraView?.displayView()
+        self.cameraView?.didGetPhoto = {
+            image, location in
+            self.addNewImage(image, location: location)
         }
+        self.cameraView?.cancelCameraViewHandler = {
+            self.cameraView?.removeFromSuperview()
+            self.cameraView = nil
+        }
+        self.cameraView?.didRecordVideo = {
+            mpa in
+            self.addSelectedAsset(mpa)
+        }
+        self.layoutSupplementaryViews(to: self.view.bounds.size)
     }
     
     // MARK: - Voice Recording
@@ -419,6 +419,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         self.populateSelectedAssetView(focusOnLastItem: true)
         if !FlexMediaPickerConfiguration.allowMultipleSelection {
             if AssetManager.persistence.numberOfAssets() >= FlexMediaPickerConfiguration.numberItemsAllowed {
+                self.selectedAssetsView?.showHide(hide: false)
                 self.showImage(byIndex: AssetManager.persistence.numberOfAssets()-1)
             }
         }
@@ -614,19 +615,20 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             self.view.addSubview(sav)
         }
     }
+    
     func populateSelectedAssetView(focusOnLastItem: Bool = false) {
         self.applyAcceptEnabling()
         self.selectedAssetsView?.populate(focusOnLastItem: focusOnLastItem) {
             imageIndex in
-            
-            self.voiceRecorderView?.removeFromSuperview()
-            self.voiceRecorderView = nil
-
-            self.cameraView?.removeFromSuperview()
-            self.cameraView = nil
-            
             self.showImage(byIndex: imageIndex)
         }
+    }
+    
+    private func cleanupTakeViews() {
+        self.voiceRecorderView?.removeFromSuperview()
+        self.voiceRecorderView = nil
+        self.cameraView?.removeFromSuperview()
+        self.cameraView = nil
     }
     
     private func applyAcceptEnabling() {
@@ -659,8 +661,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             self.createImageSlideShowView()
         }
         if let issv = self.imageSlideshowView {
-            self.voiceRecorderView?.showHide(hide: true)
-            self.cameraView?.showHide(hide: true)
+            self.cleanupTakeViews()
             issv.isHidden = false
             issv.setAssets(AssetManager.persistence.getAllAssets())
             issv.setCurrentPage(idx, animated: false)

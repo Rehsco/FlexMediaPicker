@@ -558,6 +558,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
             self.maximumAVOffset = fma.maxFrame == Float64.greatestFiniteMagnitude ? 1 : fma.maxFrame / totalFrames
             self.currentAVOffset = fma.currentFrame / totalFrames
             self.timeSliderPanel?.currentTimeOffset = self.currentAVOffset
+            self.timeSliderPanel?.allowedDuration = FlexMediaPickerConfiguration.maxVideoRecordingTime
             self.player?.url = url
         }
     }
@@ -579,6 +580,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
                 let minDur = self.minimumAVOffset * ap.duration
                 let maxDur = self.maximumAVOffset * ap.duration
                 self.timeSliderPanel?.setMinMaxVideoTime(min: minDur, max: maxDur)
+                self.timeSliderPanel?.allowedDuration = FlexMediaPickerConfiguration.maxAudioRecordingTime
                 ap.prepareToPlay()
             }
         }

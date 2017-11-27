@@ -48,6 +48,12 @@ class TimeSliderInfoView: UIView {
         }
     }
     
+    var allowedDuration: TimeInterval = 0 {
+        didSet {
+            self.updateDurationLabel()
+        }
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setupView()
@@ -80,7 +86,15 @@ class TimeSliderInfoView: UIView {
     private func updateDurationLabel() {
         let duration = self.maximumTime - self.minimumTime
         self.durationTimeLabel?.label.text = Helper.stringFromTimeInterval(interval: duration)
+        
+        if self.allowedDuration > 0 && round(duration) > self.allowedDuration {
+            self.durationTimeLabel?.labelTextColor = FlexMediaPickerConfiguration.secondWarningOfRecordingTimeColor
+        }
+        else {
+            self.durationTimeLabel?.labelTextColor = FlexMediaPickerConfiguration.timeSliderCaptionTextColor
+        }
     }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         let minTimeRect = CGRect(x: 0, y: 0, width: 100, height: self.bounds.size.height)

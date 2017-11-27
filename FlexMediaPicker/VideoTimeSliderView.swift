@@ -52,6 +52,12 @@ class VideoTimeSliderView: FlexView {
     
     var maxDuration: TimeInterval = 1
     
+    var allowedDuration: TimeInterval = 0 {
+        didSet {
+            self.infoView?.allowedDuration = self.allowedDuration
+        }
+    }
+
     var videoTimeOffsetChangeHandler: ((Double)->Void)?
     var videoTimeMinOffsetChangeHandler: ((Double)->Void)?
     var videoTimeMaxOffsetChangeHandler: ((Double)->Void)?

@@ -37,7 +37,7 @@ class CameraMediaControlPanel: FlexFooterView {
     fileprivate var triggerButton: FlexLabel?
     fileprivate var camVidSwitch: CamVidSwitch?
     
-    fileprivate var isVideoModeActive: Bool = false
+    var isVideoModeActive: Bool = false
     
     var flashActionHandler: ((Bool)->Void)?
     var cameraSwitchActionHandler: (()->Void)?

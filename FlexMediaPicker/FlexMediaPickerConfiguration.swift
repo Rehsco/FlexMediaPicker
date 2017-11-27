@@ -72,6 +72,9 @@ public class FlexMediaPickerConfiguration {
     
     public static var warningIconTintColor = UIColor(red: 1.0, green: 0.84, blue: 0.0, alpha: 1.0)
     public static var warningLabelTextColor = UIColor.white
+    
+    public static var firstWarningOfRecordingTimeColor: UIColor = UIColor(red: 1.0, green: 0.84, blue: 0.0, alpha: 1.0)
+    public static var secondWarningOfRecordingTimeColor: UIColor = UIColor(red: 0.95, green: 0.19, blue: 0.14, alpha: 1)
 
     // MARK: Styled
     
@@ -174,8 +177,8 @@ public class FlexMediaPickerConfiguration {
     public static var flashButtonAlwaysHidden = false
     public static var managesAudioSession = true
 
-    public static var allowMultipleSelection = false
-    public static var allowVideoSelection = false
+    public static var allowMultipleSelection = true
+    public static var allowVideoSelection = true
     public static var allowVoiceRecording = true
     public static var allowLocationSelection = true
 
@@ -191,14 +194,21 @@ public class FlexMediaPickerConfiguration {
 
     // MARK: Media Formats
 
-    public static var videoOutputFormat = AVAssetExportPreset640x480
-//    public static var videoOutputFormat = AVAssetExportPresetPassthrough
+    public static var videoOutputFormat = AVAssetExportPresetPassthrough // AVAssetExportPreset640x480
 
     // MARK: Limits
 
-    /// 0 means unlimited numbers allowed, when allowMultipleSelection = true
+    /// 0 means unlimited numbers allowed. Only used when allowMultipleSelection = true
     public static var numberItemsAllowed = 1
+    /// In seconds. 0 means unlimited
+    public static var maxVideoRecordingTime: TimeInterval = 20
+    /// In seconds. 0 means unlimited
+    public static var maxAudioRecordingTime: TimeInterval = 10
 
-    
+    /// Indicates that the permitted recording length is soon reached
+    public static var firstWarningForRecordingLimitAtTimeLeft: TimeInterval = 10
+    /// Indicates that the permitted recording length is imminently reached
+    public static var secondWarningForRecordingLimitAtTimeLeft: TimeInterval = 3
+
     public init() {}
 }

@@ -181,7 +181,7 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
         }
     }
     
-    func stop() {
+    fileprivate func stop() {
         self.session.stopRunning()
     }
     
@@ -304,11 +304,12 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
     }
     
     func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!) {
+        let time = Date().timeIntervalSinceNow - self.startRecordingTime.timeIntervalSinceNow
         self.lockQueue.sync() {
             if !self.isCapturing || self.isPaused {
                 return
             }
-            self.recordingTimeUpdated?(Date().timeIntervalSinceNow - self.startRecordingTime.timeIntervalSinceNow)
+            self.recordingTimeUpdated?(time)
 
             let isVideo = captureOutput is AVCaptureVideoDataOutput
             
@@ -372,6 +373,11 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
             if let buf = buffer {
                 AssetManager.persistence.writeVideoData(sample: buf, isVideo: isVideo)
             }
+        }
+        if FlexMediaPickerConfiguration.maxVideoRecordingTime > 0 && time >= FlexMediaPickerConfiguration.maxVideoRecordingTime {
+            self.stopVideoRecording()
+            return
+            // TODO: Should inform user of auto recording stop!
         }
     }
     

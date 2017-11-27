@@ -114,11 +114,26 @@ class CameraView: FlexView, CameraManDelegate {
         cameraMan.videoRecordedEventHandler = {
             mpa in
             self.didRecordVideo?(mpa)
+            DispatchQueue.main.async {
+                self.cameraControlPanel.isVideoModeActive = false
+                self.cameraControlPanel.applyTriggerButtonStyle()
+            }
         }
         cameraMan.recordingTimeUpdated = {
             timeElapsed in
             DispatchQueue.main.async {
                 self.recordingInfoLabel?.label.text = Helper.stringFromTimeInterval(interval: timeElapsed)
+                if FlexMediaPickerConfiguration.maxVideoRecordingTime > 0 {
+                    if FlexMediaPickerConfiguration.maxVideoRecordingTime - timeElapsed <= FlexMediaPickerConfiguration.secondWarningForRecordingLimitAtTimeLeft {
+                        self.recordingInfoLabel?.labelTextColor = FlexMediaPickerConfiguration.secondWarningOfRecordingTimeColor
+                    }
+                    else if FlexMediaPickerConfiguration.maxVideoRecordingTime - timeElapsed <= FlexMediaPickerConfiguration.firstWarningForRecordingLimitAtTimeLeft {
+                        self.recordingInfoLabel?.labelTextColor = FlexMediaPickerConfiguration.firstWarningOfRecordingTimeColor
+                    }
+                    else {
+                        self.recordingInfoLabel?.labelTextColor = FlexMediaPickerConfiguration.headerTextColor
+                    }
+                }
                 self.recordingInfoLabel?.setNeedsLayout()
             }
         }
