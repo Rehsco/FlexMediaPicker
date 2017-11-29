@@ -451,11 +451,25 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
                 let maxF = self.maximumAVOffset * maxFrame
                 ca.minFrame = minF
                 ca.maxFrame = maxF
+                
+                if FlexMediaPickerConfiguration.maxVideoRecordingTime > 0, let tsp = self.timeSliderPanel, round(tsp.currentDuration()) > FlexMediaPickerConfiguration.maxVideoRecordingTime {
+                    self.showWarning(withText: "Maximum allowed duration is \(Helper.stringFromTimeInterval(interval: FlexMediaPickerConfiguration.maxVideoRecordingTime))")
+                }
+                else {
+                    self.assetWarningLabel?.isHidden = true
+                }
             }
             else if ca.isAudio() {
                 ca.currentTimeOffset = self.currentAVOffset
                 ca.minTimeOffset = self.minimumAVOffset
                 ca.maxTimeOffset = self.maximumAVOffset
+
+                if FlexMediaPickerConfiguration.maxAudioRecordingTime > 0, let tsp = self.timeSliderPanel, round(tsp.currentDuration()) > FlexMediaPickerConfiguration.maxAudioRecordingTime {
+                    self.showWarning(withText: "Maximum allowed duration is \(Helper.stringFromTimeInterval(interval: FlexMediaPickerConfiguration.maxAudioRecordingTime))")
+                }
+                else {
+                    self.assetWarningLabel?.isHidden = true
+                }
             }
         }
     }
@@ -515,9 +529,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
                         self.initiateVideoValues(withURL: url)
                         
                         if !FlexMediaPickerConfiguration.allowVideoSelection {
-                            self.assetWarningLabel?.textView.attributedText = Helper.getWarningLabel(withText: "Videos not accepted, but you can use frames as images.")
-                            self.assetWarningLabel?.textView.textAlignment = .center
-                            self.assetWarningLabel?.isHidden = false
+                            self.showWarning(withText: "Videos not accepted, but you can use frames as images.")
                         }
                     }
                 })
@@ -572,7 +584,6 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
                 self.maximumAVOffset = fma.maxTimeOffset
                 self.minimumAVOffset = fma.minTimeOffset
                 self.currentAVOffset = fma.currentTimeOffset
-                NSLog("setting current play time at \(self.currentAVOffset * dur)")
                 ap.currentTime = self.currentAVOffset * dur
                 self.timeSliderPanel?.currentTimeOffset = self.currentAVOffset
                 self.timeSliderPanel?.setMinMaxVideoOffsets(min: self.minimumAVOffset, max: self.maximumAVOffset)
@@ -582,6 +593,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
                 self.timeSliderPanel?.setMinMaxVideoTime(min: minDur, max: maxDur)
                 self.timeSliderPanel?.allowedDuration = FlexMediaPickerConfiguration.maxAudioRecordingTime
                 ap.prepareToPlay()
+                self.classDidUpdateTimeOffsets()
             }
         }
     }
@@ -747,6 +759,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
                 self.timeSliderPanel?.setMinMaxVideoTime(min: minDur, max: maxDur)
                 let offset = fma.currentFrame / self.getMaxFrame()
                 self.updateVideoTime(toOffset: offset)
+                self.classDidUpdateTimeOffsets()
             }
         }
     }
@@ -805,6 +818,12 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
     }
     
     // Helper
+    
+    private func showWarning(withText text: String) {
+        self.assetWarningLabel?.textView.attributedText = Helper.getWarningLabel(withText: text)
+        self.assetWarningLabel?.textView.textAlignment = .center
+        self.assetWarningLabel?.isHidden = false
+    }
     
     private func getTopViewController() -> UIViewController? {
         let appDelegate = UIApplication.shared.delegate

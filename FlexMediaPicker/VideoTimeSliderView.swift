@@ -157,6 +157,13 @@ class VideoTimeSliderView: FlexView {
         self.timeSlider = nil
     }
     
+    func currentDuration() -> TimeInterval {
+        if let iv = self.infoView {
+            return iv.maximumTime - iv.minimumTime
+        }
+        return 0
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         self.timeSlider?.frame = UIEdgeInsetsInsetRect(self.bounds, UIEdgeInsetsMake(5, 20, 5, 20))
