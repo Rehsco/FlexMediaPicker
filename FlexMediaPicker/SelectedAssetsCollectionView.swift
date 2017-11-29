@@ -71,6 +71,15 @@ open class SelectedAssetsCollectionView: ImagesCollectionView {
         }
     }
     
+    open func refreshItem(withReference reference: String) {
+        DispatchQueue.main.async {
+            if let item = self.getItemForReference(reference) as? ImagesCollectionItem, let asset = AssetManager.persistence.getAsset(forID: item.reference) {
+                self.populateItemInfo(forAsset: asset, item: item)
+                self.updateCellForItem(reference)
+            }
+        }
+    }
+    
     open func getFocusedMediaAsset() -> FlexMediaPickerAsset? {
         for item in self.allPopulatedItems {
             if item.isFocused {
@@ -100,20 +109,7 @@ open class SelectedAssetsCollectionView: ImagesCollectionView {
                 }
                 let fitem = ImagesCollectionItem(reference: ref, icon: thumbnail)
                 
-                if selAsset.isVideo() || selAsset.isAudio() {
-                    // TODO: use cached and / or cropped duration
-                    AssetManager.duration(forMediaAsset: selAsset, durationHandler: { duration in
-                        let timeStr = Helper.stringFromTimeInterval(interval: TimeInterval(duration))
-                        fitem.secondarySubTitle = Helper.applyFontAndColorToString(FlexMediaPickerConfiguration.selectedMediaCaptionFont, color: FlexMediaPickerConfiguration.selectedMediaCaptionColor, text: timeStr)
-                        DispatchQueue.main.async {
-                            self.updateCellForItem(fitem.reference)
-                        }
-                    })
-                    
-                    if selAsset.isVideo(), !FlexMediaPickerConfiguration.allowVideoSelection, let warnIcon = Helper.getWarningIcon() {
-                        fitem.subTitle = Helper.imageToAttachmentImage(warnIcon, fontSize: FlexMediaPickerConfiguration.selectedMediaCaptionFont.pointSize)
-                    }
-                }
+                self.populateItemInfo(forAsset: selAsset, item: fitem)
                 
                 fitem.canMoveItem = false
                 fitem.imageViewFitting = .scaleToFit
@@ -127,7 +123,17 @@ open class SelectedAssetsCollectionView: ImagesCollectionView {
                 let selectionItemMenu = CommonIconViewMenu(size: CGSize(width: 36, height: 36), hPos: .left, vPos: .header, menuIconSize: 24)
                 let imageName = selAsset.isAssetBased() ? "RemoveItem" : "DeleteIcon"
                 _ = selectionItemMenu.createIconMenuItem(imageName: imageName, iconSize: 24, selectionHandler: {
-                    self.deleteOrRemoveItemHandler?(fitem.reference)
+                    if !selAsset.isAssetBased() {
+                        // TODO: Should use customized text and icons
+                        AlertViewFactory.confirmation(title: "Delete Item", subTitle: "This item is not stored. Do you want to delete it?", buttonText: "Delete item", iconName: "helpIcon_48pt", confirmationResult: { proceed in
+                            if proceed {
+                                self.deleteOrRemoveItemHandler?(fitem.reference)
+                            }
+                        })
+                    }
+                    else {
+                        self.deleteOrRemoveItemHandler?(fitem.reference)
+                    }
                 })
                 fitem.itemMenu = selectionItemMenu
                 self.addItem(self.secRef!, item: fitem)
@@ -143,14 +149,40 @@ open class SelectedAssetsCollectionView: ImagesCollectionView {
         }
     }
     
+    private func populateItemInfo(forAsset asset: FlexMediaPickerAsset, item: ImagesCollectionItem) {
+        if asset.isVideo() || asset.isAudio() {
+            AssetManager.croppedDuration(forMediaAsset: asset, durationHandler: { duration in
+                let timeStr = Helper.stringFromTimeInterval(interval: duration)
+                let maxAllowedDuration = asset.isVideo() ? FlexMediaPickerConfiguration.maxVideoRecordingTime : FlexMediaPickerConfiguration.maxAudioRecordingTime
+                if maxAllowedDuration > 0 && round(duration) > maxAllowedDuration {
+                    item.secondarySubTitle = Helper.applyFontAndColorToString(FlexMediaPickerConfiguration.selectedMediaCaptionFont, color: FlexMediaPickerConfiguration.secondWarningOfRecordingTimeColor, text: timeStr)
+                    if let warnIcon = Helper.getWarningIcon() {
+                        item.subTitle = Helper.imageToAttachmentImage(warnIcon, fontSize: FlexMediaPickerConfiguration.selectedMediaCaptionFont.pointSize)
+                    }
+                }
+                else {
+                    item.secondarySubTitle = Helper.applyFontAndColorToString(FlexMediaPickerConfiguration.selectedMediaCaptionFont, color: FlexMediaPickerConfiguration.selectedMediaCaptionColor, text: timeStr)
+                    item.subTitle = NSAttributedString(string: "")
+                }
+                DispatchQueue.main.async {
+                    self.updateCellForItem(item.reference)
+                }
+            })
+            
+            if asset.isVideo(), !FlexMediaPickerConfiguration.allowVideoSelection, let warnIcon = Helper.getWarningIcon() {
+                item.subTitle = Helper.imageToAttachmentImage(warnIcon, fontSize: FlexMediaPickerConfiguration.selectedMediaCaptionFont.pointSize)
+            }
+        }
+    }
+    
     private func maskImage(_ image: UIImage, cropRect: CGRect) -> UIImage {
         if FlexMediaPickerConfiguration.maskImage {
             let imgRect = CGRect(origin: .zero, size: image.size)
             let imgCropRect = CGRect(x: cropRect.origin.x * imgRect.width, y: cropRect.origin.y * imgRect.height, width: cropRect.width * imgRect.width, height: cropRect.height * imgRect.height)
-            NSLog("imgCropRect: \(imgCropRect)")
+//            NSLog("imgCropRect: \(imgCropRect)")
             let croppedImage = image.crop(toRect: imgCropRect)
             let cimgRect = CGRect(origin: .zero, size: croppedImage.size)
-            NSLog("cimgRect: \(cimgRect)")
+//            NSLog("cimgRect: \(cimgRect)")
             let maskRect = Helper.getMaskRect(inRect: cimgRect)
             let maskShape = StyledShapeLayer.createShape(FlexMediaPickerConfiguration.imageMaskStyle.style, bounds: maskRect, color: .black)
             let maskPath = UIBezierPath(cgPath: maskShape.path!)

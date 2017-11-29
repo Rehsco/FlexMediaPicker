@@ -376,8 +376,8 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
         }
         if FlexMediaPickerConfiguration.maxVideoRecordingTime > 0 && time >= FlexMediaPickerConfiguration.maxVideoRecordingTime {
             self.stopVideoRecording()
-            return
-            // TODO: Should inform user of auto recording stop!
+            // TODO: Should use customized text
+            AlertViewFactory.showFailAlert(title: "Recording Ended", message: "The allowed duration was reached.", iconName: FlexMediaPickerConfiguration.alertIconName)
         }
     }
     

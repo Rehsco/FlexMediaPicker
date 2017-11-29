@@ -159,8 +159,9 @@ class ImageAssetImageSource: InputSource {
             let cgImage = try imgGenerator.copyCGImage(at: time, actualTime: &actTime)
             let image = UIImage(cgImage: cgImage)
             return image
-        } catch let error as NSError {
-            print("Error generating video image at time \(time): \(error)")
+        } catch _ as NSError {
+            // Ignore the error as this can be naturally caused by misaligned audio
+//            print("Error generating video image at time \(time): \(error)")
         }
         return nil
     }

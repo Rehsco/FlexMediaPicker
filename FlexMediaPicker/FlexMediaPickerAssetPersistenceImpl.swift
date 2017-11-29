@@ -268,7 +268,7 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
     }
     
     public func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
-        // TODO: This is executed when starting the recorder with a time limit
+        // This is executed when starting the recorder with a time limit and currently unused!
         if !flag {
             self.stopAudioRecording(false) {
                 _ in

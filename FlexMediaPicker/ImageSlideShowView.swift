@@ -72,6 +72,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
     var didGetPhoto: ((UIImage)->Void)?
     var removeOrTrashLastItem: (()->Void)?
     var focusedSelectedItem: ((FlexMediaPickerAsset)->Void)?
+    var avTimingOffsetsChangedHandler: ((FlexMediaPickerAsset)->Void)?
     var updateImageCroppingHandler: (()->Void)?
 
     deinit {
@@ -121,6 +122,9 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
             offset in
             self.minimumAVOffset = offset
             self.userDidUpdateTimeOffsets()
+            if let ca = self.currentAsset {
+                self.avTimingOffsetsChangedHandler?(ca)
+            }
             if self.isCurrentAssetAVideo() {
                 self.updateFrameStepper()
             }
@@ -129,6 +133,9 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
             offset in
             self.maximumAVOffset = offset
             self.userDidUpdateTimeOffsets()
+            if let ca = self.currentAsset {
+                self.avTimingOffsetsChangedHandler?(ca)
+            }
             if self.isCurrentAssetAVideo() {
                 self.updateFrameStepper()
             }
@@ -156,19 +163,21 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
         self.addSubview(self.assetWarningLabel!)
         
         self.createBackOrCloseLeftMenu() {
-            if !FlexMediaPickerConfiguration.allowMultipleSelection {
-                self.removeOrTrashLastItem?()
+            if !FlexMediaPickerConfiguration.allowMultipleSelection && AssetManager.getAcceptableAssetCount() >= FlexMediaPickerConfiguration.numberItemsAllowed {
+                // TODO: Should use customized text
+                AlertViewFactory.confirmation(title: "Remove Item", subTitle: "Leave the view and remove the last item?", buttonText: "Delete item", iconName: FlexMediaPickerConfiguration.queryIconName, confirmationResult: { proceed in
+                    if proceed {
+                        self.removeOrTrashLastItem?()
+                        self.closeView()
+                    }
+                })
             }
-            self.closeView()
+            else {
+                self.closeView()
+            }
         }
         
-        if !FlexMediaPickerConfiguration.allowMultipleSelection {
-            self.rightViewMenu = CommonIconViewMenu(size: CGSize(width: 160, height: 36), hPos: .right, vPos: .header, menuIconSize: 24)
-        }
-        else {
-            self.rightViewMenu = CommonIconViewMenu(size: CGSize(width: 50, height: 36), hPos: .right, vPos: .header, menuIconSize: 24)
-        }
-        
+        self.rightViewMenu = CommonIconViewMenu(size: CGSize(width: 160, height: 36), hPos: .right, vPos: .header, menuIconSize: 24)
         self.cropMI = self.rightViewMenu?.createIconMenuItem(imageName: "", selectedImageName: "crop", iconSize: 24, selectionHandler: {
             if let asset = self.currentAsset, let image = AssetManager.persistence.imageFromAsset(withID: asset.uuid) {
                 self.cropView = ImageCropView(frame: UIScreen.main.bounds, image: image, cropRect: asset.cropRect)
@@ -183,12 +192,9 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
                 }
             }
         })
-        if !FlexMediaPickerConfiguration.allowMultipleSelection {
-            self.acceptMI = self.rightViewMenu?.createIconMenuItem(imageName: "Accept", selectionHandler: {
-                self.acceptSelectedAssetsHandler?()
-            })
-        }
-
+        self.acceptMI = self.rightViewMenu?.createIconMenuItem(imageName: "Accept", selectionHandler: {
+            self.acceptSelectedAssetsHandler?()
+        })
         self.addMenu(self.rightViewMenu!)
         
         self.footerSize = FlexMediaPickerConfiguration.footerHeight
@@ -252,11 +258,9 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
                 }
                 else if let ap = self.audioPlayer {
                     if shouldPlay {
-                        NSLog("should play at time: \(self.currentAVOffset * ap.duration)")
-                        ap.play() //atTime: self.currentAVOffset * ap.duration)
+                        ap.play()
                     }
                     else {
-                        NSLog("player should pause")
                         ap.pause()
                     }
                 }
@@ -401,7 +405,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
     }
     
     @objc private func playerSwipeNext(_ gesture: UISwipeGestureRecognizer) {
-        NSLog("\(#function)")
+//        NSLog("\(#function)")
         if let iss = self.imageSlideshow {
             if iss.images.count > 1 {
                 DispatchQueue.main.async {
@@ -413,7 +417,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
     }
 
     @objc private func playerSwipePrev(_ gesture: UISwipeGestureRecognizer) {
-        NSLog("\(#function)")
+//        NSLog("\(#function)")
         if let iss = self.imageSlideshow {
             if iss.images.count > 1 {
                 DispatchQueue.main.async {
@@ -442,6 +446,8 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
 
     private func doUpdateTimeOffsets() {
         if let ca = self.currentAsset {
+            ca.minTimeOffset = self.minimumAVOffset
+            ca.maxTimeOffset = self.maximumAVOffset
             if ca.isVideo() {
                 let maxFrame = self.getMaxFrame()
                 let frame = maxFrame * self.currentAVOffset
@@ -461,8 +467,6 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
             }
             else if ca.isAudio() {
                 ca.currentTimeOffset = self.currentAVOffset
-                ca.minTimeOffset = self.minimumAVOffset
-                ca.maxTimeOffset = self.maximumAVOffset
 
                 if FlexMediaPickerConfiguration.maxAudioRecordingTime > 0, let tsp = self.timeSliderPanel, round(tsp.currentDuration()) > FlexMediaPickerConfiguration.maxAudioRecordingTime {
                     self.showWarning(withText: "Maximum allowed duration is \(Helper.stringFromTimeInterval(interval: FlexMediaPickerConfiguration.maxAudioRecordingTime))")
@@ -475,7 +479,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
     }
     
     func setCurrentPage(_ idx: Int, animated: Bool) {
-        NSLog("\(#function)")
+//        NSLog("\(#function)")
         self.imageSlideshow?.setCurrentPage(idx, animated: animated)
         self.assignFooterPanel(forAssetIndex: idx)
     }
@@ -494,22 +498,9 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
         self.hideViewElementsHandler?(hide)
     }
 
-    // TODO: Need this in fix for scaling/zooming video still image
-//    private func hidePlayerView() {
-        /*
-        DispatchQueue.main.async {
-            if let p = self.player, !p.view.isHidden {
-                self.imageSlideshow?.isHidden = false
-                p.view.isHidden = true
-                p.view.removeFromSuperview()
-            }
-        }
- */
-//    }
-    
     private func assignFooterPanel(forAssetIndex index: Int) {
         self.meterTimer?.invalidate()
-        NSLog("\(#function) Asset index is \(index)")
+//        NSLog("\(#function) Asset index is \(index)")
         if let imageAssets = self.imageSlideshow?.images as? [ImageAssetImageSource] {
             let imageAsset = imageAssets[index]
             self.currentAsset = imageAsset.asset
@@ -631,7 +622,9 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
             DispatchQueue.main.async {
                 if let player = self.player {
                     player.seek(to: timeOffset) {
-                        self.videoControlPanel.isPlaying = player.playbackState == .playing
+                        DispatchQueue.main.async {
+                            self.videoControlPanel.isPlaying = player.playbackState == .playing
+                        }
                     }
                     self.assetInfoLabel?.label.text = Helper.stringFromTimeInterval(interval: player.currentTime)
                 }
@@ -750,7 +743,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
     
     func playerReady(_ player: Player) {
         // After player has been initialized, make sure it stays hidden until "play" is tapped
-        NSLog("\(#function)")
+//        NSLog("\(#function)")
         DispatchQueue.main.async {
             if let player = self.player, let fma = self.currentAsset {
                 self.timeSliderPanel?.maxDuration = player.maximumDuration

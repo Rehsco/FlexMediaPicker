@@ -34,8 +34,8 @@ open class AlertViewFactory {
     private static var alertView: SCLAlertView?
     
     open class func confirmation(title: String, subTitle: String, buttonText: String, iconName: String, confirmationResult: @escaping ((Bool) -> Void)) {
-        let image = (UIImage(named: iconName, in: Bundle(for: AlertViewFactory.self), compatibleWith: nil) ?? UIImage(named: iconName))?.tint(FlexMediaPickerConfiguration.alertStyleColor)
-        let thumbnailImage = image?.circularImage(size: CGSize(width: 52, height: 52))
+        let image = (UIImage(named: iconName, in: Bundle(for: AlertViewFactory.self), compatibleWith: nil) ?? UIImage(named: iconName))?.tint(FlexMediaPickerConfiguration.alertIconColor)
+        let thumbnailImage = image?.circularImage(size: image?.size)
         let appearance = self.sclAlertViewAppearance()
         let alertView = SCLAlertView(appearance: appearance)
         alertView.addButton(buttonText, backgroundColor: FlexMediaPickerConfiguration.alertStyleColor) {
@@ -60,8 +60,8 @@ open class AlertViewFactory {
     }
     
     open class func showFailAlert(title: String, message: String, iconName: String, okHandler: (() -> Void)? = nil) {
-        let image = (UIImage(named: iconName, in: Bundle(for: AlertViewFactory.self), compatibleWith: nil) ?? UIImage(named: iconName))?.tint(FlexMediaPickerConfiguration.alertStyleColor)
-        let thumbnailImage = image?.circularImage(size: CGSize(width: 52, height: 52))
+        let image = (UIImage(named: iconName, in: Bundle(for: AlertViewFactory.self), compatibleWith: nil) ?? UIImage(named: iconName))?.tint(FlexMediaPickerConfiguration.alertIconColor)
+        let thumbnailImage = image?.circularImage(size: image?.size)
         let appearance = self.sclAlertViewAppearance()
         let alert = SCLAlertView(appearance: appearance)
         alert.addButton(NSLocalizedString("Ok", comment: ""), backgroundColor: FlexMediaPickerConfiguration.alertButtonColor) {
@@ -72,7 +72,7 @@ open class AlertViewFactory {
     }
     
     open class func queryForItemName(title: String, subtitle: String, textPlaceholder: String, iconName: String, completionHandler: @escaping ((String, Bool) -> Void)) {
-        if let image = (UIImage(named: iconName, in: Bundle(for: AlertViewFactory.self), compatibleWith: nil) ?? UIImage(named: iconName))?.tint(FlexMediaPickerConfiguration.alertStyleColor) {
+        if let image = (UIImage(named: iconName, in: Bundle(for: AlertViewFactory.self), compatibleWith: nil) ?? UIImage(named: iconName))?.tint(FlexMediaPickerConfiguration.alertIconColor) {
             AlertViewFactory.queryForItemName(title: title, subtitle: subtitle, textPlaceholder: textPlaceholder, image: image, completionHandler: completionHandler)
         }
         else {

@@ -102,7 +102,7 @@ open class AssetManager {
         for asset in assets {
             imageManager.requestImage(for: asset, targetSize: size, contentMode: .aspectFill, options: requestOptions) { image, _ in
                 if let image = image {
-                    NSLog("Image found by PHImageManager for id \(asset.localIdentifier). Size = \(image.size)")
+//                    NSLog("Image found by PHImageManager for id \(asset.localIdentifier). Size = \(image.size)")
                     images.append(image)
                 }
             }
@@ -267,7 +267,7 @@ open class AssetManager {
             let fileURL = documentsDirectory.appendingPathComponent("\(mpa.uuid).mp4")
             let startOffset = self.getTimeForVideoFrame(mpa.minFrame, videoURL: url)
             let endOffset = self.getTimeForVideoFrame(mpa.maxFrame, videoURL: url)
-            let duration = endOffset - startOffset
+            let duration = min(endOffset - startOffset, CMTimeMakeWithSeconds(FlexMediaPickerConfiguration.maxVideoRecordingTime, 600))
             self.persistence.encodeVideo(url, targetURL: fileURL, fromTime: startOffset, duration: duration, presetName: FlexMediaPickerConfiguration.videoOutputFormat, progressHandler: progressHandler, exportFinishedHandler: { url in
                 if let videoUrl = url {
                     completedURLHandler(videoUrl)
@@ -284,7 +284,7 @@ open class AssetManager {
             let fileURL = documentsDirectory.appendingPathComponent("\(mpa.uuid).m4a")
             let startOffset = CMTimeMakeWithSeconds(mpa.minTimeOffset * dur.seconds, dur.timescale)
             let endOffset = CMTimeMakeWithSeconds(mpa.maxTimeOffset * dur.seconds, dur.timescale)
-            let duration = endOffset - startOffset
+            let duration = min(endOffset - startOffset, CMTimeMakeWithSeconds(FlexMediaPickerConfiguration.maxAudioRecordingTime, dur.timescale))
             self.persistence.cropAudio(url, targetURL: fileURL, fromTime: startOffset, duration: duration, progressHandler: progressHandler, exportFinishedHandler: { url in
                 if let videoUrl = url {
                     completedURLHandler(videoUrl)
@@ -295,12 +295,37 @@ open class AssetManager {
 
     // Helper
     
-    open class func duration(forMediaAsset mpa: FlexMediaPickerAsset, durationHandler: @escaping ((Float)->Void)) {
-        AssetManager.resolveURL(forMediaAsset: mpa) { url in
-            let asset = AVURLAsset(url: url)
-            let duration = asset.duration
-            let durationSeconds = CMTimeGetSeconds(duration)
-            durationHandler(Float(durationSeconds))
+    open class func duration(forMediaAsset mpa: FlexMediaPickerAsset, durationHandler: @escaping ((TimeInterval)->Void)) {
+        if let duration = mpa.maxDuration {
+            durationHandler(duration)
+        }
+        else {
+            AssetManager.resolveURL(forMediaAsset: mpa) { url in
+                let asset = AVURLAsset(url: url)
+                let duration = asset.duration
+                let durationSeconds = CMTimeGetSeconds(duration)
+                mpa.maxDuration = durationSeconds
+                durationHandler(durationSeconds)
+            }
+        }
+    }
+    
+    open class func croppedDuration(forMediaAsset mpa: FlexMediaPickerAsset, durationHandler: @escaping ((TimeInterval)->Void)) {
+        if let duration = mpa.maxDuration {
+            let startTime = mpa.minTimeOffset * duration
+            let endTime = mpa.maxTimeOffset * duration
+            durationHandler(endTime-startTime)
+        }
+        else {
+            AssetManager.resolveURL(forMediaAsset: mpa) { url in
+                let asset = AVURLAsset(url: url)
+                let duration = asset.duration
+                let durationSeconds = CMTimeGetSeconds(duration)
+                mpa.maxDuration = durationSeconds
+                let startTime = mpa.minTimeOffset * durationSeconds
+                let endTime = mpa.maxTimeOffset * durationSeconds
+                durationHandler(endTime-startTime)
+            }
         }
     }
     

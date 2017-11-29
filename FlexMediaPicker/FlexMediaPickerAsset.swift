@@ -49,8 +49,13 @@ open class FlexMediaPickerAsset {
     /// Audio
     public var audioURL: URL?
     public var currentTimeOffset: Double = 0
+    
+    /// Audio and Video
     public var minTimeOffset: Double = 0
     public var maxTimeOffset: Double = 1
+    
+    /// Cached info
+    public var maxDuration: TimeInterval?
 
     public init(thumbnail: UIImage, asset: PHAsset) {
         self.uuid = UUID().uuidString

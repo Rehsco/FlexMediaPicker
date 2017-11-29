@@ -70,7 +70,8 @@ open class MicrophoneMan: NSObject {
             self.stopVoiceRecording()
             self.isRecording = false
             
-            // TODO: Should inform user of auto recording stop!
+            // TODO: Should use customized text
+            AlertViewFactory.showFailAlert(title: "Recording Ended", message: "The allowed duration was reached.", iconName: FlexMediaPickerConfiguration.alertIconName)
         }
     }
     

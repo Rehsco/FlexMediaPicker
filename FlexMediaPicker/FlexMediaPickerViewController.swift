@@ -293,7 +293,8 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             self.addSelectedAsset(mpa)
         }
         self.voiceRecorderView?.voiceRecordingFailedHandler = {
-            // TODO: Notify
+            // TODO: Should use customized text
+            AlertViewFactory.showFailAlert(title: "Recording Failed", message: "An error occured and the recording could not finish.", iconName: FlexMediaPickerConfiguration.alertIconName)
         }
         self.layoutSupplementaryViews(to: self.view.bounds.size)
     }
@@ -695,6 +696,10 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             issv.focusedSelectedItem = {
                 asset in
                 self.selectedAssetsView?.focusOnItem(withReference: asset.uuid)
+            }
+            issv.avTimingOffsetsChangedHandler = {
+                asset in
+                self.selectedAssetsView?.refreshItem(withReference: asset.uuid)
             }
             issv.acceptSelectedAssetsHandler = self.acceptSelectedAssets
             issv.hideViewElements(hide: true)

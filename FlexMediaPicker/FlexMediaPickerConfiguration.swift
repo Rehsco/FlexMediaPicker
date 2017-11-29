@@ -39,8 +39,9 @@ public class FlexMediaPickerConfiguration {
 
     public static var alertStyleColor = UIColor(red: 0.15, green: 0.19, blue: 0.24, alpha: 1)
     public static var alertTitleColor = UIColor.white
+    public static var alertIconColor = UIColor.white
     public static var alertSecondaryColor = UIColor(red: 0.25, green: 0.29, blue: 0.34, alpha: 1)
-    public static var alertButtonColor = UIColor(red: 0.09, green: 0.11, blue: 0.13, alpha: 1)
+    public static var alertButtonColor = UIColor(red: 0.35, green: 0.39, blue: 0.44, alpha: 1)
 
     /// When recording and switching to camera
     public static var takeButtonRecordingBorderColorWhileInCameraMode = UIColor(red: 0.95, green: 0.19, blue: 0.14, alpha: 1)
@@ -114,6 +115,11 @@ public class FlexMediaPickerConfiguration {
 
     public static var warningLabelFont = UIFont.systemFont(ofSize: 14, weight: UIFontWeightRegular)
 
+    // MARK: Icons
+    
+    public static var alertIconName = "InfoAlertIcon_64pt"
+    public static var queryIconName = "InfoAlertIcon_64pt"
+
     // MARK: Titles
 
     public static var mediaTitle = "Media Library"
@@ -177,7 +183,7 @@ public class FlexMediaPickerConfiguration {
     public static var flashButtonAlwaysHidden = false
     public static var managesAudioSession = true
 
-    public static var allowMultipleSelection = true
+    public static var allowMultipleSelection = false
     public static var allowVideoSelection = true
     public static var allowVoiceRecording = true
     public static var allowLocationSelection = true
