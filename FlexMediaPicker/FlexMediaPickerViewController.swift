@@ -64,7 +64,6 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     private var cameraView: CameraView?
     private var voiceRecorderView: VoiceRecorderView?
 
-    private var imageSources: [ImageAssetImageSource] = []
     private var selectedAssetsView: SelectedAssetsCollectionView?
     
     // MARK: - Public accessors
@@ -263,15 +262,21 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         self.cameraView?.displayView()
         self.cameraView?.didGetPhoto = {
             image, location in
-            self.addNewImage(image, location: location)
+            DispatchQueue.main.async {
+                self.addNewImage(image, location: location)
+            }
         }
         self.cameraView?.cancelCameraViewHandler = {
-            self.cameraView?.removeFromSuperview()
-            self.cameraView = nil
+            DispatchQueue.main.async {
+                self.cameraView?.removeFromSuperview()
+                self.cameraView = nil
+            }
         }
         self.cameraView?.didRecordVideo = {
             mpa in
-            self.addSelectedAsset(mpa)
+            DispatchQueue.main.async {
+                self.addSelectedAsset(mpa)
+            }
         }
         self.layoutSupplementaryViews(to: self.view.bounds.size)
     }
@@ -352,20 +357,14 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                             AssetManager.reencodeVideo(forMediaAsset: assetToConvert, progressHandler: { progress in
                                 BusyViewFactory.updateProgress(progress: progress, upperLabel: "Converting Video", lowerLabel: "\(idx) of \(assetsConvertCount)")
                             }, completedURLHandler: { url in
-                                AssetManager.storeVideo(forURL: url, completion: { _ in
-                                    NSLog("re-encoded video stored to Photos (as test)")
-                                    next(nil)
-                                })
+                                assetToConvert.convertedURL = url
                             })
                         }
                         else if assetToConvert.isAudio() {
                             AssetManager.cropAudio(forMediaAsset: assetToConvert, progressHandler: { progress in
                                 BusyViewFactory.updateProgress(progress: progress, upperLabel: "Converting Audio", lowerLabel: "\(idx) of \(assetsConvertCount)")
                             }, completedURLHandler: { url in
-                                AssetManager.storeVideo(forURL: url, completion: { _ in
-                                    NSLog("re-encoded audio stored to Photos (as test)")
-                                    next(nil)
-                                })
+                                assetToConvert.convertedURL = url
                             })
                         }
                     }
@@ -468,23 +467,10 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     }
 
     func removeSelectedAsset(_ asset: FlexMediaPickerAsset) {
-        self.removeImageSource(forID: asset.uuid)
         AssetManager.persistence.deleteImageAsset(withID: asset.uuid)
         self.populateSelectedAssetView()
     }
 
-    private func removeImageSource(forID uuid: String) {
-        var idx = 0
-        for ims in self.imageSources {
-            if ims.asset.uuid == uuid {
-                self.imageSources.remove(at: idx)
-                return
-            }
-            idx += 1
-        }
-        NSLog("Could not find image source to remove for uuid \(uuid)")
-    }
-    
     // MARK: - Internal View Model
     
     override open func populateContent() {

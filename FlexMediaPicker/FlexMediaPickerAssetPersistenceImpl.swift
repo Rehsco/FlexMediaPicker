@@ -38,10 +38,13 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
     private var videoWriter: VideoWriter?
     private var audioRecorder: AVAudioRecorder?
     private var audioRecordingPaused: Bool = false
+    private var currentVideoFileURL: URL?
     private var currentAudioFileURL: URL?
-    private var fileIndex = 0
     private var exportSession: AVAssetExportSession?
     private var progressUpdateTimer: Timer?
+
+    open var baseVideoDirName = "fmpvideo"
+    open var baseAudioDirName = "fmpaudio"
 
     open var imagePersistence: ImagePersistenceInterface = FlexMediaPickerImagePersistenceImpl()!
     
@@ -131,6 +134,12 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
         }
     }
 
+    open func deleteAllMedia() {
+        self.imagePersistence.deleteAllImages()
+        self.removeAllAudios()
+        self.removeAllVideos()
+    }
+    
     // MARK: - Video
     
     open func isVideoRecorderCreated() -> Bool {
@@ -139,15 +148,17 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
     
     open func startRecordVideo(height:Int, width:Int, channels:Int, samples:Float64) {
         let fileManager = FileManager()
-        let url = self.videoFileUrl()
-        if fileManager.fileExists(atPath: url.path) {
-            do {
-                try fileManager.removeItem(atPath: url.path)
-            } catch _ {
+        self.currentVideoFileURL = self.videoFileUrl()
+        if let url = self.currentVideoFileURL {
+            if fileManager.fileExists(atPath: url.path) {
+                do {
+                    try fileManager.removeItem(atPath: url.path)
+                } catch _ {
+                }
             }
+            NSLog("setup video writer with \(width), \(height)")
+            self.videoWriter = VideoWriter(fileUrl: url, height: height, width: width, channels: channels, samples: samples)
         }
-        NSLog("setup video writer with \(width), \(height)")
-        self.videoWriter = VideoWriter(fileUrl: url, height: height, width: width, channels: channels, samples: samples)
     }
     
     open func writeVideoData(sample: CMSampleBuffer, isVideo: Bool) {
@@ -156,23 +167,23 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
 
     open func stopRecordVideo(finishedHandler: @escaping ((FlexMediaPickerAsset?)->Void)) {
         self.videoWriter?.finish {
-            if FlexMediaPickerConfiguration.storeRecordedVideosToAssetLibrary {
-                AssetManager.storeVideo(forURL: self.videoFileUrl(), completion: { videoAsset in
-                    if let asset = videoAsset {
-                        AssetManager.resolveVideoAsset(asset, resolvedURLHandler: { url in
-                            if let thumbnail = AssetManager.getThumbnailForVideoAsset(url: url) {
-                                finishedHandler(self.createAssetCollectionAsset(thumbnail: thumbnail, asset: asset))
-                            }
-                        })
+            if let vurl = self.currentVideoFileURL {
+                if FlexMediaPickerConfiguration.storeRecordedVideosToAssetLibrary {
+                    AssetManager.storeVideo(forURL: vurl, completion: { videoAsset in
+                        if let asset = videoAsset {
+                            AssetManager.resolveVideoAsset(asset, resolvedURLHandler: { url in
+                                if let thumbnail = AssetManager.getThumbnailForVideoAsset(url: url) {
+                                    finishedHandler(self.createAssetCollectionAsset(thumbnail: thumbnail, asset: asset))
+                                }
+                            })
+                        }
+                        self.videoWriter = nil
+                    })
+                }
+                else {
+                    if let thumbnail = AssetManager.getThumbnailForVideoAsset(url: vurl) {
+                        finishedHandler(self.createVideoRecordAsset(thumbnail: thumbnail, videoUrl: vurl))
                     }
-                    self.fileIndex += 1
-                    self.videoWriter = nil
-                })
-            }
-            else {
-                let url = self.videoFileUrl()
-                if let thumbnail = AssetManager.getThumbnailForVideoAsset(url: url) {
-                    finishedHandler(self.createVideoRecordAsset(thumbnail: thumbnail, videoUrl: url))
                 }
             }
         }
@@ -276,7 +287,7 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
         }
     }
     
-    open func cropAudio(_ audioURL: URL, targetURL: URL, fromTime: CMTime? = nil, duration: CMTime? = nil, progressHandler: ((Float)->Void)? = nil, exportFinishedHandler: @escaping ((URL?)->Void)) {
+    open func cropAudio(_ audioURL: URL, fromTime: CMTime? = nil, duration: CMTime? = nil, progressHandler: ((Float)->Void)? = nil, exportFinishedHandler: @escaping ((URL?)->Void)) {
         self.progressUpdateTimer?.invalidate()
         
         let avAsset = AVURLAsset(url: audioURL, options: nil)
@@ -285,6 +296,7 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
         // Create Export session
         self.exportSession = AVAssetExportSession(asset: avAsset, presetName: AVAssetExportPresetAppleM4A)
         
+        let targetURL = self.audioFileUrl()
         deleteFile(targetURL)
         
         exportSession?.outputURL = targetURL
@@ -326,7 +338,7 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
     
     /// Crop video
 
-    open func encodeVideo(_ videoURL: URL, targetURL: URL, fromTime: CMTime? = nil, duration: CMTime? = nil, presetName: String = AVAssetExportPresetPassthrough, progressHandler: ((Float)->Void)? = nil, exportFinishedHandler: @escaping ((URL?)->Void))  {
+    open func encodeVideo(_ videoURL: URL, fromTime: CMTime? = nil, duration: CMTime? = nil, presetName: String = AVAssetExportPresetPassthrough, progressHandler: ((Float)->Void)? = nil, exportFinishedHandler: @escaping ((URL?)->Void))  {
         self.progressUpdateTimer?.invalidate()
         
         let avAsset = AVURLAsset(url: videoURL, options: nil)
@@ -335,6 +347,7 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
         // Create Export session
         self.exportSession = AVAssetExportSession(asset: avAsset, presetName: presetName)
 
+        let targetURL = self.videoFileUrl()
         deleteFile(targetURL)
         
         exportSession?.outputURL = targetURL
@@ -377,30 +390,79 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
     // MARK: - Helper
     
     open func videoFileUrl() -> URL {
-        let url = getDocumentsDirectory().appendingPathComponent("/FlexMediaPicker\(self.fileIndex).mp4")
+        let videoPath = "/FlexMediaPicker/\(self.baseVideoDirName)"
+        self.ensureDirectoryExist(videoPath)
+        let url = getDocumentsDirectory().appendingPathComponent("\(videoPath)/\(UUID().uuidString).mp4")
         return url
     }
     
     open func audioFileUrl() -> URL {
-        let filename = "\(UUID().uuidString).m4a"
-        let filePath = getDocumentsDirectory().appendingPathComponent(filename)
-        return filePath
+        let audioPath = "/FlexMediaPicker/\(self.baseAudioDirName)"
+        self.ensureDirectoryExist(audioPath)
+        let url = getDocumentsDirectory().appendingPathComponent("\(audioPath)/\(UUID().uuidString).m4a")
+        return url
+    }
+    
+    open func removeAllVideos() {
+        let videoPath = "FlexMediaPicker/\(self.baseVideoDirName)"
+        self.removeAllInDirectory(videoPath)
+    }
+
+    open func removeAllAudios() {
+        let audioPath = "FlexMediaPicker/\(self.baseAudioDirName)"
+        self.removeAllInDirectory(audioPath)
+    }
+
+    open func deleteFile(_ filePath:URL) {
+        guard FileManager.default.fileExists(atPath: filePath.path) else { return }
+        
+        do {
+            try FileManager.default.removeItem(atPath: filePath.path)
+            NSLog("File \(filePath.path) deleted")
+        }
+        catch {
+            fatalError("Unable to delete file: \(error) : \(#function).")
+        }
+    }
+    
+    open func removeAllInDirectory(_ directoryName: String) {
+        let documentDirectory = self.getDocumentsDirectory()
+        let directoryURL = documentDirectory.appendingPathComponent(directoryName)
+        let path = directoryURL.path
+        do {
+            let directoryContents = try FileManager.default.contentsOfDirectory(atPath: path)
+            for file in directoryContents {
+                let fullPath = directoryURL.appendingPathComponent(file).path
+                do {
+                    try FileManager.default.removeItem(atPath: fullPath)
+                    NSLog("File \(fullPath) deleted")
+                } catch {
+                    NSLog("Could not delete file: \(file)")
+                }
+            }
+        }
+        catch {
+            NSLog("Could not access \(path) for deleting all files")
+        }
+    }
+    
+    open func ensureDirectoryExist(_ directoryName: String) {
+        let documentDirectory = self.getDocumentsDirectory()
+        let directoryURL = documentDirectory.appendingPathComponent(directoryName)
+        let path = directoryURL.path
+        if !FileManager.default.fileExists(atPath: path) {
+            do {
+                try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
+            }
+            catch let error as NSError {
+                NSLog("Cannot create directory at path \(path). Description: \(error.description)")
+            }
+        }
     }
     
     open func getDocumentsDirectory() -> URL {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         let documentsDirectory = paths[0]
         return documentsDirectory
-    }
-    
-    open func deleteFile(_ filePath:URL) {
-        guard FileManager.default.fileExists(atPath: filePath.path) else { return }
-        
-        do {
-            try FileManager.default.removeItem(atPath: filePath.path)
-        }
-        catch {
-            fatalError("Unable to delete file: \(error) : \(#function).")
-        }
     }
 }

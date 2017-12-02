@@ -11,6 +11,8 @@ import UIKit
 class ViewController: UIViewController {
 
     @IBAction func pickImageSelected(_ sender: Any) {
+        AssetManager.persistence.deleteAllMedia()
+        
         let vc = FlexMediaPickerViewController()
         vc.mediaAcceptedHandler = {
             acceptedMedia in

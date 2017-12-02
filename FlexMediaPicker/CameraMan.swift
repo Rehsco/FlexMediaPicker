@@ -374,10 +374,12 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
                 AssetManager.persistence.writeVideoData(sample: buf, isVideo: isVideo)
             }
         }
-        if FlexMediaPickerConfiguration.maxVideoRecordingTime > 0 && time >= FlexMediaPickerConfiguration.maxVideoRecordingTime {
+        if FlexMediaPickerConfiguration.maxVideoRecordingTime > 0 && time >= FlexMediaPickerConfiguration.maxVideoRecordingTime  && self.isCapturing {
             self.stopVideoRecording()
             // TODO: Should use customized text
-            AlertViewFactory.showFailAlert(title: "Recording Ended", message: "The allowed duration was reached.", iconName: FlexMediaPickerConfiguration.alertIconName)
+            DispatchQueue.main.async {
+                AlertViewFactory.showFailAlert(title: "Recording Ended", message: "The allowed duration was reached.", iconName: FlexMediaPickerConfiguration.alertIconName)
+            }
         }
     }
     

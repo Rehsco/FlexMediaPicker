@@ -57,6 +57,9 @@ open class FlexMediaPickerAsset {
     /// Cached info
     public var maxDuration: TimeInterval?
 
+    /// Converted Result
+    public var convertedURL: URL?
+    
     public init(thumbnail: UIImage, asset: PHAsset) {
         self.uuid = UUID().uuidString
         self.thumbnail = thumbnail

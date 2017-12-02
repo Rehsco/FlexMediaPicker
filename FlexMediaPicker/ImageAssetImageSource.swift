@@ -60,13 +60,11 @@ class ImageAssetImageSource: InputSource {
             if !self.asset.isVideo(), let image = AssetManager.persistence.imageFromAsset(withID: self.asset.uuid) {
                 completionHandler(image)
             }
-                /// TODO: change this to use Persistence
             else if let ass = self.asset.asset, ass.mediaType == .video {
                 AssetManager.resolveVideoAsset(ass, resolvedURLHandler: { url in
                     self.frameImageFromVideo(url: url, completionHandler: completionHandler)
                 })
             }
-                /// TODO: change this to use Persistence
             else if let url = self.asset.videoURL {
                 self.frameImageFromVideo(url: url, completionHandler: completionHandler)
             }

@@ -183,15 +183,15 @@ public class FlexMediaPickerConfiguration {
     public static var flashButtonAlwaysHidden = false
     public static var managesAudioSession = true
 
-    public static var allowMultipleSelection = false
+    public static var allowMultipleSelection = true
     public static var allowVideoSelection = true
     public static var allowVoiceRecording = true
     public static var allowLocationSelection = true
 
     public static var showsImageCountLabel = true
     public static var allowPinchToZoom = true
-    public static var storeTakenImagesToPhotos = true
-    public static var storeRecordedVideosToAssetLibrary = true
+    public static var storeTakenImagesToPhotos = false
+    public static var storeRecordedVideosToAssetLibrary = false
 
     public static var maskImage = true
     public static var maskImageAutoCropToDetectedFace = true
@@ -207,7 +207,7 @@ public class FlexMediaPickerConfiguration {
     /// 0 means unlimited numbers allowed. Only used when allowMultipleSelection = true
     public static var numberItemsAllowed = 1
     /// In seconds. 0 means unlimited
-    public static var maxVideoRecordingTime: TimeInterval = 20
+    public static var maxVideoRecordingTime: TimeInterval = 120
     /// In seconds. 0 means unlimited
     public static var maxAudioRecordingTime: TimeInterval = 10
 

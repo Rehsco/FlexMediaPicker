@@ -113,8 +113,8 @@ class CameraView: FlexView, CameraManDelegate {
         
         cameraMan.videoRecordedEventHandler = {
             mpa in
-            self.didRecordVideo?(mpa)
             DispatchQueue.main.async {
+                self.didRecordVideo?(mpa)
                 self.cameraControlPanel.isVideoModeActive = false
                 self.cameraControlPanel.applyTriggerButtonStyle()
             }
