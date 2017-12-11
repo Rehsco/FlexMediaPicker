@@ -374,7 +374,13 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
         self.imageSlideshow?.frame = self.bounds
         self.player?.view.frame = self.bounds
         self.assetInfoLabel?.frame = self.header.bounds
-        self.timeSliderPanel?.frame = CGRect(x: 0, y: FlexMediaPickerConfiguration.headerHeight, width: self.bounds.size.width, height: FlexMediaPickerConfiguration.timeSliderPanelHeight)
+        self.cropView?.frame = self.bounds
+        var sOffset: CGFloat = 0
+        if #available(iOS 11, *) {
+            sOffset = self.safeAreaInsets.top
+            self.cropView?.viewElementsInsets = UIEdgeInsetsMake(self.safeAreaInsets.top, 0, self.safeAreaInsets.bottom, 0)
+        }
+        self.timeSliderPanel?.frame = CGRect(x: 0, y: FlexMediaPickerConfiguration.headerHeight + sOffset, width: self.bounds.size.width, height: FlexMediaPickerConfiguration.timeSliderPanelHeight)
         let warnBaseRect = CGRect(x: self.header.bounds.minX, y: self.header.bounds.minY, width: self.header.bounds.width, height: self.header.bounds.height * 2.0)
         let warnLabelRect = warnBaseRect.offsetBy(dx: 0, dy: self.header.bounds.height).offsetBy(dx: 0, dy: FlexMediaPickerConfiguration.timeSliderPanelHeight)
         self.assetWarningLabel?.frame = warnLabelRect

@@ -146,7 +146,9 @@ public class FlexMediaPickerConfiguration {
     public static var takeButtonRingWidth: CGFloat = 1.5
     public static var camVidSwitchBorderWidth: CGFloat = 1.5
     public static var camVidSwitchSize: CGSize = CGSize(width: 80, height: 40)
-    
+
+    public static var selectedMediaPanelHeight: CGFloat = 120
+
     public static var centerActionButtonWidth: CGFloat = 80
     public static var centerActionButtonHeight: CGFloat = footerHeight * 0.8
     
@@ -191,7 +193,7 @@ public class FlexMediaPickerConfiguration {
     public static var showsImageCountLabel = true
     public static var allowPinchToZoom = true
     public static var storeTakenImagesToPhotos = false
-    public static var storeRecordedVideosToAssetLibrary = false
+    public static var storeRecordedVideosToAssetLibrary = true
 
     public static var maskImage = true
     public static var maskImageAutoCropToDetectedFace = true
@@ -207,7 +209,7 @@ public class FlexMediaPickerConfiguration {
     /// 0 means unlimited numbers allowed. Only used when allowMultipleSelection = true
     public static var numberItemsAllowed = 1
     /// In seconds. 0 means unlimited
-    public static var maxVideoRecordingTime: TimeInterval = 120
+    public static var maxVideoRecordingTime: TimeInterval = 0
     /// In seconds. 0 means unlimited
     public static var maxAudioRecordingTime: TimeInterval = 10
 

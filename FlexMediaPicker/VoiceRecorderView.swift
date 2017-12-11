@@ -162,7 +162,11 @@ class VoiceRecorderView: FlexView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.recordingInfoLabel?.frame = CGRect(x: 0, y: 0, width: self.bounds.size.width, height: FlexMediaPickerConfiguration.headerHeight)
+        var yoff:CGFloat = 0
+        if #available(iOS 11, *) {
+            yoff = self.safeAreaInsets.top
+        }
+        self.recordingInfoLabel?.frame = CGRect(x: 0, y: yoff, width: self.bounds.size.width, height: FlexMediaPickerConfiguration.headerHeight)
         let vr = self.getViewRect()
         self.waveformView?.frame = vr
     }

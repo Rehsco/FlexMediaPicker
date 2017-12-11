@@ -158,8 +158,6 @@ class CameraView: FlexView, CameraManDelegate {
                     if let img = image {
                         self.didGetPhoto?(img, location)
                     }
-                    
-                    // TODO: do some effects when making a photo
                 }
             }
             ccp.recVideoActionHandler = {
@@ -227,7 +225,11 @@ class CameraView: FlexView, CameraManDelegate {
         self.previewLayer?.frame = bb
         
         previewLayer?.connection.videoOrientation = Helper.videoOrientation()
-        self.recordingInfoLabel?.frame = CGRect(x: 0, y: 0, width: self.bounds.size.width, height: FlexMediaPickerConfiguration.headerHeight)
+        var yoff:CGFloat = 0
+        if #available(iOS 11, *) {
+            yoff = self.safeAreaInsets.top
+        }
+        self.recordingInfoLabel?.frame = CGRect(x: 0, y: yoff, width: self.bounds.size.width, height: FlexMediaPickerConfiguration.headerHeight)
     }
     
     // MARK: - Camera actions

@@ -89,7 +89,6 @@ open class MicrophoneMan: NSObject {
     
     func pauseRecording() {
         if self.isRecording {
-            NSLog("pause voice recording")
             self.isPaused = true
             AssetManager.persistence.pauseAudioRecording()
         }
@@ -97,10 +96,8 @@ open class MicrophoneMan: NSObject {
     
     func resumeRecording() {
         if self.isRecording && self.isPaused {
-            NSLog("resume voice recording")
             self.isPaused = false
             AssetManager.persistence.resumeAudioRecording()
         }
     }
-
 }

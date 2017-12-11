@@ -166,7 +166,13 @@ class VideoTimeSliderView: FlexView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.timeSlider?.frame = UIEdgeInsetsInsetRect(self.bounds, UIEdgeInsetsMake(5, 20, 5, 20))
-        self.infoView?.frame = UIEdgeInsetsInsetRect(self.footer.bounds, FlexMediaPickerConfiguration.timeSliderCaptionPanelInsets)
+        var safeInsets: UIEdgeInsets = .zero
+        if #available(iOS 11, *) {
+            if UIDevice.current.orientation == .landscapeLeft || UIDevice.current.orientation == .landscapeRight {
+                safeInsets = UIEdgeInsetsMake(0, self.safeAreaInsets.left, 0, self.safeAreaInsets.right)
+            }
+        }
+        self.timeSlider?.frame = UIEdgeInsetsInsetRect(UIEdgeInsetsInsetRect(self.bounds, UIEdgeInsetsMake(5, 20, 5, 20)), safeInsets)
+        self.infoView?.frame = UIEdgeInsetsInsetRect(UIEdgeInsetsInsetRect(self.footer.bounds, FlexMediaPickerConfiguration.timeSliderCaptionPanelInsets), safeInsets)
     }
 }

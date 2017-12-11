@@ -165,6 +165,7 @@ public class CommonIconViewMenu: FlexViewMenu {
         }
     }
     
+    @discardableResult
     public func createIconMenuItem(imageName: String, selectedImageName: String? = nil, selectedIconTintColor: UIColor? = nil, iconSize: Int? = nil, selectionHandler: @escaping (() -> Void)) -> FlexMenuItem {
         let size = iconSize ?? Int(menuIconSize)
         let ti1 = self.getImage(named: "\(imageName)_\(size)pt")?.tint(FlexMediaPickerConfiguration.iconsColor)

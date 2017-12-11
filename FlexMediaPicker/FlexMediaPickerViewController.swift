@@ -221,34 +221,60 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             tabbarSize = tbc.tabBar.isHidden ? 0 : tbc.tabBar.bounds.size.height - 3
         }
 
-        /// TODO: This must change for SafeAreaInsets and iPhone X
         if let sav = self.selectedAssetsView, !sav.isHidden {
-            self.contentView?.viewMargins = UIEdgeInsetsMake(0, 0, 120, 0)
+            self.baseViewMargins = UIEdgeInsetsMake(0, 0, 120, 0)
         }
         else {
-            self.contentView?.viewMargins = UIEdgeInsetsMake(0, 0, 0, 0)
+            self.baseViewMargins = .zero
         }
         self.selectedAssetsView?.frame = self.selectedAssetsViewRect()
 
         var resBounds = self.view.bounds.offsetBy(dx: 0, dy: UIApplication.shared.statusBarFrame.height * 0.5).insetBy(dx: 0, dy: UIApplication.shared.statusBarFrame.height * 0.5)
         resBounds = CGRect(origin: resBounds.origin, size: CGSize(width: resBounds.size.width, height: resBounds.size.height-tabbarSize))
         self.contentView?.frame = resBounds
-        
-        let camRect = self.view.bounds
-        self.cameraView?.frame = camRect
-        self.cameraView?.setNeedsLayout()
-        
+
+        self.cameraView?.frame = self.view.bounds
         self.imageSlideshowView?.frame = self.view.bounds
         self.voiceRecorderView?.frame = self.view.bounds
+
+        if #available(iOS 11, *) {
+            var cinsets:UIEdgeInsets = .zero
+            if UIDevice.current.orientation == .landscapeRight {
+                cinsets = UIEdgeInsetsMake(0, 0, 0, self.view.safeAreaInsets.right)
+            }
+            else if UIDevice.current.orientation != .landscapeLeft {
+                cinsets = UIEdgeInsetsMake(self.view.safeAreaInsets.top, 0, self.view.safeAreaInsets.bottom, 0)
+            }
+            self.cameraView?.viewElementsInsets = cinsets
+
+            let insets = UIEdgeInsetsMake(self.view.safeAreaInsets.top, 0, self.view.safeAreaInsets.bottom, 0)
+            self.imageSlideshowView?.viewElementsInsets = insets
+            self.voiceRecorderView?.viewElementsInsets = insets
+        }
+        self.cameraView?.setNeedsLayout()
+        self.voiceRecorderView?.setNeedsLayout()
 
         super.refreshView()
     }
     
     private func selectedAssetsViewRect() -> CGRect {
-        if self.cameraView != nil && (UIDevice.current.orientation == .landscapeLeft || UIDevice.current.orientation == .landscapeRight) {
-            return CGRect(x: self.view.bounds.size.width - (120 + 64), y: 0, width: 120, height: self.view.bounds.size.height)
+        let savHeight = FlexMediaPickerConfiguration.selectedMediaPanelHeight
+        let fHeight = FlexMediaPickerConfiguration.footerHeight
+        var sbounds = self.view.bounds
+        if self.cameraView != nil && UIDevice.current.orientation == .landscapeRight {
+            if #available(iOS 11, *) {
+                sbounds = CGRect(x: sbounds.minX + self.view.safeAreaInsets.left, y: sbounds.minY, width: sbounds.width - (self.view.safeAreaInsets.left + self.view.safeAreaInsets.right), height: sbounds.height)
+            }
+            return CGRect(x: sbounds.size.width - (savHeight + fHeight), y: 0, width: savHeight, height: sbounds.size.height)
         }
-        return CGRect(x: 0, y: self.view.bounds.size.height - (120 + 64), width: self.view.bounds.size.width, height: 120)
+        if self.cameraView != nil && UIDevice.current.orientation == .landscapeLeft {
+            return CGRect(x: sbounds.size.width - (savHeight + fHeight), y: 0, width: savHeight, height: sbounds.size.height)
+        }
+        // Portrait mode
+        if #available(iOS 11, *) {
+            sbounds = CGRect(x: sbounds.minX, y: sbounds.minY, width: sbounds.width, height: sbounds.height - self.view.safeAreaInsets.bottom)
+        }
+        return CGRect(x: 0, y: sbounds.size.height - (savHeight + fHeight), width: sbounds.size.width, height: savHeight)
     }
     
     // MARK: - Camera View
@@ -419,7 +445,9 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         self.populateSelectedAssetView(focusOnLastItem: true)
         if !FlexMediaPickerConfiguration.allowMultipleSelection {
             if AssetManager.persistence.numberOfAssets() >= FlexMediaPickerConfiguration.numberItemsAllowed {
-                self.selectedAssetsView?.showHide(hide: false)
+                self.selectedAssetsView?.showHide(hide: false) {
+                    self.refreshView()
+                }
                 self.showImage(byIndex: AssetManager.persistence.numberOfAssets()-1)
             }
         }
@@ -628,7 +656,9 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                     self.rightViewMenu?.viewMenu?.thumbSize = aicImage.size
                 }
             }
-            self.selectedAssetsView?.showHide(hide: AssetManager.persistence.numberOfAssets() == 0)
+            self.selectedAssetsView?.showHide(hide: AssetManager.persistence.numberOfAssets() == 0) {
+                self.refreshView()
+            }
             self.rightViewMenu?.viewMenu?.setNeedsLayout()
         }
     }
@@ -665,7 +695,9 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                 self.imageSlideshowView = nil
             }
             issv.hideViewElementsHandler = { hide in
-                self.selectedAssetsView?.showHide(hide: hide)
+                self.selectedAssetsView?.showHide(hide: hide) {
+                    self.refreshView()
+                }
             }
             issv.didGetPhoto = {
                 image in

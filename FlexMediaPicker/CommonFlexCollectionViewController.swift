@@ -39,6 +39,9 @@ open class CommonFlexCollectionViewController: UIViewController {
     
     open var headerText: String?
     
+    /// Set these to adjust margins on top of default view margins, such as safe area insets
+    open var baseViewMargins: UIEdgeInsets = .zero
+    
     override open var preferredStatusBarStyle: UIStatusBarStyle {
         get {
             return .lightContent
@@ -78,6 +81,13 @@ open class CommonFlexCollectionViewController: UIViewController {
     
     open func refreshView() {
         self.contentView?.headerText = self.headerText
+        if #available(iOS 11, *), let cv = self.contentView {
+            cv.viewElementsInsets = UIEdgeInsetsMake(self.view.safeAreaInsets.top, 0, self.view.safeAreaInsets.bottom, 0)            
+            cv.viewMargins = UIEdgeInsetsMake(self.view.safeAreaInsets.top + self.baseViewMargins.top,
+                                              self.view.safeAreaInsets.left + self.baseViewMargins.left,
+                                              self.view.safeAreaInsets.bottom + self.baseViewMargins.bottom,
+                                              self.view.safeAreaInsets.right + self.baseViewMargins.right)
+        }
     }
     
     open func populateContent() {
