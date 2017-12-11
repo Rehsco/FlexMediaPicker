@@ -33,7 +33,6 @@ import MJRFlexStyleComponents
 import SwiftSiriWaveformView
 
 class VoiceRecorderView: FlexView {
-    private var voiceRecording: Bool = false
     private var recordingInfoLabel: FlexLabel?
     private var waveformView: SwiftSiriWaveformView?
     
@@ -75,6 +74,9 @@ class VoiceRecorderView: FlexView {
         micMan.voiceRecordedEventHandler = {
             mpa in
             self.didRecordAudio?(mpa)
+            self.vrControlPanel.isRecording = false
+            self.vrControlPanel.applyTriggerButtonStyle()
+            self.vrControlPanel.showHide(hide: false)
         }
         micMan.recordingTimeUpdated = {
             timeElapsed, avgpower in
@@ -130,13 +132,11 @@ class VoiceRecorderView: FlexView {
             ccp.setupMenu(in: self)
             
             ccp.recAudioActionHandler = {
-                if self.voiceRecording {
-                    self.voiceRecording = false
+                if self.micMan.isRecording {
                     self.recordingInfoLabel?.isHidden = true
                     self.stopVoiceRecording()
                 }
                 else {
-                    self.voiceRecording = true
                     self.recordingInfoLabel?.isHidden = false
                     self.startVoiceRecording()
                 }
