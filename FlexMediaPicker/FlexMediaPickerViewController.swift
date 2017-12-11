@@ -384,6 +384,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                                 BusyViewFactory.updateProgress(progress: progress, upperLabel: "Converting Video", lowerLabel: "\(idx) of \(assetsConvertCount)")
                             }, completedURLHandler: { url in
                                 assetToConvert.convertedURL = url
+                                next(nil)
                             })
                         }
                         else if assetToConvert.isAudio() {
@@ -391,6 +392,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                                 BusyViewFactory.updateProgress(progress: progress, upperLabel: "Converting Audio", lowerLabel: "\(idx) of \(assetsConvertCount)")
                             }, completedURLHandler: { url in
                                 assetToConvert.convertedURL = url
+                                next(nil)
                             })
                         }
                     }
@@ -496,7 +498,14 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
 
     func removeSelectedAsset(_ asset: FlexMediaPickerAsset) {
         AssetManager.persistence.deleteImageAsset(withID: asset.uuid)
-        self.populateSelectedAssetView()
+        self.populateSelectedAssetView(focusOnLastItem: true)
+        if let li = asset.asset?.localIdentifier {
+            if let item = self.contentView?.getItemForReference(li) {
+                item.isSelected = false
+                self.contentView?.deselectItem(item.reference)
+                self.updateCellForItem(uuid: item.reference)
+            }
+        }
     }
 
     // MARK: - Internal View Model
