@@ -1,0 +1,1015 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5B3DB3221F7FB8D300D864DE /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3DB3211F7FB8D300D864DE /* UIViewExtensions.swift */; };
+		5B3DB3231F7FB8D300D864DE /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3DB3211F7FB8D300D864DE /* UIViewExtensions.swift */; };
+		5B3DB3281F7FFB1200D864DE /* VideoPlaybackControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3DB3271F7FFB1200D864DE /* VideoPlaybackControlPanel.swift */; };
+		5B3DB3291F7FFB1200D864DE /* VideoPlaybackControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3DB3271F7FFB1200D864DE /* VideoPlaybackControlPanel.swift */; };
+		5B88355E1FB1AC0600782FB5 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B88355D1FB1AC0600782FB5 /* StringExtension.swift */; };
+		5B88355F1FB1AC0600782FB5 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B88355D1FB1AC0600782FB5 /* StringExtension.swift */; };
+		5B8835611FB1B2CB00782FB5 /* AlertViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8835601FB1B2CB00782FB5 /* AlertViewFactory.swift */; };
+		5B8835621FB1B2CB00782FB5 /* AlertViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8835601FB1B2CB00782FB5 /* AlertViewFactory.swift */; };
+		5B8835681FB1F6C800782FB5 /* SelectedAssetsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8835671FB1F6C800782FB5 /* SelectedAssetsCollectionView.swift */; };
+		5B8835691FB1F6C800782FB5 /* SelectedAssetsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8835671FB1F6C800782FB5 /* SelectedAssetsCollectionView.swift */; };
+		5B88356B1FB204F900782FB5 /* FlexMediaPickerStyling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B88356A1FB204F900782FB5 /* FlexMediaPickerStyling.swift */; };
+		5B88356C1FB204F900782FB5 /* FlexMediaPickerStyling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B88356A1FB204F900782FB5 /* FlexMediaPickerStyling.swift */; };
+		5BBFFABB1F51796500C08350 /* FlexMediaPickerAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBFFABA1F51796500C08350 /* FlexMediaPickerAsset.swift */; };
+		5BBFFABC1F51796500C08350 /* FlexMediaPickerAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBFFABA1F51796500C08350 /* FlexMediaPickerAsset.swift */; };
+		5BBFFABE1F51DF7500C08350 /* MediaControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBFFABD1F51DF7500C08350 /* MediaControlPanel.swift */; };
+		5BBFFABF1F51DF7500C08350 /* MediaControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBFFABD1F51DF7500C08350 /* MediaControlPanel.swift */; };
+		5BC11D011FADB34000BBC03B /* MicrophoneMan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC11D001FADB34000BBC03B /* MicrophoneMan.swift */; };
+		5BC11D021FADB34000BBC03B /* MicrophoneMan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC11D001FADB34000BBC03B /* MicrophoneMan.swift */; };
+		5BC11D041FADCB1900BBC03B /* VoiceRecorderMediaControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC11D031FADCB1900BBC03B /* VoiceRecorderMediaControlPanel.swift */; };
+		5BC11D051FADCB1900BBC03B /* VoiceRecorderMediaControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC11D031FADCB1900BBC03B /* VoiceRecorderMediaControlPanel.swift */; };
+		5BC11D071FADCCF200BBC03B /* VoiceRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC11D061FADCCF200BBC03B /* VoiceRecorderView.swift */; };
+		5BC11D081FADCCF200BBC03B /* VoiceRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC11D061FADCCF200BBC03B /* VoiceRecorderView.swift */; };
+		5BC3EF891FA72A4B00D21B14 /* CGGeometryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF881FA72A4B00D21B14 /* CGGeometryExtension.swift */; };
+		5BC3EF8A1FA72A4B00D21B14 /* CGGeometryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF881FA72A4B00D21B14 /* CGGeometryExtension.swift */; };
+		5BC3EF8C1FA72A6900D21B14 /* RSKImageScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF8B1FA72A6900D21B14 /* RSKImageScrollView.swift */; };
+		5BC3EF8D1FA72A6900D21B14 /* RSKImageScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF8B1FA72A6900D21B14 /* RSKImageScrollView.swift */; };
+		5BC3EF8F1FA72A9800D21B14 /* RSKTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF8E1FA72A9800D21B14 /* RSKTouchView.swift */; };
+		5BC3EF901FA72A9800D21B14 /* RSKTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF8E1FA72A9800D21B14 /* RSKTouchView.swift */; };
+		5BC3EF921FA72AF000D21B14 /* ImageCropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF911FA72AF000D21B14 /* ImageCropView.swift */; };
+		5BC3EF931FA72AF000D21B14 /* ImageCropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF911FA72AF000D21B14 /* ImageCropView.swift */; };
+		5BC3EF951FA757E800D21B14 /* CommonFlexView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF941FA757E800D21B14 /* CommonFlexView.swift */; };
+		5BC3EF961FA757E800D21B14 /* CommonFlexView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF941FA757E800D21B14 /* CommonFlexView.swift */; };
+		5BC562631F50392D00A848F2 /* FlexMediaPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BC562611F50392D00A848F2 /* FlexMediaPicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5BC562701F50394700A848F2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC5626F1F50394700A848F2 /* AppDelegate.swift */; };
+		5BC562721F50394700A848F2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC562711F50394700A848F2 /* ViewController.swift */; };
+		5BC562751F50394700A848F2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5BC562731F50394700A848F2 /* Main.storyboard */; };
+		5BC562771F50394700A848F2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5BC562761F50394700A848F2 /* Assets.xcassets */; };
+		5BC5627A1F50394700A848F2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5BC562781F50394700A848F2 /* LaunchScreen.storyboard */; };
+		5BC562831F503A9A00A848F2 /* AssetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC562821F503A9A00A848F2 /* AssetManager.swift */; };
+		5BC562841F503A9A00A848F2 /* AssetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC562821F503A9A00A848F2 /* AssetManager.swift */; };
+		5BC562861F503ABB00A848F2 /* FlexMediaPickerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC562851F503ABB00A848F2 /* FlexMediaPickerConfiguration.swift */; };
+		5BC562871F503ABB00A848F2 /* FlexMediaPickerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC562851F503ABB00A848F2 /* FlexMediaPickerConfiguration.swift */; };
+		5BC5628B1F50412900A848F2 /* FlexMediaPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC5628A1F50412900A848F2 /* FlexMediaPickerViewController.swift */; };
+		5BC5628C1F50412900A848F2 /* FlexMediaPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC5628A1F50412900A848F2 /* FlexMediaPickerViewController.swift */; };
+		5BC5628F1F50436700A848F2 /* CommonFlexCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC5628E1F50436700A848F2 /* CommonFlexCollectionViewController.swift */; };
+		5BC562901F50436700A848F2 /* CommonFlexCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC5628E1F50436700A848F2 /* CommonFlexCollectionViewController.swift */; };
+		5BC562921F50437B00A848F2 /* CommonIconViewMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC562911F50437B00A848F2 /* CommonIconViewMenu.swift */; };
+		5BC562931F50437B00A848F2 /* CommonIconViewMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC562911F50437B00A848F2 /* CommonIconViewMenu.swift */; };
+		5BC562951F50438F00A848F2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5BC562941F50438F00A848F2 /* Assets.xcassets */; };
+		5BC562961F50438F00A848F2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5BC562941F50438F00A848F2 /* Assets.xcassets */; };
+		5BC562981F50599700A848F2 /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC562971F50599700A848F2 /* UIImageExtensions.swift */; };
+		5BC562991F50599700A848F2 /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC562971F50599700A848F2 /* UIImageExtensions.swift */; };
+		5BC5629B1F5059E400A848F2 /* ImagesCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC5629A1F5059E400A848F2 /* ImagesCollectionView.swift */; };
+		5BC5629C1F5059E400A848F2 /* ImagesCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC5629A1F5059E400A848F2 /* ImagesCollectionView.swift */; };
+		5BC5629E1F506EF300A848F2 /* BusyViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC5629D1F506EF300A848F2 /* BusyViewFactory.swift */; };
+		5BC5629F1F506EF300A848F2 /* BusyViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC5629D1F506EF300A848F2 /* BusyViewFactory.swift */; };
+		5BC6677E1FA480FE004D517D /* StyledActionOverlayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6677D1FA480FE004D517D /* StyledActionOverlayExtension.swift */; };
+		5BC6677F1FA480FE004D517D /* StyledActionOverlayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6677D1FA480FE004D517D /* StyledActionOverlayExtension.swift */; };
+		5BC667811FA4D948004D517D /* CGRectHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC667801FA4D948004D517D /* CGRectHelper.swift */; };
+		5BC667821FA4D948004D517D /* CGRectHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC667801FA4D948004D517D /* CGRectHelper.swift */; };
+		5BC6D9481F763E570051B0A3 /* MainMediaControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6D9471F763E570051B0A3 /* MainMediaControlPanel.swift */; };
+		5BC6D9491F763E570051B0A3 /* MainMediaControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6D9471F763E570051B0A3 /* MainMediaControlPanel.swift */; };
+		5BC6D94B1F763EB00051B0A3 /* CameraMediaControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6D94A1F763EB00051B0A3 /* CameraMediaControlPanel.swift */; };
+		5BC6D94C1F763EB00051B0A3 /* CameraMediaControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6D94A1F763EB00051B0A3 /* CameraMediaControlPanel.swift */; };
+		5BC6D94E1F763F190051B0A3 /* CamVidSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6D94D1F763F190051B0A3 /* CamVidSwitch.swift */; };
+		5BC6D94F1F763F190051B0A3 /* CamVidSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6D94D1F763F190051B0A3 /* CamVidSwitch.swift */; };
+		5BC9193B1FB05D6900A37AC4 /* AudioService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC9193A1FB05D6900A37AC4 /* AudioService.swift */; };
+		5BC9193C1FB05D6900A37AC4 /* AudioService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC9193A1FB05D6900A37AC4 /* AudioService.swift */; };
+		5BC9193E1FB065D800A37AC4 /* PhotosService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC9193D1FB065D800A37AC4 /* PhotosService.swift */; };
+		5BC9193F1FB065D800A37AC4 /* PhotosService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC9193D1FB065D800A37AC4 /* PhotosService.swift */; };
+		5BC919411FB06A4B00A37AC4 /* CameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC919401FB06A4B00A37AC4 /* CameraService.swift */; };
+		5BC919421FB06A4B00A37AC4 /* CameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC919401FB06A4B00A37AC4 /* CameraService.swift */; };
+		5BCB66451F81549800AB9F4E /* VideoTimeSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCB66441F81549800AB9F4E /* VideoTimeSliderView.swift */; };
+		5BCB66461F81549800AB9F4E /* VideoTimeSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCB66441F81549800AB9F4E /* VideoTimeSliderView.swift */; };
+		5BCCDEC41F82A44A00914DC1 /* PositionUpdateTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCCDEC31F82A44A00914DC1 /* PositionUpdateTimer.swift */; };
+		5BCCDEC51F82A44A00914DC1 /* PositionUpdateTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCCDEC31F82A44A00914DC1 /* PositionUpdateTimer.swift */; };
+		5BCE9C261FAB79A2008D2E31 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCE9C251FAB79A2008D2E31 /* LocationService.swift */; };
+		5BCE9C271FAB79A2008D2E31 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCE9C251FAB79A2008D2E31 /* LocationService.swift */; };
+		5BCE9C291FAB7E2A008D2E31 /* LocationMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCE9C281FAB7E2A008D2E31 /* LocationMapView.swift */; };
+		5BCE9C2A1FAB7E2A008D2E31 /* LocationMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCE9C281FAB7E2A008D2E31 /* LocationMapView.swift */; };
+		5BD1E6E61F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD1E6E51F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift */; };
+		5BD1E6E71F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD1E6E51F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift */; };
+		5BD6281C1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD6281B1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift */; };
+		5BD6281D1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD6281B1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift */; };
+		5BD6281F1F84C57F001DB4BA /* FlexMediaPickerAssetPersistenceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD6281E1F84C57F001DB4BA /* FlexMediaPickerAssetPersistenceImpl.swift */; };
+		5BD628201F84C57F001DB4BA /* FlexMediaPickerAssetPersistenceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD6281E1F84C57F001DB4BA /* FlexMediaPickerAssetPersistenceImpl.swift */; };
+		5BD79AB91F66879A0023CE21 /* VideoWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD79AB81F66879A0023CE21 /* VideoWriter.swift */; };
+		5BD79ABA1F66879A0023CE21 /* VideoWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD79AB81F66879A0023CE21 /* VideoWriter.swift */; };
+		5BDC84151F52CC3000BF45B5 /* CameraMan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC84141F52CC3000BF45B5 /* CameraMan.swift */; };
+		5BDC84161F52CC3000BF45B5 /* CameraMan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC84141F52CC3000BF45B5 /* CameraMan.swift */; };
+		5BDC84191F52CC8F00BF45B5 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC84181F52CC8F00BF45B5 /* Helper.swift */; };
+		5BDC841A1F52CC8F00BF45B5 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC84181F52CC8F00BF45B5 /* Helper.swift */; };
+		5BDC841C1F52CE8B00BF45B5 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC841B1F52CE8B00BF45B5 /* CameraView.swift */; };
+		5BDC841D1F52CE8B00BF45B5 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC841B1F52CE8B00BF45B5 /* CameraView.swift */; };
+		5BDF22FA1F7F9A65000A6B7E /* ImageSlideShowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDF22F91F7F9A65000A6B7E /* ImageSlideShowView.swift */; };
+		5BDF22FB1F7F9A65000A6B7E /* ImageSlideShowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDF22F91F7F9A65000A6B7E /* ImageSlideShowView.swift */; };
+		5BE0F1741FA203B300BEC1CB /* UIScrollViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE0F1731FA203B300BEC1CB /* UIScrollViewExtensions.swift */; };
+		5BE0F1751FA203B300BEC1CB /* UIScrollViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE0F1731FA203B300BEC1CB /* UIScrollViewExtensions.swift */; };
+		5BE45C591F7C004000322FCC /* ImageAssetImageSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE45C581F7C004000322FCC /* ImageAssetImageSource.swift */; };
+		5BE45C5A1F7C004000322FCC /* ImageAssetImageSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE45C581F7C004000322FCC /* ImageAssetImageSource.swift */; };
+		5BE57D151F83AE340037D4EF /* TimeSliderInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE57D141F83AE340037D4EF /* TimeSliderInfoView.swift */; };
+		5BE57D161F83AE340037D4EF /* TimeSliderInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE57D141F83AE340037D4EF /* TimeSliderInfoView.swift */; };
+		903231DFC07DA9FD099D7C2D /* Pods_FlexMediaPicker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A355FF259B4BD6806377BAD5 /* Pods_FlexMediaPicker.framework */; };
+		A19CD1DD1C8C1335BEFBF9B7 /* Pods_FlexMediaPickerExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89B7DD93059BEE76E18453D9 /* Pods_FlexMediaPickerExample.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		19BFF1510DF1A710A8C8385C /* Pods-FlexMediaPicker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlexMediaPicker.release.xcconfig"; path = "Pods/Target Support Files/Pods-FlexMediaPicker/Pods-FlexMediaPicker.release.xcconfig"; sourceTree = "<group>"; };
+		5B3DB3211F7FB8D300D864DE /* UIViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtensions.swift; sourceTree = "<group>"; };
+		5B3DB3271F7FFB1200D864DE /* VideoPlaybackControlPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlaybackControlPanel.swift; sourceTree = "<group>"; };
+		5B88355D1FB1AC0600782FB5 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
+		5B8835601FB1B2CB00782FB5 /* AlertViewFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertViewFactory.swift; sourceTree = "<group>"; };
+		5B8835671FB1F6C800782FB5 /* SelectedAssetsCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedAssetsCollectionView.swift; sourceTree = "<group>"; };
+		5B88356A1FB204F900782FB5 /* FlexMediaPickerStyling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexMediaPickerStyling.swift; sourceTree = "<group>"; };
+		5BBFFABA1F51796500C08350 /* FlexMediaPickerAsset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlexMediaPickerAsset.swift; sourceTree = "<group>"; };
+		5BBFFABD1F51DF7500C08350 /* MediaControlPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaControlPanel.swift; sourceTree = "<group>"; };
+		5BC11D001FADB34000BBC03B /* MicrophoneMan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneMan.swift; sourceTree = "<group>"; };
+		5BC11D031FADCB1900BBC03B /* VoiceRecorderMediaControlPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceRecorderMediaControlPanel.swift; sourceTree = "<group>"; };
+		5BC11D061FADCCF200BBC03B /* VoiceRecorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceRecorderView.swift; sourceTree = "<group>"; };
+		5BC3EF881FA72A4B00D21B14 /* CGGeometryExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGGeometryExtension.swift; sourceTree = "<group>"; };
+		5BC3EF8B1FA72A6900D21B14 /* RSKImageScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSKImageScrollView.swift; sourceTree = "<group>"; };
+		5BC3EF8E1FA72A9800D21B14 /* RSKTouchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSKTouchView.swift; sourceTree = "<group>"; };
+		5BC3EF911FA72AF000D21B14 /* ImageCropView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCropView.swift; sourceTree = "<group>"; };
+		5BC3EF941FA757E800D21B14 /* CommonFlexView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonFlexView.swift; sourceTree = "<group>"; };
+		5BC5625E1F50392D00A848F2 /* FlexMediaPicker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FlexMediaPicker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5BC562611F50392D00A848F2 /* FlexMediaPicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlexMediaPicker.h; sourceTree = "<group>"; };
+		5BC562621F50392D00A848F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5BC5626D1F50394700A848F2 /* FlexMediaPickerExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlexMediaPickerExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5BC5626F1F50394700A848F2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		5BC562711F50394700A848F2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		5BC562741F50394700A848F2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		5BC562761F50394700A848F2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5BC562791F50394700A848F2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		5BC5627B1F50394700A848F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5BC562821F503A9A00A848F2 /* AssetManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetManager.swift; sourceTree = "<group>"; };
+		5BC562851F503ABB00A848F2 /* FlexMediaPickerConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlexMediaPickerConfiguration.swift; sourceTree = "<group>"; };
+		5BC5628A1F50412900A848F2 /* FlexMediaPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlexMediaPickerViewController.swift; sourceTree = "<group>"; };
+		5BC5628E1F50436700A848F2 /* CommonFlexCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonFlexCollectionViewController.swift; sourceTree = "<group>"; };
+		5BC562911F50437B00A848F2 /* CommonIconViewMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonIconViewMenu.swift; sourceTree = "<group>"; };
+		5BC562941F50438F00A848F2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5BC562971F50599700A848F2 /* UIImageExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageExtensions.swift; sourceTree = "<group>"; };
+		5BC5629A1F5059E400A848F2 /* ImagesCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagesCollectionView.swift; sourceTree = "<group>"; };
+		5BC5629D1F506EF300A848F2 /* BusyViewFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BusyViewFactory.swift; sourceTree = "<group>"; };
+		5BC6677D1FA480FE004D517D /* StyledActionOverlayExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyledActionOverlayExtension.swift; sourceTree = "<group>"; };
+		5BC667801FA4D948004D517D /* CGRectHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGRectHelper.swift; sourceTree = "<group>"; };
+		5BC6D9471F763E570051B0A3 /* MainMediaControlPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMediaControlPanel.swift; sourceTree = "<group>"; };
+		5BC6D94A1F763EB00051B0A3 /* CameraMediaControlPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraMediaControlPanel.swift; sourceTree = "<group>"; };
+		5BC6D94D1F763F190051B0A3 /* CamVidSwitch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CamVidSwitch.swift; sourceTree = "<group>"; };
+		5BC9193A1FB05D6900A37AC4 /* AudioService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioService.swift; sourceTree = "<group>"; };
+		5BC9193D1FB065D800A37AC4 /* PhotosService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosService.swift; sourceTree = "<group>"; };
+		5BC919401FB06A4B00A37AC4 /* CameraService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraService.swift; sourceTree = "<group>"; };
+		5BCB66441F81549800AB9F4E /* VideoTimeSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTimeSliderView.swift; sourceTree = "<group>"; };
+		5BCCDEC31F82A44A00914DC1 /* PositionUpdateTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionUpdateTimer.swift; sourceTree = "<group>"; };
+		5BCE9C251FAB79A2008D2E31 /* LocationService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
+		5BCE9C281FAB7E2A008D2E31 /* LocationMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationMapView.swift; sourceTree = "<group>"; };
+		5BD1E6E51F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexMediaPickerImagePersistenceImpl.swift; sourceTree = "<group>"; };
+		5BD6281B1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexMediaPickerAssetPersistence.swift; sourceTree = "<group>"; };
+		5BD6281E1F84C57F001DB4BA /* FlexMediaPickerAssetPersistenceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexMediaPickerAssetPersistenceImpl.swift; sourceTree = "<group>"; };
+		5BD79AB81F66879A0023CE21 /* VideoWriter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoWriter.swift; sourceTree = "<group>"; };
+		5BDC84141F52CC3000BF45B5 /* CameraMan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraMan.swift; sourceTree = "<group>"; };
+		5BDC84181F52CC8F00BF45B5 /* Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
+		5BDC841B1F52CE8B00BF45B5 /* CameraView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		5BDF22F91F7F9A65000A6B7E /* ImageSlideShowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSlideShowView.swift; sourceTree = "<group>"; };
+		5BE0F1731FA203B300BEC1CB /* UIScrollViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIScrollViewExtensions.swift; sourceTree = "<group>"; };
+		5BE45C581F7C004000322FCC /* ImageAssetImageSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAssetImageSource.swift; sourceTree = "<group>"; };
+		5BE57D141F83AE340037D4EF /* TimeSliderInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSliderInfoView.swift; sourceTree = "<group>"; };
+		7F0A6406FB8E47035C90A29C /* Pods-FlexMediaPickerExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlexMediaPickerExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-FlexMediaPickerExample/Pods-FlexMediaPickerExample.release.xcconfig"; sourceTree = "<group>"; };
+		89B7DD93059BEE76E18453D9 /* Pods_FlexMediaPickerExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FlexMediaPickerExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A355FF259B4BD6806377BAD5 /* Pods_FlexMediaPicker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FlexMediaPicker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BFADA1119F6F8BC93196B195 /* Pods-FlexMediaPicker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlexMediaPicker.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FlexMediaPicker/Pods-FlexMediaPicker.debug.xcconfig"; sourceTree = "<group>"; };
+		F1EE6C3176AD2D99C7AFD35F /* Pods-FlexMediaPickerExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlexMediaPickerExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FlexMediaPickerExample/Pods-FlexMediaPickerExample.debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5BC5625A1F50392D00A848F2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				903231DFC07DA9FD099D7C2D /* Pods_FlexMediaPicker.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5BC5626A1F50394700A848F2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A19CD1DD1C8C1335BEFBF9B7 /* Pods_FlexMediaPickerExample.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		10B70B1200DEEE85A884004A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				BFADA1119F6F8BC93196B195 /* Pods-FlexMediaPicker.debug.xcconfig */,
+				19BFF1510DF1A710A8C8385C /* Pods-FlexMediaPicker.release.xcconfig */,
+				F1EE6C3176AD2D99C7AFD35F /* Pods-FlexMediaPickerExample.debug.xcconfig */,
+				7F0A6406FB8E47035C90A29C /* Pods-FlexMediaPickerExample.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		5B8835631FB1F57600782FB5 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				5BBFFABA1F51796500C08350 /* FlexMediaPickerAsset.swift */,
+				5BE45C581F7C004000322FCC /* ImageAssetImageSource.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		5B8835641FB1F5B300782FB5 /* Device */ = {
+			isa = PBXGroup;
+			children = (
+				5BCE9C251FAB79A2008D2E31 /* LocationService.swift */,
+				5BC9193A1FB05D6900A37AC4 /* AudioService.swift */,
+				5BC9193D1FB065D800A37AC4 /* PhotosService.swift */,
+				5BC919401FB06A4B00A37AC4 /* CameraService.swift */,
+			);
+			name = Device;
+			sourceTree = "<group>";
+		};
+		5B8835651FB1F5D000782FB5 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				5BD6281B1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift */,
+				5BD6281E1F84C57F001DB4BA /* FlexMediaPickerAssetPersistenceImpl.swift */,
+				5BD1E6E51F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift */,
+				5BC562821F503A9A00A848F2 /* AssetManager.swift */,
+			);
+			name = Assets;
+			sourceTree = "<group>";
+		};
+		5B8835661FB1F67900782FB5 /* Selected Media View */ = {
+			isa = PBXGroup;
+			children = (
+				5B8835671FB1F6C800782FB5 /* SelectedAssetsCollectionView.swift */,
+			);
+			name = "Selected Media View";
+			sourceTree = "<group>";
+		};
+		5BBFFAC01F51DF8000C08350 /* Control Panels */ = {
+			isa = PBXGroup;
+			children = (
+				5BC6D94D1F763F190051B0A3 /* CamVidSwitch.swift */,
+				5BBFFABD1F51DF7500C08350 /* MediaControlPanel.swift */,
+				5BC6D9471F763E570051B0A3 /* MainMediaControlPanel.swift */,
+				5BC6D94A1F763EB00051B0A3 /* CameraMediaControlPanel.swift */,
+				5B3DB3271F7FFB1200D864DE /* VideoPlaybackControlPanel.swift */,
+				5BC11D031FADCB1900BBC03B /* VoiceRecorderMediaControlPanel.swift */,
+			);
+			name = "Control Panels";
+			sourceTree = "<group>";
+		};
+		5BC11CFF1FADB2B600BBC03B /* Voice Recorder */ = {
+			isa = PBXGroup;
+			children = (
+				5BC11D001FADB34000BBC03B /* MicrophoneMan.swift */,
+				5BC11D061FADCCF200BBC03B /* VoiceRecorderView.swift */,
+			);
+			name = "Voice Recorder";
+			sourceTree = "<group>";
+		};
+		5BC3EF871FA72A3100D21B14 /* Image Crop View */ = {
+			isa = PBXGroup;
+			children = (
+				5BC3EF8B1FA72A6900D21B14 /* RSKImageScrollView.swift */,
+				5BC3EF8E1FA72A9800D21B14 /* RSKTouchView.swift */,
+				5BC3EF911FA72AF000D21B14 /* ImageCropView.swift */,
+			);
+			name = "Image Crop View";
+			sourceTree = "<group>";
+		};
+		5BC562541F50392D00A848F2 = {
+			isa = PBXGroup;
+			children = (
+				5BC562601F50392D00A848F2 /* FlexMediaPicker */,
+				5BC5626E1F50394700A848F2 /* FlexMediaPickerExample */,
+				5BC5625F1F50392D00A848F2 /* Products */,
+				10B70B1200DEEE85A884004A /* Pods */,
+				EA7EB04CE10266DB550BF25F /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		5BC5625F1F50392D00A848F2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5BC5625E1F50392D00A848F2 /* FlexMediaPicker.framework */,
+				5BC5626D1F50394700A848F2 /* FlexMediaPickerExample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5BC562601F50392D00A848F2 /* FlexMediaPicker */ = {
+			isa = PBXGroup;
+			children = (
+				5B8835631FB1F57600782FB5 /* Model */,
+				5BCE9C241FAB798B008D2E31 /* Services */,
+				5BC562811F503A8700A848F2 /* Extensions */,
+				5BC562801F503A7100A848F2 /* UI */,
+				5BC5628A1F50412900A848F2 /* FlexMediaPickerViewController.swift */,
+				5BC562611F50392D00A848F2 /* FlexMediaPicker.h */,
+				5BC562941F50438F00A848F2 /* Assets.xcassets */,
+				5BC562621F50392D00A848F2 /* Info.plist */,
+			);
+			path = FlexMediaPicker;
+			sourceTree = "<group>";
+		};
+		5BC5626E1F50394700A848F2 /* FlexMediaPickerExample */ = {
+			isa = PBXGroup;
+			children = (
+				5BC5626F1F50394700A848F2 /* AppDelegate.swift */,
+				5BC562711F50394700A848F2 /* ViewController.swift */,
+				5BC562731F50394700A848F2 /* Main.storyboard */,
+				5BC562761F50394700A848F2 /* Assets.xcassets */,
+				5BC562781F50394700A848F2 /* LaunchScreen.storyboard */,
+				5BC5627B1F50394700A848F2 /* Info.plist */,
+			);
+			path = FlexMediaPickerExample;
+			sourceTree = "<group>";
+		};
+		5BC562801F503A7100A848F2 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				5BC562881F503B6800A848F2 /* Config */,
+				5BDC84171F52CC8300BF45B5 /* Helper */,
+				5BC5628D1F50435B00A848F2 /* Base UI */,
+				5BC11CFF1FADB2B600BBC03B /* Voice Recorder */,
+				5BDC84131F52CC2300BF45B5 /* Camera */,
+				5BC3EF871FA72A3100D21B14 /* Image Crop View */,
+				5B8835661FB1F67900782FB5 /* Selected Media View */,
+				5BDF22F81F7F9A3E000A6B7E /* Media Viewer */,
+				5BBFFAC01F51DF8000C08350 /* Control Panels */,
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
+		5BC562811F503A8700A848F2 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				5BC562971F50599700A848F2 /* UIImageExtensions.swift */,
+				5B3DB3211F7FB8D300D864DE /* UIViewExtensions.swift */,
+				5BE0F1731FA203B300BEC1CB /* UIScrollViewExtensions.swift */,
+				5BC6677D1FA480FE004D517D /* StyledActionOverlayExtension.swift */,
+				5BC667801FA4D948004D517D /* CGRectHelper.swift */,
+				5BC3EF881FA72A4B00D21B14 /* CGGeometryExtension.swift */,
+				5B88355D1FB1AC0600782FB5 /* StringExtension.swift */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
+		5BC562881F503B6800A848F2 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				5BC562851F503ABB00A848F2 /* FlexMediaPickerConfiguration.swift */,
+			);
+			name = Config;
+			sourceTree = "<group>";
+		};
+		5BC5628D1F50435B00A848F2 /* Base UI */ = {
+			isa = PBXGroup;
+			children = (
+				5B8835601FB1B2CB00782FB5 /* AlertViewFactory.swift */,
+				5BC5629D1F506EF300A848F2 /* BusyViewFactory.swift */,
+				5BC562911F50437B00A848F2 /* CommonIconViewMenu.swift */,
+				5BC5628E1F50436700A848F2 /* CommonFlexCollectionViewController.swift */,
+				5BC5629A1F5059E400A848F2 /* ImagesCollectionView.swift */,
+				5BC3EF941FA757E800D21B14 /* CommonFlexView.swift */,
+				5BCE9C281FAB7E2A008D2E31 /* LocationMapView.swift */,
+			);
+			name = "Base UI";
+			sourceTree = "<group>";
+		};
+		5BCE9C241FAB798B008D2E31 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				5B8835651FB1F5D000782FB5 /* Assets */,
+				5B8835641FB1F5B300782FB5 /* Device */,
+			);
+			name = Services;
+			sourceTree = "<group>";
+		};
+		5BDC84131F52CC2300BF45B5 /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				5BDC84141F52CC3000BF45B5 /* CameraMan.swift */,
+				5BDC841B1F52CE8B00BF45B5 /* CameraView.swift */,
+				5BD79AB81F66879A0023CE21 /* VideoWriter.swift */,
+			);
+			name = Camera;
+			sourceTree = "<group>";
+		};
+		5BDC84171F52CC8300BF45B5 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				5BCCDEC31F82A44A00914DC1 /* PositionUpdateTimer.swift */,
+				5BDC84181F52CC8F00BF45B5 /* Helper.swift */,
+				5B88356A1FB204F900782FB5 /* FlexMediaPickerStyling.swift */,
+			);
+			name = Helper;
+			sourceTree = "<group>";
+		};
+		5BDF22F81F7F9A3E000A6B7E /* Media Viewer */ = {
+			isa = PBXGroup;
+			children = (
+				5BE57D141F83AE340037D4EF /* TimeSliderInfoView.swift */,
+				5BCB66441F81549800AB9F4E /* VideoTimeSliderView.swift */,
+				5BDF22F91F7F9A65000A6B7E /* ImageSlideShowView.swift */,
+			);
+			name = "Media Viewer";
+			sourceTree = "<group>";
+		};
+		EA7EB04CE10266DB550BF25F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A355FF259B4BD6806377BAD5 /* Pods_FlexMediaPicker.framework */,
+				89B7DD93059BEE76E18453D9 /* Pods_FlexMediaPickerExample.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5BC5625B1F50392D00A848F2 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5BC562631F50392D00A848F2 /* FlexMediaPicker.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5BC5625D1F50392D00A848F2 /* FlexMediaPicker */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5BC562661F50392D00A848F2 /* Build configuration list for PBXNativeTarget "FlexMediaPicker" */;
+			buildPhases = (
+				0DA1EEBC75961DA1BB6651CC /* [CP] Check Pods Manifest.lock */,
+				5BC562591F50392D00A848F2 /* Sources */,
+				5BC5625A1F50392D00A848F2 /* Frameworks */,
+				5BC5625B1F50392D00A848F2 /* Headers */,
+				5BC5625C1F50392D00A848F2 /* Resources */,
+				8B4506E58243066DA58C185B /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FlexMediaPicker;
+			productName = FlexMediaPicker;
+			productReference = 5BC5625E1F50392D00A848F2 /* FlexMediaPicker.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		5BC5626C1F50394700A848F2 /* FlexMediaPickerExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5BC5627C1F50394700A848F2 /* Build configuration list for PBXNativeTarget "FlexMediaPickerExample" */;
+			buildPhases = (
+				E576D1ECF1CAF780852A4449 /* [CP] Check Pods Manifest.lock */,
+				5BC562691F50394700A848F2 /* Sources */,
+				5BC5626A1F50394700A848F2 /* Frameworks */,
+				5BC5626B1F50394700A848F2 /* Resources */,
+				3EE272C99D133ED23AD783A1 /* [CP] Embed Pods Frameworks */,
+				5791B41045988E05AE9B0D16 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FlexMediaPickerExample;
+			productName = FlexMediaPickerExample;
+			productReference = 5BC5626D1F50394700A848F2 /* FlexMediaPickerExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5BC562551F50392D00A848F2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0830;
+				LastUpgradeCheck = 0900;
+				ORGANIZATIONNAME = "Martin Jacob Rehder";
+				TargetAttributes = {
+					5BC5625D1F50392D00A848F2 = {
+						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = V7Y9TF9C7U;
+						LastSwiftMigration = 0830;
+						ProvisioningStyle = Automatic;
+					};
+					5BC5626C1F50394700A848F2 = {
+						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = V7Y9TF9C7U;
+						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
+					};
+				};
+			};
+			buildConfigurationList = 5BC562581F50392D00A848F2 /* Build configuration list for PBXProject "FlexMediaPicker" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5BC562541F50392D00A848F2;
+			productRefGroup = 5BC5625F1F50392D00A848F2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5BC5625D1F50392D00A848F2 /* FlexMediaPicker */,
+				5BC5626C1F50394700A848F2 /* FlexMediaPickerExample */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5BC5625C1F50392D00A848F2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5BC562951F50438F00A848F2 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5BC5626B1F50394700A848F2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5BC5627A1F50394700A848F2 /* LaunchScreen.storyboard in Resources */,
+				5BC562771F50394700A848F2 /* Assets.xcassets in Resources */,
+				5BC562961F50438F00A848F2 /* Assets.xcassets in Resources */,
+				5BC562751F50394700A848F2 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0DA1EEBC75961DA1BB6651CC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-FlexMediaPicker-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3EE272C99D133ED23AD783A1 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-FlexMediaPickerExample/Pods-FlexMediaPickerExample-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/DSWaveformImage/DSWaveformImage.framework",
+				"${BUILT_PRODUCTS_DIR}/DateToolsSwift/DateToolsSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/DynamicColor/DynamicColor.framework",
+				"${BUILT_PRODUCTS_DIR}/ImagePersistence/ImagePersistence.framework",
+				"${BUILT_PRODUCTS_DIR}/ImageSlideshow/ImageSlideshow.framework",
+				"${BUILT_PRODUCTS_DIR}/MJRFlexStyleComponents/MJRFlexStyleComponents.framework",
+				"${BUILT_PRODUCTS_DIR}/Player/Player.framework",
+				"${BUILT_PRODUCTS_DIR}/SCLAlertView/SCLAlertView.framework",
+				"${BUILT_PRODUCTS_DIR}/StyledLabel/StyledLabel.framework",
+				"${BUILT_PRODUCTS_DIR}/StyledOverlay/StyledOverlay.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftSiriWaveformView/SwiftSiriWaveformView.framework",
+				"${BUILT_PRODUCTS_DIR}/TaskQueue/TaskQueue.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DSWaveformImage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DateToolsSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DynamicColor.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ImagePersistence.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ImageSlideshow.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MJRFlexStyleComponents.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Player.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SCLAlertView.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/StyledLabel.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/StyledOverlay.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftSiriWaveformView.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TaskQueue.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FlexMediaPickerExample/Pods-FlexMediaPickerExample-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5791B41045988E05AE9B0D16 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FlexMediaPickerExample/Pods-FlexMediaPickerExample-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8B4506E58243066DA58C185B /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FlexMediaPicker/Pods-FlexMediaPicker-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E576D1ECF1CAF780852A4449 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-FlexMediaPickerExample-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5BC562591F50392D00A848F2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5BC919411FB06A4B00A37AC4 /* CameraService.swift in Sources */,
+				5BDC84151F52CC3000BF45B5 /* CameraMan.swift in Sources */,
+				5B3DB3281F7FFB1200D864DE /* VideoPlaybackControlPanel.swift in Sources */,
+				5BD6281F1F84C57F001DB4BA /* FlexMediaPickerAssetPersistenceImpl.swift in Sources */,
+				5B3DB3231F7FB8D300D864DE /* UIViewExtensions.swift in Sources */,
+				5BCE9C291FAB7E2A008D2E31 /* LocationMapView.swift in Sources */,
+				5BC562861F503ABB00A848F2 /* FlexMediaPickerConfiguration.swift in Sources */,
+				5BC6677E1FA480FE004D517D /* StyledActionOverlayExtension.swift in Sources */,
+				5BD6281C1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift in Sources */,
+				5BC3EF891FA72A4B00D21B14 /* CGGeometryExtension.swift in Sources */,
+				5BDC841C1F52CE8B00BF45B5 /* CameraView.swift in Sources */,
+				5BCB66451F81549800AB9F4E /* VideoTimeSliderView.swift in Sources */,
+				5BC6D94B1F763EB00051B0A3 /* CameraMediaControlPanel.swift in Sources */,
+				5B88356B1FB204F900782FB5 /* FlexMediaPickerStyling.swift in Sources */,
+				5BBFFABE1F51DF7500C08350 /* MediaControlPanel.swift in Sources */,
+				5BC11D011FADB34000BBC03B /* MicrophoneMan.swift in Sources */,
+				5BC562831F503A9A00A848F2 /* AssetManager.swift in Sources */,
+				5BCE9C261FAB79A2008D2E31 /* LocationService.swift in Sources */,
+				5BD1E6E61F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift in Sources */,
+				5BC3EF951FA757E800D21B14 /* CommonFlexView.swift in Sources */,
+				5BD79AB91F66879A0023CE21 /* VideoWriter.swift in Sources */,
+				5BE57D151F83AE340037D4EF /* TimeSliderInfoView.swift in Sources */,
+				5BC562921F50437B00A848F2 /* CommonIconViewMenu.swift in Sources */,
+				5BC5629B1F5059E400A848F2 /* ImagesCollectionView.swift in Sources */,
+				5BC3EF921FA72AF000D21B14 /* ImageCropView.swift in Sources */,
+				5BC562981F50599700A848F2 /* UIImageExtensions.swift in Sources */,
+				5BC11D041FADCB1900BBC03B /* VoiceRecorderMediaControlPanel.swift in Sources */,
+				5BC9193B1FB05D6900A37AC4 /* AudioService.swift in Sources */,
+				5BC3EF8F1FA72A9800D21B14 /* RSKTouchView.swift in Sources */,
+				5BC5628F1F50436700A848F2 /* CommonFlexCollectionViewController.swift in Sources */,
+				5B8835611FB1B2CB00782FB5 /* AlertViewFactory.swift in Sources */,
+				5BDF22FA1F7F9A65000A6B7E /* ImageSlideShowView.swift in Sources */,
+				5BC5629E1F506EF300A848F2 /* BusyViewFactory.swift in Sources */,
+				5B88355E1FB1AC0600782FB5 /* StringExtension.swift in Sources */,
+				5BC6D9481F763E570051B0A3 /* MainMediaControlPanel.swift in Sources */,
+				5BE45C591F7C004000322FCC /* ImageAssetImageSource.swift in Sources */,
+				5BC5628B1F50412900A848F2 /* FlexMediaPickerViewController.swift in Sources */,
+				5BC6D94E1F763F190051B0A3 /* CamVidSwitch.swift in Sources */,
+				5BC11D071FADCCF200BBC03B /* VoiceRecorderView.swift in Sources */,
+				5BE0F1741FA203B300BEC1CB /* UIScrollViewExtensions.swift in Sources */,
+				5BC667811FA4D948004D517D /* CGRectHelper.swift in Sources */,
+				5BC9193E1FB065D800A37AC4 /* PhotosService.swift in Sources */,
+				5BC3EF8C1FA72A6900D21B14 /* RSKImageScrollView.swift in Sources */,
+				5BCCDEC41F82A44A00914DC1 /* PositionUpdateTimer.swift in Sources */,
+				5BBFFABB1F51796500C08350 /* FlexMediaPickerAsset.swift in Sources */,
+				5B8835681FB1F6C800782FB5 /* SelectedAssetsCollectionView.swift in Sources */,
+				5BDC84191F52CC8F00BF45B5 /* Helper.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5BC562691F50394700A848F2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5BC3EF931FA72AF000D21B14 /* ImageCropView.swift in Sources */,
+				5BC562901F50436700A848F2 /* CommonFlexCollectionViewController.swift in Sources */,
+				5B88356C1FB204F900782FB5 /* FlexMediaPickerStyling.swift in Sources */,
+				5BC11D021FADB34000BBC03B /* MicrophoneMan.swift in Sources */,
+				5BCE9C2A1FAB7E2A008D2E31 /* LocationMapView.swift in Sources */,
+				5B3DB3291F7FFB1200D864DE /* VideoPlaybackControlPanel.swift in Sources */,
+				5B88355F1FB1AC0600782FB5 /* StringExtension.swift in Sources */,
+				5BCB66461F81549800AB9F4E /* VideoTimeSliderView.swift in Sources */,
+				5BDC841A1F52CC8F00BF45B5 /* Helper.swift in Sources */,
+				5BC6D9491F763E570051B0A3 /* MainMediaControlPanel.swift in Sources */,
+				5BC9193C1FB05D6900A37AC4 /* AudioService.swift in Sources */,
+				5BC562721F50394700A848F2 /* ViewController.swift in Sources */,
+				5B3DB3221F7FB8D300D864DE /* UIViewExtensions.swift in Sources */,
+				5BDC841D1F52CE8B00BF45B5 /* CameraView.swift in Sources */,
+				5BC919421FB06A4B00A37AC4 /* CameraService.swift in Sources */,
+				5BC5629F1F506EF300A848F2 /* BusyViewFactory.swift in Sources */,
+				5BD6281D1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift in Sources */,
+				5BC3EF8A1FA72A4B00D21B14 /* CGGeometryExtension.swift in Sources */,
+				5BC11D051FADCB1900BBC03B /* VoiceRecorderMediaControlPanel.swift in Sources */,
+				5BC6677F1FA480FE004D517D /* StyledActionOverlayExtension.swift in Sources */,
+				5BE0F1751FA203B300BEC1CB /* UIScrollViewExtensions.swift in Sources */,
+				5BC5629C1F5059E400A848F2 /* ImagesCollectionView.swift in Sources */,
+				5BE57D161F83AE340037D4EF /* TimeSliderInfoView.swift in Sources */,
+				5BC562841F503A9A00A848F2 /* AssetManager.swift in Sources */,
+				5BDF22FB1F7F9A65000A6B7E /* ImageSlideShowView.swift in Sources */,
+				5BC562991F50599700A848F2 /* UIImageExtensions.swift in Sources */,
+				5BC562871F503ABB00A848F2 /* FlexMediaPickerConfiguration.swift in Sources */,
+				5BCCDEC51F82A44A00914DC1 /* PositionUpdateTimer.swift in Sources */,
+				5BCE9C271FAB79A2008D2E31 /* LocationService.swift in Sources */,
+				5BD628201F84C57F001DB4BA /* FlexMediaPickerAssetPersistenceImpl.swift in Sources */,
+				5BC6D94C1F763EB00051B0A3 /* CameraMediaControlPanel.swift in Sources */,
+				5BBFFABF1F51DF7500C08350 /* MediaControlPanel.swift in Sources */,
+				5BBFFABC1F51796500C08350 /* FlexMediaPickerAsset.swift in Sources */,
+				5BD79ABA1F66879A0023CE21 /* VideoWriter.swift in Sources */,
+				5BC5628C1F50412900A848F2 /* FlexMediaPickerViewController.swift in Sources */,
+				5BC3EF901FA72A9800D21B14 /* RSKTouchView.swift in Sources */,
+				5BC562701F50394700A848F2 /* AppDelegate.swift in Sources */,
+				5BC3EF961FA757E800D21B14 /* CommonFlexView.swift in Sources */,
+				5BDC84161F52CC3000BF45B5 /* CameraMan.swift in Sources */,
+				5BC562931F50437B00A848F2 /* CommonIconViewMenu.swift in Sources */,
+				5BC9193F1FB065D800A37AC4 /* PhotosService.swift in Sources */,
+				5BE45C5A1F7C004000322FCC /* ImageAssetImageSource.swift in Sources */,
+				5BC3EF8D1FA72A6900D21B14 /* RSKImageScrollView.swift in Sources */,
+				5BC667821FA4D948004D517D /* CGRectHelper.swift in Sources */,
+				5BC6D94F1F763F190051B0A3 /* CamVidSwitch.swift in Sources */,
+				5B8835621FB1B2CB00782FB5 /* AlertViewFactory.swift in Sources */,
+				5BD1E6E71F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift in Sources */,
+				5B8835691FB1F6C800782FB5 /* SelectedAssetsCollectionView.swift in Sources */,
+				5BC11D081FADCCF200BBC03B /* VoiceRecorderView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		5BC562731F50394700A848F2 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5BC562741F50394700A848F2 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		5BC562781F50394700A848F2 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5BC562791F50394700A848F2 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		5BC562641F50392D00A848F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		5BC562651F50392D00A848F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		5BC562671F50392D00A848F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BFADA1119F6F8BC93196B195 /* Pods-FlexMediaPicker.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = V7Y9TF9C7U;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = FlexMediaPicker/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.rehsco.FlexMediaPicker;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		5BC562681F50392D00A848F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 19BFF1510DF1A710A8C8385C /* Pods-FlexMediaPicker.release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = V7Y9TF9C7U;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = FlexMediaPicker/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.rehsco.FlexMediaPicker;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		5BC5627D1F50394700A848F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F1EE6C3176AD2D99C7AFD35F /* Pods-FlexMediaPickerExample.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = V7Y9TF9C7U;
+				INFOPLIST_FILE = FlexMediaPickerExample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.rehsco.FlexMediaPickerExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		5BC5627E1F50394700A848F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7F0A6406FB8E47035C90A29C /* Pods-FlexMediaPickerExample.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = V7Y9TF9C7U;
+				INFOPLIST_FILE = FlexMediaPickerExample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.rehsco.FlexMediaPickerExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5BC562581F50392D00A848F2 /* Build configuration list for PBXProject "FlexMediaPicker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5BC562641F50392D00A848F2 /* Debug */,
+				5BC562651F50392D00A848F2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5BC562661F50392D00A848F2 /* Build configuration list for PBXNativeTarget "FlexMediaPicker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5BC562671F50392D00A848F2 /* Debug */,
+				5BC562681F50392D00A848F2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5BC5627C1F50394700A848F2 /* Build configuration list for PBXNativeTarget "FlexMediaPickerExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5BC5627D1F50394700A848F2 /* Debug */,
+				5BC5627E1F50394700A848F2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5BC562551F50392D00A848F2 /* Project object */;
+}
