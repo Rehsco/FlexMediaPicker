@@ -181,9 +181,34 @@ class CameraView: FlexView, CameraManDelegate {
                 self.flashCamera(flashMode)
             }
             ccp.backToImagesHandler = {
-                self.closeView()
-                self.cancelCameraViewHandler?()
+                self.confirmedClose()
             }
+        }
+    }
+
+    public func confirmedClose(confirmationHandler: ((Bool)->Void)? = nil) {
+        if self.cameraMan.isCapturing {
+            AlertViewFactory.confirmation(title: FlexMediaPickerConfiguration.stopRecordingOnCloseTitle, subTitle: FlexMediaPickerConfiguration.stopRecordingOnCloseMessage, buttonText: FlexMediaPickerConfiguration.stopRecordingOnCloseButtonText, iconName: FlexMediaPickerConfiguration.queryIconName, confirmationResult: { confirmed in
+                if confirmed {
+                    self.closeAndClean()
+                }
+                confirmationHandler?(confirmed)
+            })
+        }
+        else {
+            self.closeAndClean()
+            confirmationHandler?(true)
+        }
+    }
+    
+    private func closeAndClean() {
+        self.cancelCameraViewHandler?()
+        self.closeView()
+    }
+    
+    public func closeView() {
+        if cameraMan.isCapturing {
+            self.cameraMan.stopVideoRecording()
         }
     }
     
@@ -194,9 +219,6 @@ class CameraView: FlexView, CameraManDelegate {
         }
     }
 
-    public func closeView() {
-    }
-    
     private func setupPreviewLayer() {
         self.previewLayer?.removeFromSuperlayer()
         guard let layer = AVCaptureVideoPreviewLayer(session: cameraMan.session) else { return }

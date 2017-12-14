@@ -34,41 +34,47 @@ open class AlertViewFactory {
     private static var alertView: SCLAlertView?
     
     open class func confirmation(title: String, subTitle: String, buttonText: String, iconName: String, confirmationResult: @escaping ((Bool) -> Void)) {
-        let image = (UIImage(named: iconName, in: Bundle(for: AlertViewFactory.self), compatibleWith: nil) ?? UIImage(named: iconName))?.tint(FlexMediaPickerConfiguration.alertIconColor)
-        let thumbnailImage = image?.circularImage(size: image?.size)
-        let appearance = self.sclAlertViewAppearance()
-        let alertView = SCLAlertView(appearance: appearance)
-        alertView.addButton(buttonText, backgroundColor: FlexMediaPickerConfiguration.alertStyleColor) {
-            confirmationResult(true)
+        Helper.ensureOnAsyncMainThread {
+            let image = (UIImage(named: iconName, in: Bundle(for: AlertViewFactory.self), compatibleWith: nil) ?? UIImage(named: iconName))?.tint(FlexMediaPickerConfiguration.alertIconColor)
+            let thumbnailImage = image?.circularImage(size: image?.size)
+            let appearance = self.sclAlertViewAppearance()
+            let alertView = SCLAlertView(appearance: appearance)
+            alertView.addButton(buttonText, backgroundColor: FlexMediaPickerConfiguration.alertStyleColor) {
+                confirmationResult(true)
+            }
+            alertView.addButton(NSLocalizedString("Cancel", comment: ""), backgroundColor: FlexMediaPickerConfiguration.alertButtonColor) {
+                confirmationResult(false)
+                alertView.dismiss(animated: true)
+            }
+            _ = alertView.showCustom(title, subTitle: subTitle, color: FlexMediaPickerConfiguration.alertButtonColor, icon: thumbnailImage!)
         }
-        alertView.addButton(NSLocalizedString("Cancel", comment: ""), backgroundColor: FlexMediaPickerConfiguration.alertButtonColor) {
-            confirmationResult(false)
-            alertView.dismiss(animated: true)
-        }
-        _ = alertView.showCustom(title, subTitle: subTitle, color: FlexMediaPickerConfiguration.alertButtonColor, icon: thumbnailImage!)
     }
     
     open class func showSettingsRequest(title: String, message: String) {
-        let appearance = self.sclAlertViewAppearance()
-        let alert = SCLAlertView(appearance: appearance)
-        alert.addButton("Open Settings", backgroundColor: FlexMediaPickerConfiguration.alertButtonColor) {
-            if let url = URL(string:UIApplicationOpenSettingsURLString) {
-                UIApplication.shared.open(url)
+        Helper.ensureOnAsyncMainThread {
+            let appearance = self.sclAlertViewAppearance()
+            let alert = SCLAlertView(appearance: appearance)
+            alert.addButton("Open Settings", backgroundColor: FlexMediaPickerConfiguration.alertButtonColor) {
+                if let url = URL(string:UIApplicationOpenSettingsURLString) {
+                    UIApplication.shared.open(url)
+                }
             }
+            let _ = alert.showTitle(title, subTitle: message, style: SCLAlertViewStyle.error)
         }
-        let _ = alert.showTitle(title, subTitle: message, style: SCLAlertViewStyle.error)
     }
     
     open class func showFailAlert(title: String, message: String, iconName: String, okHandler: (() -> Void)? = nil) {
-        let image = (UIImage(named: iconName, in: Bundle(for: AlertViewFactory.self), compatibleWith: nil) ?? UIImage(named: iconName))?.tint(FlexMediaPickerConfiguration.alertIconColor)
-        let thumbnailImage = image?.circularImage(size: image?.size)
-        let appearance = self.sclAlertViewAppearance()
-        let alert = SCLAlertView(appearance: appearance)
-        alert.addButton(NSLocalizedString("Ok", comment: ""), backgroundColor: FlexMediaPickerConfiguration.alertButtonColor) {
-            alertView?.dismiss(animated: true)
-            okHandler?()
+        Helper.ensureOnAsyncMainThread {
+            let image = (UIImage(named: iconName, in: Bundle(for: AlertViewFactory.self), compatibleWith: nil) ?? UIImage(named: iconName))?.tint(FlexMediaPickerConfiguration.alertIconColor)
+            let thumbnailImage = image?.circularImage(size: image?.size)
+            let appearance = self.sclAlertViewAppearance()
+            let alert = SCLAlertView(appearance: appearance)
+            alert.addButton(NSLocalizedString("Ok", comment: ""), backgroundColor: FlexMediaPickerConfiguration.alertButtonColor) {
+                alertView?.dismiss(animated: true)
+                okHandler?()
+            }
+            _ = alert.showCustom(title, subTitle: message, color: FlexMediaPickerConfiguration.alertButtonColor, icon: thumbnailImage!)
         }
-        _ = alert.showCustom(title, subTitle: message, color: FlexMediaPickerConfiguration.alertButtonColor, icon: thumbnailImage!)
     }
     
     open class func queryForItemName(title: String, subtitle: String, textPlaceholder: String, iconName: String, completionHandler: @escaping ((String, Bool) -> Void)) {

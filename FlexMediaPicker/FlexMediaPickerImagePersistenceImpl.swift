@@ -39,5 +39,24 @@ open class FlexMediaPickerImagePersistenceImpl: ImagePersistence {
         set {
             self._imageCache = newValue
         }
-    }    
+    }
+    
+    /// Set this closure for handling encryption of image data
+    open var encryptImageHandler: ((Data)->Data?)?
+    /// Set this closure for handling decryption of image data
+    open var decryptImageHandler: ((Data)->Data?)?
+
+    open override func encryptImage(_ data: Data) -> Data? {
+        if let eh = self.encryptImageHandler {
+            return eh(data)
+        }
+        return data
+    }
+    
+    open override func decryptImage(_ data: Data) -> Data? {
+        if let dh = self.decryptImageHandler {
+            return dh(data)
+        }
+        return data
+    }
 }

@@ -164,8 +164,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
         
         self.createBackOrCloseLeftMenu() {
             if !FlexMediaPickerConfiguration.allowMultipleSelection && AssetManager.getAcceptableAssetCount() >= FlexMediaPickerConfiguration.numberItemsAllowed {
-                // TODO: Should use customized text
-                AlertViewFactory.confirmation(title: "Remove Item", subTitle: "Leave the view and remove the last item?", buttonText: "Delete item", iconName: FlexMediaPickerConfiguration.queryIconName, confirmationResult: { proceed in
+                AlertViewFactory.confirmation(title: FlexMediaPickerConfiguration.removeItemTitle, subTitle: FlexMediaPickerConfiguration.removeItemMessage, buttonText: FlexMediaPickerConfiguration.removeItemButtonText, iconName: FlexMediaPickerConfiguration.queryIconName, confirmationResult: { proceed in
                     if proceed {
                         self.removeOrTrashLastItem?()
                         self.closeView()

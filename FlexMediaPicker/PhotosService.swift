@@ -40,13 +40,11 @@ open class PhotosService: NSObject {
             permissionGrantedHandler(true)
         case .denied, .notDetermined:
             PHPhotoLibrary.requestAuthorization { authorizationStatus -> Void in
-                DispatchQueue.main.async {
-                    if authorizationStatus == .denied {
-                        AlertViewFactory.showSettingsRequest(title: "Photos Access Disabled", message: "In order to access photos, please open this app's settings and enable photo access.")
-                        permissionGrantedHandler(false)
-                    } else if authorizationStatus == .authorized {
-                        permissionGrantedHandler(true)
-                    }
+                if authorizationStatus == .denied {
+                    AlertViewFactory.showSettingsRequest(title: FlexMediaPickerConfiguration.requestPermissionTitle, message: FlexMediaPickerConfiguration.requestPhotosPermissionMessage)
+                    permissionGrantedHandler(false)
+                } else if authorizationStatus == .authorized {
+                    permissionGrantedHandler(true)
                 }
             }
         default:

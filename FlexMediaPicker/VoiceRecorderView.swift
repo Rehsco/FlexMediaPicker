@@ -143,7 +143,7 @@ class VoiceRecorderView: FlexView {
                 
             }
             ccp.backToImagesHandler = {
-                self.cancelVoiceRecorderViewHandler?()
+                self.confirmedClose()
             }
             ccp.pausePressedHandler = {
                 isPaused in
@@ -156,6 +156,32 @@ class VoiceRecorderView: FlexView {
             }
         }
         self.footer.styleColor = FlexMediaPickerConfiguration.footerPanelColor
+    }
+    
+    public func confirmedClose(confirmationHandler: ((Bool)->Void)? = nil) {
+        if self.micMan.isRecording {
+            AlertViewFactory.confirmation(title: FlexMediaPickerConfiguration.stopRecordingOnCloseTitle, subTitle: FlexMediaPickerConfiguration.stopRecordingOnCloseMessage, buttonText: FlexMediaPickerConfiguration.stopRecordingOnCloseButtonText, iconName: FlexMediaPickerConfiguration.queryIconName, confirmationResult: { confirmed in
+                if confirmed {
+                    self.closeAndClean()
+                }
+                confirmationHandler?(confirmed)
+            })
+        }
+        else {
+            self.closeAndClean()
+            confirmationHandler?(true)
+        }
+    }
+
+    private func closeAndClean() {
+        self.closeView()
+        self.cancelVoiceRecorderViewHandler?()
+    }
+    
+    public func closeView() {
+        if self.micMan.isRecording {
+            self.stopVoiceRecording()
+        }
     }
     
     // MARK: - Layout

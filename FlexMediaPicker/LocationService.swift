@@ -64,7 +64,7 @@ open class LocationService: NSObject, CLLocationManagerDelegate  {
             self.startLocationMessagingUse()
         case .restricted, .denied:
             if fullAccessRequired {
-                AlertViewFactory.showSettingsRequest(title: "Location Access Disabled", message: "In order to use locations, please open this app's settings and enable location access.")
+                AlertViewFactory.showSettingsRequest(title: FlexMediaPickerConfiguration.requestPermissionTitle, message: FlexMediaPickerConfiguration.requestLocationPermissionMessage)
             }
         }
     }
@@ -72,7 +72,7 @@ open class LocationService: NSObject, CLLocationManagerDelegate  {
     public func getCurrentLocationAsImage(completionHandler: @escaping (UIImage)->Void) {
         if let loc = locationService.currentLocation {
             let mapView = LocationMapView(frame: CGRect(origin: .zero , size: FlexMediaPickerConfiguration.locationImageSize))
-            mapView.setSingleLocation(loc, tag: "My location")
+            mapView.setSingleLocation(loc, tag: FlexMediaPickerConfiguration.currentLocationTagString)
             mapView.setMapAnnotations()
             self.takeSnapshot(mapView, withCallback: { (image, error) in
                 if let e = error {

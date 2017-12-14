@@ -42,13 +42,11 @@ open class CameraService: NSObject {
             permissionGrantedHandler(true)
         case .denied, .notDetermined:
             AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo) { granted in
-                DispatchQueue.main.async {
-                    if granted {
-                        permissionGrantedHandler(true)
-                    } else {
-                        AlertViewFactory.showSettingsRequest(title: "Camera Access Disabled", message: "In order to take photos and video, please open this app's settings and enable camera access.")
-                        permissionGrantedHandler(false)
-                    }
+                if granted {
+                    permissionGrantedHandler(true)
+                } else {
+                    AlertViewFactory.showSettingsRequest(title: FlexMediaPickerConfiguration.requestPermissionTitle, message: FlexMediaPickerConfiguration.requestCameraPermissionMessage)
+                    permissionGrantedHandler(false)
                 }
             }
         default:

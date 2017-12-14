@@ -120,12 +120,11 @@ open class SelectedAssetsCollectionView: ImagesCollectionView {
                     showImageHandler(fitem.imageIndex)
                     self.focusOnItem(withReference: ref)
                 }
-                let selectionItemMenu = CommonIconViewMenu(size: CGSize(width: 36, height: 36), hPos: .left, vPos: .header, menuIconSize: 24)
+                let selectionItemMenu = CommonIconViewMenu(size: CGSize(width: 24, height: 24), hPos: .left, vPos: .header, menuIconSize: 24)
                 let imageName = selAsset.isAssetBased() ? "RemoveItem" : "DeleteIcon"
                 _ = selectionItemMenu.createIconMenuItem(imageName: imageName, iconSize: 24, selectionHandler: {
                     if !selAsset.isAssetBased() {
-                        // TODO: Should use customized text and icons
-                        AlertViewFactory.confirmation(title: "Delete Item", subTitle: "This item is not stored. Do you want to delete it?", buttonText: "Delete item", iconName: "helpIcon_48pt", confirmationResult: { proceed in
+                        AlertViewFactory.confirmation(title: FlexMediaPickerConfiguration.deleteItemTitle, subTitle: FlexMediaPickerConfiguration.deleteItemMessage, buttonText: FlexMediaPickerConfiguration.deleteItemButtonText, iconName: FlexMediaPickerConfiguration.queryIconName, confirmationResult: { proceed in
                             if proceed {
                                 self.deleteOrRemoveItemHandler?(fitem.reference)
                             }

@@ -110,6 +110,8 @@ class VideoPlaybackControlPanel: FlexFooterView {
         flexView.addMenu(self.playMenu!)
         
         self.frameStepper = FlexSnapStepper(frame: .zero)
+        self.frameStepper?.valueSteps = 100
+        self.frameStepper?.valueSlideFactor = 100
         self.frameStepper?.stepValueChangeHandler = {
             newValue in
             self.frameStepperChangeHandler?(newValue)

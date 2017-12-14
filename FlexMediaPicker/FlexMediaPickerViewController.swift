@@ -186,6 +186,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.cameraView?.closeView()
+        self.voiceRecorderView?.closeView()
     }
     
     override open func whenTransition(to size: CGSize) {
@@ -324,8 +325,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             self.addSelectedAsset(mpa)
         }
         self.voiceRecorderView?.voiceRecordingFailedHandler = {
-            // TODO: Should use customized text
-            AlertViewFactory.showFailAlert(title: "Recording Failed", message: "An error occured and the recording could not finish.", iconName: FlexMediaPickerConfiguration.alertIconName)
+            AlertViewFactory.showFailAlert(title: FlexMediaPickerConfiguration.recordingFailedTitle, message: FlexMediaPickerConfiguration.recordingFailedMessage, iconName: FlexMediaPickerConfiguration.alertIconName)
         }
         self.layoutSupplementaryViews(to: self.view.bounds.size)
     }
@@ -682,7 +682,25 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     // MARK: - Fullscreen Preview
     
     func showImage(byIndex idx: Int) {
-        // TODO: Stop recording before switching to viewer: ask to confirm
+        var shouldConfirm = false
+        if let cv = self.cameraView, cv.cameraMan.isCapturing {
+            cv.confirmedClose(confirmationHandler: { confirmed in
+                self.showImageConfirmed(byIndex: idx)
+            })
+            shouldConfirm = true
+        }
+        if let rv = self.voiceRecorderView, rv.micMan.isRecording {
+            rv.confirmedClose(confirmationHandler: { confirmed in
+                self.showImageConfirmed(byIndex: idx)
+            })
+            shouldConfirm = true
+        }
+        if !shouldConfirm {
+            self.showImageConfirmed(byIndex: idx)
+        }
+    }
+    
+    private func showImageConfirmed(byIndex idx: Int) {
         if self.imageSlideshowView == nil {
             self.createImageSlideShowView()
         }

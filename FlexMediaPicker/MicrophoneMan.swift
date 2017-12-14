@@ -69,9 +69,7 @@ open class MicrophoneMan: NSObject {
         if self.isRecording && FlexMediaPickerConfiguration.maxAudioRecordingTime > 0 && time >= FlexMediaPickerConfiguration.maxAudioRecordingTime {
             self.stopVoiceRecording()
             self.isRecording = false
-            
-            // TODO: Should use customized text
-            AlertViewFactory.showFailAlert(title: "Recording Ended", message: "The allowed duration was reached.", iconName: FlexMediaPickerConfiguration.alertIconName)
+            AlertViewFactory.showFailAlert(title: FlexMediaPickerConfiguration.recordingEndedTitle, message: FlexMediaPickerConfiguration.recordingEndedMessage, iconName: FlexMediaPickerConfiguration.alertIconName)
         }
     }
     
@@ -84,6 +82,7 @@ open class MicrophoneMan: NSObject {
             else {
                 self.voiceRecordingFailedHandler?()
             }
+            self.isRecording = false
         }
     }
     

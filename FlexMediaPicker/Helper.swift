@@ -8,6 +8,17 @@ import StyledLabel
 
 class Helper {
     
+    static func ensureOnAsyncMainThread(_ execute: @escaping (()->Void)) {
+        if Thread.isMainThread {
+            execute()
+        }
+        else {
+            DispatchQueue.main.async {
+                execute()
+            }
+        }
+    }
+    
     static func rotationTransform() -> CGAffineTransform {
         switch UIDevice.current.orientation {
         case .landscapeLeft:

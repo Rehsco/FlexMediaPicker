@@ -48,11 +48,9 @@ open class AudioService {
     
     func requestPermission() {
         AVAudioSession.sharedInstance().requestRecordPermission() { [unowned self] allowed in
-            DispatchQueue.main.async {
-                self.isAudioRecordingGranted = allowed
-                if !allowed {
-                    AlertViewFactory.showSettingsRequest(title: "Microphone Access Disabled", message: "In order to record audio, please open this app's settings and enable microphone access.")
-                }
+            self.isAudioRecordingGranted = allowed
+            if !allowed {
+                AlertViewFactory.showSettingsRequest(title: FlexMediaPickerConfiguration.requestPermissionTitle, message: FlexMediaPickerConfiguration.requestMicrophonePermissionMessage)
             }
         }
     }

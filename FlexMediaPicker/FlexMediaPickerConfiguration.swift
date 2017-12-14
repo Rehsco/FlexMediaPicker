@@ -130,8 +130,25 @@ public class FlexMediaPickerConfiguration {
     public static var noCameraTitle = "Camera is not available"
     public static var settingsTitle = "Settings"
     public static var requestPermissionTitle = "Permission denied"
-    public static var requestPermissionMessage = "Please, allow the application to access to your photo library."
-
+    public static var requestPhotosPermissionMessage = "In order to access photos, please open this app's settings and enable photo access."
+    public static var requestCameraPermissionMessage = "In order to take photos and video, please open this app's settings and enable camera access."
+    public static var requestMicrophonePermissionMessage = "In order to record audio, please open this app's settings and enable microphone access."
+    public static var requestLocationPermissionMessage = "In order to use locations, please open this app's settings and enable location access."
+    public static var recordingEndedTitle = "Recording ended"
+    public static var recordingEndedMessage = "The allowed duration was reached."
+    public static var deleteItemTitle = "Delete item"
+    public static var deleteItemMessage = "This item is not stored. Do you want to delete it?"
+    public static var deleteItemButtonText = "Delete item"
+    public static var removeItemTitle = "Remove item"
+    public static var removeItemMessage = "Leave the view and remove the last item?"
+    public static var removeItemButtonText = "Remove item"
+    public static var recordingFailedTitle = "Recording failed"
+    public static var recordingFailedMessage = "An error occured and the recording could not finish."
+    public static var stopRecordingOnCloseTitle = "Recording"
+    public static var stopRecordingOnCloseMessage = "Stop recording and close?"
+    public static var stopRecordingOnCloseButtonText = "Stop and close"
+    public static var currentLocationTagString = "My location"
+    
     // MARK: Dimensions
     
     public static var thumbnailSize: CGSize = CGSize(width: 100, height: 100)
