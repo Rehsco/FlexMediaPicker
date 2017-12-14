@@ -12,6 +12,14 @@ Pod::Spec.new do |s|
   s.dependency 'StyledLabel'
   s.dependency 'ImagePersistence'
   s.dependency 'MJRFlexStyleComponents'
+  s.dependency 'DateToolsSwift'
+  s.dependency 'StyledOverlay'
+  s.dependency 'ImageSlideshow'
+  s.dependency 'TaskQueue'
+  s.dependency 'Player', '~> 0.7.0' ## Swift 4: 0.8.0+
+  s.dependency 'SwiftSiriWaveformView', '2.1'
+  s.dependency 'SCLAlertView', '0.7.0'
+  s.dependency 'DSWaveformImage', '~> 5.0'
 
   s.platform     = :ios, '10.0'
   s.framework    = 'UIKit'
