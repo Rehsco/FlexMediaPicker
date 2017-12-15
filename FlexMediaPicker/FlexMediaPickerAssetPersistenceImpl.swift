@@ -32,6 +32,7 @@ import Photos
 import ImagePersistence
 import AVFoundation
 import DSWaveformImage
+import CoreLocation
 
 open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPersistence, AVAudioRecorderDelegate {
     private var assetMap: [String: FlexMediaPickerAsset] = [:]
@@ -71,6 +72,12 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
     
     open func createAssetCollectionAsset(thumbnail: UIImage, asset: PHAsset) -> FlexMediaPickerAsset {
         let asset = FlexMediaPickerAsset(thumbnail: thumbnail, asset: asset)
+        assetMap[asset.uuid] = asset
+        return asset
+    }
+    
+    open func createLocationAsset(thumbnail: UIImage, location: CLLocation) -> FlexMediaPickerAsset {
+        let asset = FlexMediaPickerAsset(thumbnail: thumbnail, location: location)
         assetMap[asset.uuid] = asset
         return asset
     }

@@ -502,7 +502,6 @@
 					};
 					5BC5626C1F50394700A848F2 = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = V7Y9TF9C7U;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -922,7 +921,7 @@
 				INFOPLIST_FILE = FlexMediaPicker/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.rehsco.FlexMediaPicker;
+				PRODUCT_BUNDLE_IDENTIFIER = org.cocoapods.FlexMediaPicker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -944,7 +943,7 @@
 				INFOPLIST_FILE = FlexMediaPicker/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.rehsco.FlexMediaPicker;
+				PRODUCT_BUNDLE_IDENTIFIER = org.cocoapods.FlexMediaPicker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
@@ -956,10 +955,10 @@
 			baseConfigurationReference = F1EE6C3176AD2D99C7AFD35F /* Pods-FlexMediaPickerExample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = V7Y9TF9C7U;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = FlexMediaPickerExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.rehsco.FlexMediaPickerExample;
+				PRODUCT_BUNDLE_IDENTIFIER = org.cocoapods.FlexMediaPickerExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -970,10 +969,10 @@
 			baseConfigurationReference = 7F0A6406FB8E47035C90A29C /* Pods-FlexMediaPickerExample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = V7Y9TF9C7U;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = FlexMediaPickerExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.rehsco.FlexMediaPickerExample;
+				PRODUCT_BUNDLE_IDENTIFIER = org.cocoapods.FlexMediaPickerExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};

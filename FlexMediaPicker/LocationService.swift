@@ -69,7 +69,7 @@ open class LocationService: NSObject, CLLocationManagerDelegate  {
         }
     }
     
-    public func getCurrentLocationAsImage(completionHandler: @escaping (UIImage)->Void) {
+    public func getCurrentLocationAsImage(completionHandler: @escaping (UIImage, CLLocation)->Void) {
         if let loc = locationService.currentLocation {
             let mapView = LocationMapView(frame: CGRect(origin: .zero , size: FlexMediaPickerConfiguration.locationImageSize))
             mapView.setSingleLocation(loc, tag: FlexMediaPickerConfiguration.currentLocationTagString)
@@ -79,7 +79,7 @@ open class LocationService: NSObject, CLLocationManagerDelegate  {
                     NSLog("Error creating location snapshot image: \(e.localizedDescription)")
                 }
                 else if let thumbnail = image {
-                    completionHandler(thumbnail)
+                    completionHandler(thumbnail, loc)
                 }
                 else {
                     NSLog("Location snapshort returned neither image nor an error!")

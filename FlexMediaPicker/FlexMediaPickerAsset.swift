@@ -30,12 +30,16 @@
 import UIKit
 import Photos
 import AVFoundation
+import CoreLocation
 
 open class FlexMediaPickerAsset {
     public var uuid: String
     public let thumbnail: UIImage
     public var asset: PHAsset?
     public let addedTime: Date
+    
+    /// Location
+    public var location: CLLocation? = nil
     
     /// Video
     public var videoURL: URL?
@@ -86,16 +90,27 @@ open class FlexMediaPickerAsset {
         self.audioURL = audioURL
         self.addedTime = Date()
     }
-    
-    func isAssetBased() -> Bool {
+
+    public init(thumbnail: UIImage, location: CLLocation) {
+        self.uuid = UUID().uuidString
+        self.thumbnail = thumbnail
+        self.location = location
+        self.addedTime = Date()
+    }
+
+    public func isAssetBased() -> Bool {
         return self.asset != nil
     }
-    
-    func isVideoOrAudio() -> Bool {
+
+    public func isLocation() -> Bool {
+        return self.location != nil
+    }
+
+    public func isVideoOrAudio() -> Bool {
         return self.isVideo() || self.isAudio()
     }
     
-    func isVideo() -> Bool {
+    public func isVideo() -> Bool {
         if self.videoURL != nil {
             return true
         }
@@ -105,7 +120,7 @@ open class FlexMediaPickerAsset {
         return false
     }
 
-    func isAudio() -> Bool {
+    public func isAudio() -> Bool {
         if self.audioURL != nil {
             return true
         }

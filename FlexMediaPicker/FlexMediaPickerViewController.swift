@@ -442,6 +442,11 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         }
     }
 
+    private func addNewLocation(_ thumbnail: UIImage, location: CLLocation) {
+        let locAsset = AssetManager.persistence.createLocationAsset(thumbnail: thumbnail, location: location)
+        self.addSelectedAsset(locAsset)
+    }
+
     private func addSelectedAsset(_ asset: FlexMediaPickerAsset) {
         self.imageSlideshowView?.addAsset(asset)
         self.populateSelectedAssetView(focusOnLastItem: true)
@@ -755,8 +760,8 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
 
     private func addCurrentLocationAsImage() {
         locationService.getCurrentLocationAsImage() {
-            image in
-            self.addNewImage(image, location: nil)
+            image, location in
+            self.addNewLocation(image, location: location)
         }
     }
     
