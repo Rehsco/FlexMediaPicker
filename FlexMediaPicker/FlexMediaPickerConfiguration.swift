@@ -118,7 +118,7 @@ public class FlexMediaPickerConfiguration {
     // MARK: Icons
     
     public static var alertIconName = "InfoAlertIcon_64pt"
-    public static var queryIconName = "InfoAlertIcon_64pt"
+    public static var queryIconName = "helpIcon_64pt"
 
     // MARK: Titles
 
@@ -180,7 +180,6 @@ public class FlexMediaPickerConfiguration {
     public static var frameStepperBorderWidth: CGFloat = 1.5
     public static var frameStepperSize: CGSize = CGSize(width: 200, height: 40)
 
-//    public static var imageMaskMargin: UIEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10)
     public static var imageCroppingMaxScale: CGFloat = 5.0
     // Currently available: scaleToFit and scaleToFill
     public static var imageMaskFitting: FlexImageShapeFit = .scaleToFit

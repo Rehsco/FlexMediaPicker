@@ -145,6 +145,7 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
         self.imagePersistence.deleteAllImages()
         self.removeAllAudios()
         self.removeAllVideos()
+        self.assetMap.removeAll()
     }
     
     // MARK: - Video

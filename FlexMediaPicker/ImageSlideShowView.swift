@@ -381,7 +381,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
         }
         self.timeSliderPanel?.frame = CGRect(x: 0, y: FlexMediaPickerConfiguration.headerHeight + sOffset, width: self.bounds.size.width, height: FlexMediaPickerConfiguration.timeSliderPanelHeight)
         let warnBaseRect = CGRect(x: self.header.bounds.minX, y: self.header.bounds.minY, width: self.header.bounds.width, height: self.header.bounds.height * 2.0)
-        let warnLabelRect = warnBaseRect.offsetBy(dx: 0, dy: self.header.bounds.height).offsetBy(dx: 0, dy: FlexMediaPickerConfiguration.timeSliderPanelHeight)
+        let warnLabelRect = warnBaseRect.offsetBy(dx: 0, dy: self.header.bounds.height).offsetBy(dx: 0, dy: FlexMediaPickerConfiguration.timeSliderPanelHeight + sOffset)
         self.assetWarningLabel?.frame = warnLabelRect
     }
     
@@ -463,7 +463,10 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
                 ca.minFrame = minF
                 ca.maxFrame = maxF
                 
-                if FlexMediaPickerConfiguration.maxVideoRecordingTime > 0, let tsp = self.timeSliderPanel, round(tsp.currentDuration()) > FlexMediaPickerConfiguration.maxVideoRecordingTime {
+                if !FlexMediaPickerConfiguration.allowVideoSelection {
+                    self.showWarning(withText: "Videos not accepted, but you can use frames as images.")
+                }
+                else if FlexMediaPickerConfiguration.maxVideoRecordingTime > 0, let tsp = self.timeSliderPanel, round(tsp.currentDuration()) > FlexMediaPickerConfiguration.maxVideoRecordingTime {
                     self.showWarning(withText: "Maximum allowed duration is \(Helper.stringFromTimeInterval(interval: FlexMediaPickerConfiguration.maxVideoRecordingTime))")
                 }
                 else {

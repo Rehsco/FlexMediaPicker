@@ -217,11 +217,6 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         self.contentView?.headerText = self.headerText
         self.contentView?.subHeaderText = self.getItemsCountStr()
 
-        var tabbarSize: CGFloat = 0
-        if let tbc = self.tabBarController {
-            tabbarSize = tbc.tabBar.isHidden ? 0 : tbc.tabBar.bounds.size.height - 3
-        }
-
         if let sav = self.selectedAssetsView, !sav.isHidden {
             self.baseViewMargins = UIEdgeInsetsMake(0, 0, 120, 0)
         }
@@ -229,16 +224,14 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             self.baseViewMargins = .zero
         }
         self.selectedAssetsView?.frame = self.selectedAssetsViewRect()
-
-        var resBounds = self.view.bounds.offsetBy(dx: 0, dy: UIApplication.shared.statusBarFrame.height * 0.5).insetBy(dx: 0, dy: UIApplication.shared.statusBarFrame.height * 0.5)
-        resBounds = CGRect(origin: resBounds.origin, size: CGSize(width: resBounds.size.width, height: resBounds.size.height-tabbarSize))
-        self.contentView?.frame = resBounds
-
+        
         self.cameraView?.frame = self.view.bounds
         self.imageSlideshowView?.frame = self.view.bounds
         self.voiceRecorderView?.frame = self.view.bounds
 
         if #available(iOS 11, *) {
+            self.contentView?.frame = self.view.bounds
+
             var cinsets:UIEdgeInsets = .zero
             if UIDevice.current.orientation == .landscapeRight {
                 cinsets = UIEdgeInsetsMake(0, 0, 0, self.view.safeAreaInsets.right)
@@ -251,6 +244,16 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             let insets = UIEdgeInsetsMake(self.view.safeAreaInsets.top, 0, self.view.safeAreaInsets.bottom, 0)
             self.imageSlideshowView?.viewElementsInsets = insets
             self.voiceRecorderView?.viewElementsInsets = insets
+        }
+        else {
+            var tabbarSize: CGFloat = 0
+            if let tbc = self.tabBarController {
+                tabbarSize = tbc.tabBar.isHidden ? 0 : tbc.tabBar.bounds.size.height - 3
+            }
+
+            var resBounds = self.view.bounds.offsetBy(dx: 0, dy: UIApplication.shared.statusBarFrame.height * 0.5).insetBy(dx: 0, dy: UIApplication.shared.statusBarFrame.height * 0.5)
+            resBounds = CGRect(origin: resBounds.origin, size: CGSize(width: resBounds.size.width, height: resBounds.size.height-tabbarSize))
+            self.contentView?.frame = resBounds
         }
         self.cameraView?.setNeedsLayout()
         self.voiceRecorderView?.setNeedsLayout()

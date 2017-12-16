@@ -153,8 +153,7 @@ open class SelectedAssetsCollectionView: ImagesCollectionView {
             AssetManager.croppedDuration(forMediaAsset: asset, durationHandler: { duration in
                 let timeStr = Helper.stringFromTimeInterval(interval: duration)
                 let maxAllowedDuration = asset.isVideo() ? FlexMediaPickerConfiguration.maxVideoRecordingTime : FlexMediaPickerConfiguration.maxAudioRecordingTime
-                if maxAllowedDuration > 0 && round(duration) > maxAllowedDuration {
-                    item.secondarySubTitle = Helper.applyFontAndColorToString(FlexMediaPickerConfiguration.selectedMediaCaptionFont, color: FlexMediaPickerConfiguration.secondWarningOfRecordingTimeColor, text: timeStr)
+                if (maxAllowedDuration > 0 && round(duration) > maxAllowedDuration) || (asset.isVideo() && !FlexMediaPickerConfiguration.allowVideoSelection) {
                     if let warnIcon = Helper.getWarningIcon() {
                         item.subTitle = Helper.imageToAttachmentImage(warnIcon, fontSize: FlexMediaPickerConfiguration.selectedMediaCaptionFont.pointSize)
                     }
@@ -163,14 +162,17 @@ open class SelectedAssetsCollectionView: ImagesCollectionView {
                     item.secondarySubTitle = Helper.applyFontAndColorToString(FlexMediaPickerConfiguration.selectedMediaCaptionFont, color: FlexMediaPickerConfiguration.selectedMediaCaptionColor, text: timeStr)
                     item.subTitle = NSAttributedString(string: "")
                 }
+                if maxAllowedDuration > 0 && round(duration) > maxAllowedDuration {
+                    item.secondarySubTitle = Helper.applyFontAndColorToString(FlexMediaPickerConfiguration.selectedMediaCaptionFont, color: FlexMediaPickerConfiguration.secondWarningOfRecordingTimeColor, text: timeStr)
+                }
+                else {
+                    item.secondarySubTitle = Helper.applyFontAndColorToString(FlexMediaPickerConfiguration.selectedMediaCaptionFont, color: FlexMediaPickerConfiguration.selectedMediaCaptionColor, text: timeStr)
+                }
+
                 DispatchQueue.main.async {
                     self.updateCellForItem(item.reference)
                 }
             })
-            
-            if asset.isVideo(), !FlexMediaPickerConfiguration.allowVideoSelection, let warnIcon = Helper.getWarningIcon() {
-                item.subTitle = Helper.imageToAttachmentImage(warnIcon, fontSize: FlexMediaPickerConfiguration.selectedMediaCaptionFont.pointSize)
-            }
         }
     }
     
