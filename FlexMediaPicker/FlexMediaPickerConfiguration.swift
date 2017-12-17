@@ -106,7 +106,7 @@ public class FlexMediaPickerConfiguration {
     public static var upperProgressLabelFont = UIFont.systemFont(ofSize: 16, weight: UIFontWeightMedium)
     public static var lowerProgressLabelFont = UIFont.systemFont(ofSize: 14, weight: UIFontWeightRegular)
 
-    public static var selectedMediaNumberFont = UIFont.systemFont(ofSize: 32, weight: UIFontWeightRegular)
+    public static var selectedMediaNumberFont = UIFont.systemFont(ofSize: 16, weight: UIFontWeightRegular)
     public static var selectedMediaCaptionFont = UIFont.systemFont(ofSize: 12, weight: UIFontWeightRegular)
 
     public static var alertTitleFont = UIFont.systemFont(ofSize: 16, weight: UIFontWeightMedium)

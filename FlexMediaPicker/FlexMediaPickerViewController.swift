@@ -762,9 +762,13 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     // MARK: - Locations
 
     private func addCurrentLocationAsImage() {
-        locationService.getCurrentLocationAsImage() {
-            image, location in
-            self.addNewLocation(image, location: location)
+        BusyViewFactory.showBusyOverlay() {
+            locationService.getCurrentLocationAsImage() {
+                image, location in
+                BusyViewFactory.hideBusyOverlay() {
+                    self.addNewLocation(image, location: location)
+                }
+            }
         }
     }
     

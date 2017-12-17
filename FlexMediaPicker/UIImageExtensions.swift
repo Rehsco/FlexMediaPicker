@@ -48,9 +48,8 @@ extension UIImage {
         return UIGraphicsGetImageFromCurrentImageContext()!;
     }
     
-    convenience init?(color: UIColor, size: CGSize = CGSize(width: 1, height: 1)) {
+    convenience init?(color: UIColor, size: CGSize = CGSize(width: 1, height: 1), scale: CGFloat = UIScreen.main.scale) {
         let rect = CGRect(origin: .zero, size: size)
-        let scale = UIScreen.main.scale
         UIGraphicsBeginImageContextWithOptions(rect.size, false, scale)
         color.setFill()
         UIRectFill(rect)
@@ -60,7 +59,7 @@ extension UIImage {
         guard let cgImage = image?.cgImage else { return nil }
         self.init(cgImage: cgImage)
     }
-
+    
     func circularImage(size: CGSize?) -> UIImage? {
         let newSize = size ?? self.size
         
