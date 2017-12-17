@@ -41,7 +41,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
     
     private var currentImageSource: ImageAssetImageSource?
 
-    private var currentAsset: FlexMediaPickerAsset?
+    var currentAsset: FlexMediaPickerAsset?
     private var movieAsset: AVURLAsset?
     private var meterTimer: Timer?
 

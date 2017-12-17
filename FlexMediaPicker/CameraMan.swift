@@ -221,7 +221,7 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
             self.queue.async {
                 let capturer = CameraPhotoCapturer()
                 capturer.didCaptureWithImageData = { (imageData) in
-                    let image = UIImage(data: imageData)
+                    let image = UIImage(data: imageData)?.fixOrientation()
                     completion?(image)
                 }
                 capturer.didFinish = { [unowned self] in

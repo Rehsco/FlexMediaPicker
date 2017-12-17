@@ -90,7 +90,7 @@ open class SelectedAssetsCollectionView: ImagesCollectionView {
         return nil
     }
     
-    open func populate(focusOnLastItem: Bool = false, showImageHandler: @escaping ((Int)->Void)) {
+    open func populate(focusOnLastItem: Bool = false, focusOnItemByIndex: String? = nil, showImageHandler: @escaping ((Int)->Void)) {
         DispatchQueue.main.async {
             self.removeAllSections()
             self.allPopulatedItems = []
@@ -99,7 +99,7 @@ open class SelectedAssetsCollectionView: ImagesCollectionView {
             var idx = 0
             var lastItem: ImagesCollectionItem? = nil
             for selAsset in allSelectedAssets {
-                let ref = selAsset.uuid // selAsset.asset?.localIdentifier ?? UUID().uuidString
+                let ref = selAsset.uuid
                 let thumbnail: UIImage?
                 if selAsset.isVideo() || selAsset.isAudio() {
                     thumbnail = selAsset.thumbnail
@@ -144,6 +144,9 @@ open class SelectedAssetsCollectionView: ImagesCollectionView {
             self.itemCollectionView.reloadData()
             if focusOnLastItem, let li = lastItem {
                 self.focusOnItem(withReference: li.reference)
+            }
+            else if let foi = focusOnItemByIndex {
+                self.focusOnItem(withReference: foi)
             }
         }
     }

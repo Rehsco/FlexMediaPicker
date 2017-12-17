@@ -648,9 +648,9 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         }
     }
     
-    func populateSelectedAssetView(focusOnLastItem: Bool = false) {
+    func populateSelectedAssetView(focusOnLastItem: Bool = false, focusOnItemByIndex: String? = nil) {
         self.applyAcceptEnabling()
-        self.selectedAssetsView?.populate(focusOnLastItem: focusOnLastItem) {
+        self.selectedAssetsView?.populate(focusOnLastItem: focusOnLastItem, focusOnItemByIndex: focusOnItemByIndex) {
             imageIndex in
             self.showImage(byIndex: imageIndex)
         }
@@ -744,7 +744,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                 }
             }
             issv.updateImageCroppingHandler = {
-                self.populateSelectedAssetView()
+                self.populateSelectedAssetView(focusOnItemByIndex: issv.currentAsset?.uuid)
             }
             issv.focusedSelectedItem = {
                 asset in
