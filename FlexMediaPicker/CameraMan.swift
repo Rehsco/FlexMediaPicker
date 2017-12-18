@@ -204,6 +204,7 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
             self.configure {
                 self.session.removeInput(currentInput)
                 self.addInput(input)
+                self.currentInput = input
             }
             
             DispatchQueue.main.async {
