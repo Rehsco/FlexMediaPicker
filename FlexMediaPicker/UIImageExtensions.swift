@@ -134,10 +134,10 @@ extension UIImage {
         return newImage
     }
     
-    func maskImageWithPathAndCrop(_ path: UIBezierPath) -> UIImage {
+    func maskImageWithPathAndCrop(_ path: UIBezierPath, scale: CGFloat = UIScreen.main.scale) -> UIImage {
         let newSize = path.cgPath.boundingBox.size
         
-        UIGraphicsBeginImageContextWithOptions(newSize, false, self.scale)
+        UIGraphicsBeginImageContextWithOptions(newSize, false, scale)
         let context = UIGraphicsGetCurrentContext()
         
         self.draw(in: CGRect(origin: CGPoint.zero, size: newSize), blendMode: .copy, alpha: 1.0)
@@ -201,10 +201,10 @@ extension UIImage {
         return scaledImage!
     }
     
-    func addText(drawText text: String, textColor: UIColor = UIColor.white, font: UIFont? = nil) -> UIImage {
+    func addText(drawText text: String, textColor: UIColor = UIColor.white, font: UIFont? = nil, scale: CGFloat = UIScreen.main.scale) -> UIImage {
         let textFont = font ?? UIFont.systemFont(ofSize: 24)
         
-        UIGraphicsBeginImageContextWithOptions(self.size, false, self.scale)
+        UIGraphicsBeginImageContextWithOptions(self.size, false, scale)
 
         self.draw(in: CGRect(origin: CGPoint.zero, size: self.size))
 

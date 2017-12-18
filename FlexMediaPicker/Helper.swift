@@ -122,7 +122,7 @@ class Helper {
          */
         
         let mask = StyledShapeLayer.createShape(.rounded, bounds: CGRect(x: 0, y: 0, width: 36, height: 24), color: .black)
-        let nImage = UIImage(color: FlexMediaPickerConfiguration.selectedItemColor, size: CGSize(width: 36, height: 24), scale: 1.0)
+        let nImage = UIImage(color: FlexMediaPickerConfiguration.selectedItemColor, size: CGSize(width: 36, height: 24))
         let numImage = nImage?.addText(drawText: "\(acceptableAssetCount)", font: FlexMediaPickerConfiguration.selectedMediaNumberFont)
         let maskPath = UIBezierPath(cgPath: mask.path!)
         let roundedImage = numImage?.maskImageWithPathAndCrop(maskPath)
