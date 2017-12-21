@@ -327,7 +327,7 @@ open class AssetManager {
     
     open class func getTimeForVideoFrame(_ frame: Float64, videoURL: URL) -> CMTime {
         let asset = AVURLAsset(url: videoURL, options: nil)
-        let movieTracks = asset.tracks(withMediaType: AVMediaTypeVideo)
+        let movieTracks = asset.tracks(withMediaType: AVMediaType.video)
         if let movieTrack = movieTracks.first {
             let durationSeconds = CMTimeGetSeconds(asset.duration)
             let totalFrames: Float64 = durationSeconds * Float64(movieTrack.nominalFrameRate)
@@ -339,7 +339,7 @@ open class AssetManager {
     
     open class func getVideoFrameForTime(_ time: TimeInterval, movieAsset: AVURLAsset?) -> Float64 {
         if let asset = movieAsset {
-            let movieTracks = asset.tracks(withMediaType: AVMediaTypeVideo)
+            let movieTracks = asset.tracks(withMediaType: AVMediaType.video)
             if let movieTrack = movieTracks.first {
                 let durationSeconds = CMTimeGetSeconds(asset.duration)
                 let totalFrames: Float64 = durationSeconds * Float64(movieTrack.nominalFrameRate)

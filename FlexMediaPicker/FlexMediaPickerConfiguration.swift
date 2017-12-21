@@ -94,26 +94,26 @@ public class FlexMediaPickerConfiguration {
     
     // MARK: Fonts
     
-    public static var headerFont = UIFont.systemFont(ofSize: 19, weight: UIFontWeightMedium)
-    public static var headerSubCaptionFont = UIFont.systemFont(ofSize: 12, weight: UIFontWeightRegular)
-    public static var collectionCaptionFont = UIFont.systemFont(ofSize: 12, weight: UIFontWeightRegular)
-    public static var numberLabelFont = UIFont.systemFont(ofSize: 19, weight: UIFontWeightBold)
-    public static var noImagesFont = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium)
-    public static var noCameraFont = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium)
-    public static var settingsFont = UIFont.systemFont(ofSize: 16, weight: UIFontWeightMedium)
-    public static var timeSliderCaptionFont = UIFont.systemFont(ofSize: 12, weight: UIFontWeightRegular)
+    public static var headerFont = UIFont.systemFont(ofSize: 19, weight: UIFont.Weight.medium)
+    public static var headerSubCaptionFont = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
+    public static var collectionCaptionFont = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
+    public static var numberLabelFont = UIFont.systemFont(ofSize: 19, weight: UIFont.Weight.bold)
+    public static var noImagesFont = UIFont.systemFont(ofSize: 18, weight: UIFont.Weight.medium)
+    public static var noCameraFont = UIFont.systemFont(ofSize: 18, weight: UIFont.Weight.medium)
+    public static var settingsFont = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.medium)
+    public static var timeSliderCaptionFont = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
 
-    public static var upperProgressLabelFont = UIFont.systemFont(ofSize: 16, weight: UIFontWeightMedium)
-    public static var lowerProgressLabelFont = UIFont.systemFont(ofSize: 14, weight: UIFontWeightRegular)
+    public static var upperProgressLabelFont = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.medium)
+    public static var lowerProgressLabelFont = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
 
-    public static var selectedMediaNumberFont = UIFont.systemFont(ofSize: 16 * UIScreen.main.scale, weight: UIFontWeightRegular)
-    public static var selectedMediaCaptionFont = UIFont.systemFont(ofSize: 12, weight: UIFontWeightRegular)
+    public static var selectedMediaNumberFont = UIFont.systemFont(ofSize: 16 * UIScreen.main.scale, weight: UIFont.Weight.regular)
+    public static var selectedMediaCaptionFont = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
 
-    public static var alertTitleFont = UIFont.systemFont(ofSize: 16, weight: UIFontWeightMedium)
-    public static var alertTextFont = UIFont.systemFont(ofSize: 12, weight: UIFontWeightRegular)
-    public static var alertButtonFont = UIFont.systemFont(ofSize: 14, weight: UIFontWeightMedium)
+    public static var alertTitleFont = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.medium)
+    public static var alertTextFont = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
+    public static var alertButtonFont = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.medium)
 
-    public static var warningLabelFont = UIFont.systemFont(ofSize: 14, weight: UIFontWeightRegular)
+    public static var warningLabelFont = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.regular)
 
     // MARK: Icons
     

@@ -30,7 +30,7 @@
 import UIKit
 
 extension UIView {
-    func showHide(hide: Bool = false, completionHandler: (()->Void)? = nil) {
+    @objc func showHide(hide: Bool = false, completionHandler: (()->Void)? = nil) {
         DispatchQueue.main.async {
             if self.isHidden == hide {
                 completionHandler?()

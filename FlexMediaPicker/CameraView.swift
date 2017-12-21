@@ -177,7 +177,7 @@ class CameraView: FlexView, CameraManDelegate {
                 self.rotateCamera()
             }
             ccp.flashActionHandler = { mode in
-                let flashMode = mode ? AVCaptureFlashMode.on : AVCaptureFlashMode.off
+                let flashMode = mode ? AVCaptureDevice.FlashMode.on : AVCaptureDevice.FlashMode.off
                 self.flashCamera(flashMode)
             }
             ccp.backToImagesHandler = {
@@ -213,7 +213,7 @@ class CameraView: FlexView, CameraManDelegate {
     }
     
     public func displayView() {
-        previewLayer?.connection.videoOrientation = Helper.videoOrientation()
+        previewLayer?.connection?.videoOrientation = Helper.videoOrientation()
         if FlexMediaPickerConfiguration.recordLocationOnPhoto {
             locationService.startLocationMessagingUse()
         }
@@ -221,11 +221,11 @@ class CameraView: FlexView, CameraManDelegate {
 
     private func setupPreviewLayer() {
         self.previewLayer?.removeFromSuperlayer()
-        guard let layer = AVCaptureVideoPreviewLayer(session: cameraMan.session) else { return }
+        let layer = AVCaptureVideoPreviewLayer(session: cameraMan.session)
         
         layer.backgroundColor = FlexMediaPickerConfiguration.styleColor.cgColor
         layer.autoreverses = true
-        layer.videoGravity = AVLayerVideoGravityResizeAspectFill
+        layer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         
         self.layer.insertSublayer(layer, at: 1)
         layer.frame = self.layer.frame
@@ -246,7 +246,7 @@ class CameraView: FlexView, CameraManDelegate {
         capturedImageView.frame = bb
         self.previewLayer?.frame = bb
         
-        previewLayer?.connection.videoOrientation = Helper.videoOrientation()
+        previewLayer?.connection?.videoOrientation = Helper.videoOrientation()
         var yoff:CGFloat = 0
         if #available(iOS 11, *) {
             yoff = self.safeAreaInsets.top
@@ -257,7 +257,7 @@ class CameraView: FlexView, CameraManDelegate {
     // MARK: - Camera actions
     
     func rotateCamera() {
-        UIView.animate(withDuration: 0.3, animations: { _ in
+        UIView.animate(withDuration: 0.3, animations: { 
             self.containerView.alpha = 1
         }, completion: { _ in
             self.cameraMan.switchCamera {
@@ -268,7 +268,7 @@ class CameraView: FlexView, CameraManDelegate {
         })
     }
     
-    func flashCamera(_ mode: AVCaptureFlashMode) {
+    func flashCamera(_ mode: AVCaptureDevice.FlashMode) {
         cameraMan.flash(mode)
     }
     
@@ -304,7 +304,7 @@ class CameraView: FlexView, CameraManDelegate {
     
     // MARK: - Timer methods
     
-    func timerDidFire() {
+    @objc func timerDidFire() {
         UIView.animate(withDuration: 0.3, animations: { [unowned self] in
             self.focusImageView.alpha = 0
             }, completion: { _ in
@@ -321,7 +321,7 @@ class CameraView: FlexView, CameraManDelegate {
         cameraMan.focus(convertedPoint)
         
         focusImageView.center = point
-        UIView.animate(withDuration: 0.5, animations: { _ in
+        UIView.animate(withDuration: 0.5, animations: { 
             self.focusImageView.alpha = 1
             self.focusImageView.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
         }, completion: { _ in
@@ -342,7 +342,7 @@ class CameraView: FlexView, CameraManDelegate {
     
     // MARK: - Tap
     
-    func tapGestureRecognizerHandler(_ gesture: UITapGestureRecognizer) {
+    @objc func tapGestureRecognizerHandler(_ gesture: UITapGestureRecognizer) {
         let touch = gesture.location(in: self)
         
         focusImageView.transform = CGAffineTransform.identity
@@ -352,7 +352,7 @@ class CameraView: FlexView, CameraManDelegate {
     
     // MARK: - Pinch
     
-    func pinchGestureRecognizerHandler(_ gesture: UIPinchGestureRecognizer) {
+    @objc func pinchGestureRecognizerHandler(_ gesture: UIPinchGestureRecognizer) {
         switch gesture.state {
         case .began:
             fallthrough

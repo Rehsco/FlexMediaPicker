@@ -136,7 +136,7 @@ class CameraMediaControlPanel: FlexFooterView {
 }
 
 extension CameraMediaControlPanel {
-    func onCameraTriggerPressed(_ recognizer: UITapGestureRecognizer) {
+    @objc func onCameraTriggerPressed(_ recognizer: UITapGestureRecognizer) {
         guard let cvs = self.camVidSwitch else { return }
         if cvs.on {
             self.isVideoModeActive = !self.isVideoModeActive

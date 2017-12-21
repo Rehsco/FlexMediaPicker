@@ -117,7 +117,7 @@ class VoiceRecorderMediaControlPanel: FlexFooterView {
 }
 
 extension VoiceRecorderMediaControlPanel {
-    func onRecordingPressed(_ recognizer: UITapGestureRecognizer) {
+    @objc func onRecordingPressed(_ recognizer: UITapGestureRecognizer) {
         self.isRecording = !self.isRecording
         self.recAudioActionHandler?()
         self.applyTriggerButtonStyle()

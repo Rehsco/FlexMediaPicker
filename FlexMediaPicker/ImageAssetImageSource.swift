@@ -127,7 +127,7 @@ class ImageAssetImageSource: InputSource {
     
     func imageFromVideo(url: URL, completionHandler: @escaping ((UIImage?)->Void)) {
         let asset = AVURLAsset(url: url, options: nil)
-        let movieTracks = asset.tracks(withMediaType: AVMediaTypeVideo)
+        let movieTracks = asset.tracks(withMediaType: AVMediaType.video)
         if let movieTrack = movieTracks.first {
             let durationSeconds = CMTimeGetSeconds(asset.duration)
             let totalFrames: Float64 = durationSeconds * Float64(movieTrack.nominalFrameRate)

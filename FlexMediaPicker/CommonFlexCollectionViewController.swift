@@ -180,7 +180,7 @@ open class CommonFlexCollectionViewController: UIViewController {
         self.contentView?.addMenu(self.leftViewMenu!)
     }
     
-    open func swipeToGoBack(sender: Any) {
+    @objc open func swipeToGoBack(sender: Any) {
         self.navigationController?.popViewController(animated: true)
     }
 

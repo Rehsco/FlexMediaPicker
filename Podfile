@@ -7,10 +7,10 @@ pod 'StyledOverlay'
 pod 'ImageSlideshow'
 pod 'ImagePersistence'
 pod 'TaskQueue'
-pod 'Player', '~> 0.7.0' ## Swift 4: 0.8.0+
-pod 'SwiftSiriWaveformView', '2.1'
-pod 'SCLAlertView', '0.7.0'
-pod 'DSWaveformImage', '~> 5.0'
+pod 'Player'
+pod 'SwiftSiriWaveformView'
+pod 'SCLAlertView', :git => 'https://github.com/mjrehder/SCLAlertView-Swift.git', :branch => 'master'
+pod 'DSWaveformImage'
 
 target 'FlexMediaPicker' do
 end

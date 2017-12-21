@@ -37,14 +37,14 @@ class VideoWriter {
     var audioInput: AVAssetWriterInput!
     
     init(fileUrl:URL!, height:Int, width:Int, channels:Int, samples:Float64){
-        fileWriter = try? AVAssetWriter(outputURL: fileUrl, fileType: AVFileTypeQuickTimeMovie)
+        fileWriter = try? AVAssetWriter(outputURL: fileUrl, fileType: AVFileType.mov)
         
         let videoOutputSettings: Dictionary<String, AnyObject> = [
             AVVideoCodecKey : AVVideoCodecH264 as AnyObject,
             AVVideoWidthKey : width as AnyObject,
             AVVideoHeightKey : height as AnyObject
         ];
-        videoInput = AVAssetWriterInput(mediaType: AVMediaTypeVideo, outputSettings: videoOutputSettings)
+        videoInput = AVAssetWriterInput(mediaType: AVMediaType.video, outputSettings: videoOutputSettings)
         videoInput.expectsMediaDataInRealTime = true
         fileWriter.add(videoInput)
         
@@ -54,7 +54,7 @@ class VideoWriter {
             AVSampleRateKey : samples as AnyObject,
             AVEncoderBitRateKey : 128000 as AnyObject
         ]
-        audioInput = AVAssetWriterInput(mediaType: AVMediaTypeAudio, outputSettings: audioOutputSettings)
+        audioInput = AVAssetWriterInput(mediaType: AVMediaType.audio, outputSettings: audioOutputSettings)
         audioInput.expectsMediaDataInRealTime = true
         fileWriter.add(audioInput)
     }

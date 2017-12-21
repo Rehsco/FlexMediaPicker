@@ -35,13 +35,13 @@ let cameraService = CameraService()
 open class CameraService: NSObject {
     
     func checkPermission(permissionGrantedHandler: @escaping (Bool)->Void) {
-        let status = AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo)
+        let status = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
         
         switch status {
         case .authorized:
             permissionGrantedHandler(true)
         case .denied, .notDetermined:
-            AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo) { granted in
+            AVCaptureDevice.requestAccess(for: AVMediaType.video) { granted in
                 if granted {
                     permissionGrantedHandler(true)
                 } else {

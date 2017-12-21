@@ -30,8 +30,8 @@ import UIKit
 
 #if arch(x86_64) || CPU_TYPE_ARM64
     let INFINITY = Double.greatestFiniteMagnitude
-    let RSK_EPSILON = CGFloat(DBL_EPSILON)
-    let RSK_MIN = CGFloat(DBL_MIN)
+    let RSK_EPSILON = CGFloat(Double.ulpOfOne)
+    let RSK_MIN = CGFloat(Double.leastNormalMagnitude)
 #else
     let INFINITY = CGFloat.greatestFiniteMagnitude
     let RSK_EPSILON = CGFloat(Float.ulpOfOne)

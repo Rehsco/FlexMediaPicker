@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'FlexMediaPicker'
-  s.version          = '1.1.5'
+  s.version          = '2.0'
   s.license          = 'MIT'
   s.summary          = 'Image'
   s.homepage         = 'https://github.com/Rehsco/FlexMediaPicker.git'
@@ -16,8 +16,8 @@ Pod::Spec.new do |s|
   s.dependency 'StyledOverlay'
   s.dependency 'ImageSlideshow'
   s.dependency 'TaskQueue'
-  s.dependency 'Player', '~> 0.7.0' ## Swift 4: 0.8.0+
-  s.dependency 'SwiftSiriWaveformView', '2.1'
+  s.dependency 'Player', '~> 0.8.0'
+  s.dependency 'SwiftSiriWaveformView', '2.4'
   s.dependency 'SCLAlertView', '0.7.0'
   s.dependency 'DSWaveformImage', '~> 5.0'
 

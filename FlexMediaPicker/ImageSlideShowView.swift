@@ -353,11 +353,11 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
         self.posUpdateTimer.stop()
     }
     
-    func scrollviewBeginsZoom(_ sender: Any) {
+    @objc func scrollviewBeginsZoom(_ sender: Any) {
         self.player?.view.isHidden = true
     }
 
-    func scrollviewEndsZoom(_ sender: Any) {
+    @objc func scrollviewEndsZoom(_ sender: Any) {
         if let ass = self.currentAsset, ass.isVideoOrAudio() {
             self.player?.view.isHidden = false
         }
@@ -614,7 +614,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
         if let asset = self.movieAsset {
             let durationSeconds = CMTimeGetSeconds(asset.duration)
             let timeOffset = CMTimeMakeWithSeconds(Float64(offset) * durationSeconds, 600)
-            let movieTracks = asset.tracks(withMediaType: AVMediaTypeVideo)
+            let movieTracks = asset.tracks(withMediaType: AVMediaType.video)
             if let movieTrack = movieTracks.first {
                 let totalFrames: Float64 = durationSeconds * Float64(movieTrack.nominalFrameRate)
                 let frame: Float64 = Float64(offset) * totalFrames
@@ -629,7 +629,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
             }
             DispatchQueue.main.async {
                 if let player = self.player {
-                    player.seek(to: timeOffset) {
+                    player.seek(to: timeOffset) { success in
                         DispatchQueue.main.async {
                             self.videoControlPanel.isPlaying = player.playbackState == .playing
                         }
@@ -657,7 +657,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
     
     private func getMaxFrame() -> Float64 {
         if let asset = self.movieAsset {
-            let movieTracks = asset.tracks(withMediaType: AVMediaTypeVideo)
+            let movieTracks = asset.tracks(withMediaType: AVMediaType.video)
             if let movieTrack = movieTracks.first {
                 let durationSeconds = CMTimeGetSeconds(asset.duration)
                 let totalFrames: Float64 = durationSeconds * Float64(movieTrack.nominalFrameRate)
@@ -669,7 +669,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
     
     private func updateFrameStepper() {
         if let asset = self.movieAsset {
-            let movieTracks = asset.tracks(withMediaType: AVMediaTypeVideo)
+            let movieTracks = asset.tracks(withMediaType: AVMediaType.video)
             if let movieTrack = movieTracks.first {
                 let durationSeconds = CMTimeGetSeconds(asset.duration)
                 let totalFrames = Double(durationSeconds * Float64(movieTrack.nominalFrameRate))

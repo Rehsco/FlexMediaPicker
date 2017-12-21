@@ -308,7 +308,7 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
         deleteFile(targetURL)
         
         exportSession?.outputURL = targetURL
-        exportSession?.outputFileType = AVFileTypeAppleM4A
+        exportSession?.outputFileType = AVFileType.m4a
         exportSession?.shouldOptimizeForNetworkUse = true
         let start = fromTime ?? CMTimeMakeWithSeconds(0.0, 0)
         let range = CMTimeRangeMake(start, duration ?? avAsset.duration)
@@ -359,7 +359,7 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
         deleteFile(targetURL)
         
         exportSession?.outputURL = targetURL
-        exportSession?.outputFileType = AVFileTypeMPEG4
+        exportSession?.outputFileType = AVFileType.mp4
         exportSession?.shouldOptimizeForNetworkUse = true
         let start = fromTime ?? CMTimeMakeWithSeconds(0.0, 0)
         let range = CMTimeRangeMake(start, duration ?? avAsset.duration)

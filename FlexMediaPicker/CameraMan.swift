@@ -16,9 +16,9 @@ class CameraPhotoCapturer: NSObject, AVCapturePhotoCaptureDelegate {
     var didCaptureWithImageData: ((_ imageData: Data) -> Void)?
     var didFinish: (() -> Void)?
     
-    func capture(_ output: AVCapturePhotoOutput,
-                 didFinishProcessingPhotoSampleBuffer photoSampleBuffer: CMSampleBuffer?,
-                 previewPhotoSampleBuffer: CMSampleBuffer?,
+    func photoOutput(_ output: AVCapturePhotoOutput,
+                 didFinishProcessingPhoto photoSampleBuffer: CMSampleBuffer?,
+                 previewPhoto previewPhotoSampleBuffer: CMSampleBuffer?,
                      resolvedSettings: AVCaptureResolvedPhotoSettings,
                      bracketSettings: AVCaptureBracketedStillImageSettings?,
                      error: Error?) {
@@ -35,7 +35,7 @@ class CameraPhotoCapturer: NSObject, AVCapturePhotoCaptureDelegate {
         }
     }
     
-    func capture(_ output: AVCapturePhotoOutput, didFinishCaptureForResolvedSettings resolvedSettings: AVCaptureResolvedPhotoSettings, error: Error?) {
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishCaptureFor resolvedSettings: AVCaptureResolvedPhotoSettings, error: Error?) {
         if let error = error {
             NSLog("\(#function): \(error)")
         } else if let didFinish = self.didFinish {
@@ -56,7 +56,7 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
     // Inputs
     var backCamera: AVCaptureDeviceInput?
     var frontCamera: AVCaptureDeviceInput?
-    let audioDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeAudio)
+    let audioDevice = AVCaptureDevice.default(for: AVMediaType.audio)
     
     // Outputs
     var stillImageOutput: AVCapturePhotoOutput?
@@ -108,8 +108,8 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
     
     func setupDevices() {
         // Input
-        self.frontCamera = try? AVCaptureDeviceInput(device: AVCaptureDevice.defaultDevice(withDeviceType: .builtInWideAngleCamera, mediaType: AVMediaTypeVideo, position: .front))
-        self.backCamera = try? AVCaptureDeviceInput(device: AVCaptureDevice.defaultDevice(withDeviceType: .builtInWideAngleCamera, mediaType: AVMediaTypeVideo, position: .back))
+        self.frontCamera = try? AVCaptureDeviceInput(device: AVCaptureDevice.default(AVCaptureDevice.DeviceType.builtInWideAngleCamera, for: AVMediaType.video, position: .front)!)
+        self.backCamera = try? AVCaptureDeviceInput(device: AVCaptureDevice.default(AVCaptureDevice.DeviceType.builtInWideAngleCamera, for: AVMediaType.video, position: .back)!)
         self.currentInput = startOnFrontCamera ? self.frontCamera : self.backCamera
         
         // Output for Photo
@@ -122,11 +122,11 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
         videoOutput?.setSampleBufferDelegate(self, queue: recordingQueue)
         videoOutput?.alwaysDiscardsLateVideoFrames = true
         videoOutput?.videoSettings = [
-            kCVPixelBufferPixelFormatTypeKey as AnyHashable : Int(kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange)
+            kCVPixelBufferPixelFormatTypeKey as AnyHashable as! String : Int(kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange)
         ]
         
         do {
-            let audioInput = try AVCaptureDeviceInput(device: audioDevice) as AVCaptureDeviceInput
+            let audioInput = try AVCaptureDeviceInput(device: audioDevice!) as AVCaptureDeviceInput
             session.addInput(audioInput)
         }
         catch let error as NSError {
@@ -214,7 +214,7 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
     }
     
     func takePhoto(_ previewLayer: AVCaptureVideoPreviewLayer, completion: ((UIImage?) -> Void)? = nil) {
-        guard let connection = stillImageOutput?.connection(withMediaType: AVMediaTypeVideo) else { return }
+        guard let connection = stillImageOutput?.connection(with: AVMediaType.video) else { return }
         
         connection.videoOrientation = Helper.videoOrientation()
         
@@ -237,7 +237,7 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
     }
     
     func startVideoRecording(_ previewLayer: AVCaptureVideoPreviewLayer) {
-        guard let connection = videoOutput?.connection(withMediaType: AVMediaTypeVideo) else { return }
+        guard let connection = videoOutput?.connection(with: AVMediaType.video) else { return }
         connection.videoOrientation = Helper.videoOrientation()
 
         self.startRecordingTime = Date()
@@ -300,11 +300,11 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
     
     // MARK: - Capturing
     
-    func captureOutput(_ captureOutput: AVCaptureOutput!, didDrop sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!) {
+    func captureOutput(_ captureOutput: AVCaptureOutput, didDrop sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         // Intentionally left blank
     }
     
-    func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, from connection: AVCaptureConnection!) {
+    func captureOutput(_ captureOutput: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         let time = Date().timeIntervalSinceNow - self.startRecordingTime.timeIntervalSinceNow
         self.lockQueue.sync() {
             if !self.isCapturing || self.isPaused {
@@ -363,17 +363,15 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
             }
             
             if !isVideo {
-                var pts = CMSampleBufferGetPresentationTimeStamp(buffer!)
-                let dur = CMSampleBufferGetDuration(buffer!)
+                var pts = CMSampleBufferGetPresentationTimeStamp(buffer)
+                let dur = CMSampleBufferGetDuration(buffer)
                 if (dur.value > 0) {
                     pts = CMTimeAdd(pts, dur)
                 }
                 self.lastAudioPts = pts
             }
 
-            if let buf = buffer {
-                AssetManager.persistence.writeVideoData(sample: buf, isVideo: isVideo)
-            }
+            AssetManager.persistence.writeVideoData(sample: buffer, isVideo: isVideo)
         }
         if FlexMediaPickerConfiguration.maxVideoRecordingTime > 0 && time >= FlexMediaPickerConfiguration.maxVideoRecordingTime  && self.isCapturing {
             self.stopVideoRecording()
@@ -397,7 +395,7 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
         return out!
     }
     
-    func flash(_ mode: AVCaptureFlashMode) {
+    func flash(_ mode: AVCaptureDevice.FlashMode) {
         if let currentDevice = self.currentInput?.device, let captureOutput = self.stillImageOutput, currentDevice.isFlashAvailable  {
             let isFlashModeSupported = captureOutput.__supportedFlashModes.contains(NSNumber(value: mode.rawValue))
             if isFlashModeSupported {
@@ -407,7 +405,7 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
     }
     
     func focus(_ point: CGPoint) {
-        guard let device = currentInput?.device, device.isFocusModeSupported(AVCaptureFocusMode.locked) else { return }
+        guard let device = currentInput?.device, device.isFocusModeSupported(AVCaptureDevice.FocusMode.locked) else { return }
         
         queue.async {
             self.lock {
@@ -447,8 +445,8 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
     
     func configurePreset(_ input: AVCaptureDeviceInput) {
         for asset in preferredPresets() {
-            if input.device.supportsAVCaptureSessionPreset(asset) && self.session.canSetSessionPreset(asset) {
-                self.session.sessionPreset = asset
+            if input.device.supportsSessionPreset(AVCaptureSession.Preset(rawValue: asset)) && self.session.canSetSessionPreset(AVCaptureSession.Preset(rawValue: asset)) {
+                self.session.sessionPreset = AVCaptureSession.Preset(rawValue: asset)
                 return
             }
         }
@@ -456,9 +454,9 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
     
     func preferredPresets() -> [String] {
         return [
-            AVCaptureSessionPresetHigh,
-            AVCaptureSessionPresetMedium,
-            AVCaptureSessionPresetLow
+            AVCaptureSession.Preset.high.rawValue,
+            AVCaptureSession.Preset.medium.rawValue,
+            AVCaptureSession.Preset.low.rawValue
         ]
     }
 }
