@@ -211,11 +211,11 @@ extension UIImage {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center
         
-        let textFontAttributes = [
-            NSAttributedStringKey.font.rawValue: textFont,
+        let textFontAttributes: [NSAttributedStringKey : Any] = [
+            NSAttributedStringKey.font: textFont,
             NSAttributedStringKey.foregroundColor: textColor,
             NSAttributedStringKey.paragraphStyle: paragraphStyle,
-            ] as! [NSAttributedStringKey : Any]
+            ]
         
         let tHeight = text.heightWithConstrainedWidth(self.size.width, font: textFont)
         

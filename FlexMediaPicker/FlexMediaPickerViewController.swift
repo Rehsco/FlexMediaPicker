@@ -37,6 +37,7 @@ import CoreLocation
 import ImagePersistence
 import TaskQueue
 import StyledLabel
+import StyledOverlay
 import MapKit
 
 class ImageMediaCollectionView: ImagesCollectionView {

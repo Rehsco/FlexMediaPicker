@@ -61,10 +61,6 @@
 		5BC562991F50599700A848F2 /* UIImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC562971F50599700A848F2 /* UIImageExtensions.swift */; };
 		5BC5629B1F5059E400A848F2 /* ImagesCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC5629A1F5059E400A848F2 /* ImagesCollectionView.swift */; };
 		5BC5629C1F5059E400A848F2 /* ImagesCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC5629A1F5059E400A848F2 /* ImagesCollectionView.swift */; };
-		5BC5629E1F506EF300A848F2 /* BusyViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC5629D1F506EF300A848F2 /* BusyViewFactory.swift */; };
-		5BC5629F1F506EF300A848F2 /* BusyViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC5629D1F506EF300A848F2 /* BusyViewFactory.swift */; };
-		5BC6677E1FA480FE004D517D /* StyledActionOverlayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6677D1FA480FE004D517D /* StyledActionOverlayExtension.swift */; };
-		5BC6677F1FA480FE004D517D /* StyledActionOverlayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6677D1FA480FE004D517D /* StyledActionOverlayExtension.swift */; };
 		5BC667811FA4D948004D517D /* CGRectHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC667801FA4D948004D517D /* CGRectHelper.swift */; };
 		5BC667821FA4D948004D517D /* CGRectHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC667801FA4D948004D517D /* CGRectHelper.swift */; };
 		5BC6D9481F763E570051B0A3 /* MainMediaControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC6D9471F763E570051B0A3 /* MainMediaControlPanel.swift */; };
@@ -149,8 +145,6 @@
 		5BC562941F50438F00A848F2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5BC562971F50599700A848F2 /* UIImageExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageExtensions.swift; sourceTree = "<group>"; };
 		5BC5629A1F5059E400A848F2 /* ImagesCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagesCollectionView.swift; sourceTree = "<group>"; };
-		5BC5629D1F506EF300A848F2 /* BusyViewFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BusyViewFactory.swift; sourceTree = "<group>"; };
-		5BC6677D1FA480FE004D517D /* StyledActionOverlayExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyledActionOverlayExtension.swift; sourceTree = "<group>"; };
 		5BC667801FA4D948004D517D /* CGRectHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGRectHelper.swift; sourceTree = "<group>"; };
 		5BC6D9471F763E570051B0A3 /* MainMediaControlPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMediaControlPanel.swift; sourceTree = "<group>"; };
 		5BC6D94A1F763EB00051B0A3 /* CameraMediaControlPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraMediaControlPanel.swift; sourceTree = "<group>"; };
@@ -352,7 +346,6 @@
 				5BC562971F50599700A848F2 /* UIImageExtensions.swift */,
 				5B3DB3211F7FB8D300D864DE /* UIViewExtensions.swift */,
 				5BE0F1731FA203B300BEC1CB /* UIScrollViewExtensions.swift */,
-				5BC6677D1FA480FE004D517D /* StyledActionOverlayExtension.swift */,
 				5BC667801FA4D948004D517D /* CGRectHelper.swift */,
 				5BC3EF881FA72A4B00D21B14 /* CGGeometryExtension.swift */,
 				5B88355D1FB1AC0600782FB5 /* StringExtension.swift */,
@@ -372,7 +365,6 @@
 			isa = PBXGroup;
 			children = (
 				5B8835601FB1B2CB00782FB5 /* AlertViewFactory.swift */,
-				5BC5629D1F506EF300A848F2 /* BusyViewFactory.swift */,
 				5BC562911F50437B00A848F2 /* CommonIconViewMenu.swift */,
 				5BC5628E1F50436700A848F2 /* CommonFlexCollectionViewController.swift */,
 				5BC5629A1F5059E400A848F2 /* ImagesCollectionView.swift */,
@@ -501,6 +493,7 @@
 					};
 					5BC5626C1F50394700A848F2 = {
 						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = V7Y9TF9C7U;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -672,7 +665,6 @@
 				5B3DB3231F7FB8D300D864DE /* UIViewExtensions.swift in Sources */,
 				5BCE9C291FAB7E2A008D2E31 /* LocationMapView.swift in Sources */,
 				5BC562861F503ABB00A848F2 /* FlexMediaPickerConfiguration.swift in Sources */,
-				5BC6677E1FA480FE004D517D /* StyledActionOverlayExtension.swift in Sources */,
 				5BD6281C1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift in Sources */,
 				5BC3EF891FA72A4B00D21B14 /* CGGeometryExtension.swift in Sources */,
 				5BDC841C1F52CE8B00BF45B5 /* CameraView.swift in Sources */,
@@ -697,7 +689,6 @@
 				5BC5628F1F50436700A848F2 /* CommonFlexCollectionViewController.swift in Sources */,
 				5B8835611FB1B2CB00782FB5 /* AlertViewFactory.swift in Sources */,
 				5BDF22FA1F7F9A65000A6B7E /* ImageSlideShowView.swift in Sources */,
-				5BC5629E1F506EF300A848F2 /* BusyViewFactory.swift in Sources */,
 				5B88355E1FB1AC0600782FB5 /* StringExtension.swift in Sources */,
 				5BC6D9481F763E570051B0A3 /* MainMediaControlPanel.swift in Sources */,
 				5BE45C591F7C004000322FCC /* ImageAssetImageSource.swift in Sources */,
@@ -734,11 +725,9 @@
 				5B3DB3221F7FB8D300D864DE /* UIViewExtensions.swift in Sources */,
 				5BDC841D1F52CE8B00BF45B5 /* CameraView.swift in Sources */,
 				5BC919421FB06A4B00A37AC4 /* CameraService.swift in Sources */,
-				5BC5629F1F506EF300A848F2 /* BusyViewFactory.swift in Sources */,
 				5BD6281D1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift in Sources */,
 				5BC3EF8A1FA72A4B00D21B14 /* CGGeometryExtension.swift in Sources */,
 				5BC11D051FADCB1900BBC03B /* VoiceRecorderMediaControlPanel.swift in Sources */,
-				5BC6677F1FA480FE004D517D /* StyledActionOverlayExtension.swift in Sources */,
 				5BE0F1751FA203B300BEC1CB /* UIScrollViewExtensions.swift in Sources */,
 				5BC5629C1F5059E400A848F2 /* ImagesCollectionView.swift in Sources */,
 				5BE57D161F83AE340037D4EF /* TimeSliderInfoView.swift in Sources */,
@@ -956,10 +945,10 @@
 			baseConfigurationReference = F1EE6C3176AD2D99C7AFD35F /* Pods-FlexMediaPickerExample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = V7Y9TF9C7U;
 				INFOPLIST_FILE = FlexMediaPickerExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = org.cocoapods.FlexMediaPickerExample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rehsco.FlexMediaPickerExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 			};
@@ -970,10 +959,10 @@
 			baseConfigurationReference = 7F0A6406FB8E47035C90A29C /* Pods-FlexMediaPickerExample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = V7Y9TF9C7U;
 				INFOPLIST_FILE = FlexMediaPickerExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = org.cocoapods.FlexMediaPickerExample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rehsco.FlexMediaPickerExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 			};

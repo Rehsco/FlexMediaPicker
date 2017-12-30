@@ -29,6 +29,7 @@
 
 import UIKit
 import MJRFlexStyleComponents
+import StyledOverlay
 
 open class FlexMediaPickerStyling {
 
@@ -58,5 +59,10 @@ open class FlexMediaPickerStyling {
         
         let cfooterApp = CameraMediaControlPanel.appearance(whenContainedInInstancesOf: [CameraView.self])
         cfooterApp.styleColor = FlexMediaPickerConfiguration.footerPanelColor
+        
+        BusyViewFactory.topLabelFont = FlexMediaPickerConfiguration.upperProgressLabelFont
+        BusyViewFactory.bottomLabelFont = FlexMediaPickerConfiguration.lowerProgressLabelFont
+        BusyViewFactory.topLabelTextColor = FlexMediaPickerConfiguration.upperProgressLabelTextColor
+        BusyViewFactory.bottomLabelTextColor = FlexMediaPickerConfiguration.lowerProgressLabelTextColor
     }
 }
