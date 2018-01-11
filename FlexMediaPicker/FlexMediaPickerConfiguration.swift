@@ -37,11 +37,12 @@ public class FlexMediaPickerConfiguration {
 
     public static var overlayMaskColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.55)
 
-    public static var alertStyleColor = UIColor(red: 0.15, green: 0.19, blue: 0.24, alpha: 1)
-    public static var alertTitleColor = UIColor.white
+    public static var alertStyleColor = UIColor.white
+    public static var alertTitleColor = UIColor.black
     public static var alertIconColor = UIColor.white
     public static var alertSecondaryColor = UIColor(red: 0.25, green: 0.29, blue: 0.34, alpha: 1)
     public static var alertButtonColor = UIColor(red: 0.35, green: 0.39, blue: 0.44, alpha: 1)
+    public static var alertButtonTextColor = UIColor.white
 
     /// When recording and switching to camera
     public static var takeButtonRecordingBorderColorWhileInCameraMode = UIColor(red: 0.95, green: 0.19, blue: 0.14, alpha: 1)
@@ -117,8 +118,8 @@ public class FlexMediaPickerConfiguration {
 
     // MARK: Icons
     
-    public static var alertIconName = "InfoAlertIcon_64pt"
-    public static var queryIconName = "helpIcon_64pt"
+    public static var alertIconName = "InfoAlertIcon_48pt"
+    public static var queryIconName = "helpIcon_48pt"
 
     // MARK: Titles
 

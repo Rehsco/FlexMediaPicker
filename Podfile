@@ -9,7 +9,6 @@ pod 'ImagePersistence'
 pod 'TaskQueue'
 pod 'Player'
 pod 'SwiftSiriWaveformView'
-pod 'SCLAlertView', :git => 'https://github.com/mjrehder/SCLAlertView-Swift.git', :branch => 'master'
 pod 'DSWaveformImage'
 
 target 'FlexMediaPicker' do

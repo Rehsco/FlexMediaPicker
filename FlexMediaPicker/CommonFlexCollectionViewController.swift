@@ -130,11 +130,13 @@ open class CommonFlexCollectionViewController: UIViewController {
     // MARK: - View logic
     
     open func closeView() {
-        if self.isModal() {
-            self.dismiss(animated: true)
-        }
-        else {
-            self.navigationController?.popViewController(animated: true)
+        Helper.ensureOnAsyncMainThread {
+            if self.isModal() {
+                self.dismiss(animated: true)
+            }
+            else {
+                self.navigationController?.popViewController(animated: true)
+            }
         }
     }
     

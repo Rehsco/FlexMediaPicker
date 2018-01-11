@@ -28,38 +28,45 @@
  */
 
 import UIKit
-import SCLAlertView
+import StyledOverlay
+import MJRFlexStyleComponents
 
 open class AlertViewFactory {
-    private static var alertView: SCLAlertView?
     
     open class func confirmation(title: String, subTitle: String, buttonText: String, iconName: String, confirmationResult: @escaping ((Bool) -> Void)) {
         Helper.ensureOnAsyncMainThread {
             let image = (UIImage(named: iconName, in: Bundle(for: AlertViewFactory.self), compatibleWith: nil) ?? UIImage(named: iconName))?.tint(FlexMediaPickerConfiguration.alertIconColor)
             let thumbnailImage = image?.circularImage(size: image?.size)
-            let appearance = self.sclAlertViewAppearance()
-            let alertView = SCLAlertView(appearance: appearance)
-            alertView.addButton(buttonText, backgroundColor: FlexMediaPickerConfiguration.alertStyleColor) {
+            let appearance = self.getAlertViewAppearance()
+            let alertView = StyledMenuPopover(frame: UIScreen.main.bounds, configuration: appearance)
+            self.addStandardButton(alertView: alertView, text: buttonText, tapHandler: {
+                alertView.hide()
                 confirmationResult(true)
-            }
-            alertView.addButton(NSLocalizedString("Cancel", comment: ""), backgroundColor: FlexMediaPickerConfiguration.alertButtonColor) {
+            })
+            self.addStandardCancelButton(alertView: alertView) {
                 confirmationResult(false)
-                alertView.dismiss(animated: true)
             }
-            _ = alertView.showCustom(title, subTitle: subTitle, color: FlexMediaPickerConfiguration.alertButtonColor, icon: thumbnailImage!)
+            let atitle = Helper.applyFontAndColorToString(FlexMediaPickerConfiguration.alertTitleFont, color: FlexMediaPickerConfiguration.alertTitleColor, text: title)
+            let asubtitle = Helper.applyFontAndColorToString(FlexMediaPickerConfiguration.alertTextFont, color: FlexMediaPickerConfiguration.alertTitleColor, text: subTitle)
+            alertView.show(title: atitle, subTitle: asubtitle, topLeftPoint: nil, icon: thumbnailImage)
         }
     }
     
     open class func showSettingsRequest(title: String, message: String) {
         Helper.ensureOnAsyncMainThread {
-            let appearance = self.sclAlertViewAppearance()
-            let alert = SCLAlertView(appearance: appearance)
-            alert.addButton("Open Settings", backgroundColor: FlexMediaPickerConfiguration.alertButtonColor) {
+            let appearance = self.getAlertViewAppearance()
+            let alertView = StyledMenuPopover(frame: UIScreen.main.bounds, configuration: appearance)
+            self.addStandardButton(alertView: alertView, text: NSLocalizedString("Open Settings", comment: ""), tapHandler: {
+                alertView.hide()
                 if let url = URL(string:UIApplicationOpenSettingsURLString) {
                     UIApplication.shared.open(url)
                 }
-            }
-            let _ = alert.showTitle(title, subTitle: message, style: SCLAlertViewStyle.error)
+            })
+            let image = (UIImage(named: "CloseView_36pt", in: Bundle(for: AlertViewFactory.self), compatibleWith: nil) ?? UIImage(named: "CloseView_36pt"))?.tint(FlexMediaPickerConfiguration.alertIconColor)
+            let thumbnailImage = image?.circularImage(size: image?.size)
+            let atitle = Helper.applyFontAndColorToString(FlexMediaPickerConfiguration.alertTitleFont, color: FlexMediaPickerConfiguration.alertTitleColor, text: title)
+            let asubtitle = Helper.applyFontAndColorToString(FlexMediaPickerConfiguration.alertTextFont, color: FlexMediaPickerConfiguration.alertTitleColor, text: message)
+            alertView.show(title: atitle, subTitle: asubtitle, topLeftPoint: nil, icon: thumbnailImage)
         }
     }
     
@@ -67,13 +74,15 @@ open class AlertViewFactory {
         Helper.ensureOnAsyncMainThread {
             let image = (UIImage(named: iconName, in: Bundle(for: AlertViewFactory.self), compatibleWith: nil) ?? UIImage(named: iconName))?.tint(FlexMediaPickerConfiguration.alertIconColor)
             let thumbnailImage = image?.circularImage(size: image?.size)
-            let appearance = self.sclAlertViewAppearance()
-            let alert = SCLAlertView(appearance: appearance)
-            alert.addButton(NSLocalizedString("Ok", comment: ""), backgroundColor: FlexMediaPickerConfiguration.alertButtonColor) {
-                alertView?.dismiss(animated: true)
+            let appearance = self.getAlertViewAppearance()
+            let alertView = StyledMenuPopover(frame: UIScreen.main.bounds, configuration: appearance)
+            self.addStandardButton(alertView: alertView, text: NSLocalizedString("Ok", comment: ""), tapHandler: {
+                alertView.hide()
                 okHandler?()
-            }
-            _ = alert.showCustom(title, subTitle: message, color: FlexMediaPickerConfiguration.alertButtonColor, icon: thumbnailImage!)
+            })
+            let atitle = Helper.applyFontAndColorToString(FlexMediaPickerConfiguration.alertTitleFont, color: FlexMediaPickerConfiguration.alertTitleColor, text: title)
+            let asubtitle = Helper.applyFontAndColorToString(FlexMediaPickerConfiguration.alertTextFont, color: FlexMediaPickerConfiguration.alertTitleColor, text: message)
+            alertView.show(title: atitle, subTitle: asubtitle, topLeftPoint: nil, icon: thumbnailImage)
         }
     }
     
@@ -88,57 +97,78 @@ open class AlertViewFactory {
     
     open class func queryForItemName(title: String, subtitle: String, textPlaceholder: String, image: UIImage, completionHandler: @escaping ((String, Bool) -> Void)) {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(50)) {
-            let thumbnailImage = image.circularImage(size: CGSize(width: 52, height: 52))
-            let appearance = AlertViewFactory.sclAlertViewAppearance()
-            let alertView = SCLAlertView(appearance: appearance)
-            let inputTextField = alertView.addTextField(NSLocalizedString("Name", comment: ""))
-            inputTextField.placeholder = textPlaceholder
-            alertView.addButton(NSLocalizedString("Done", comment: ""), backgroundColor: FlexMediaPickerConfiguration.alertButtonColor) {
-                if let text = inputTextField.text, text != "" {
+            let thumbnailImage = image.circularImage(size: CGSize(width: 56, height: 56))
+            let appearance = AlertViewFactory.getAlertViewAppearance()
+            let alertView = StyledMenuPopover(frame: UIScreen.main.bounds, configuration: appearance)
+
+            let imenu = FlexTextFieldCollectionItem(reference: "textInput", text: NSAttributedString(string: ""))
+            imenu.placeholderText = NSAttributedString(string: NSLocalizedString("Name", comment: ""))
+            imenu.textFieldShouldReturn = {
+                _ in
+                return true
+            }
+            imenu.textIsMutable = true
+            alertView.addMenuItem(imenu)
+            
+            self.addStandardButton(alertView: alertView, text: NSLocalizedString("Done", comment: ""), tapHandler: {
+                if let text = imenu.text?.string, text != "" {
                     completionHandler(text, true)
                 }
                 else {
                     completionHandler(textPlaceholder, true)
                 }
-            }
+            })
             addStandardCancelButton(alertView: alertView) {
                 completionHandler("", false)
             }
-            _ = alertView.showCustom(title, subTitle: subtitle, color: FlexMediaPickerConfiguration.alertButtonColor, icon: thumbnailImage!)
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .milliseconds(50)) {
-                inputTextField.becomeFirstResponder()
-            }
+            let atitle = Helper.applyFontAndColorToString(FlexMediaPickerConfiguration.alertTitleFont, color: FlexMediaPickerConfiguration.alertTitleColor, text: title)
+            let asubtitle = Helper.applyFontAndColorToString(FlexMediaPickerConfiguration.alertTextFont, color: FlexMediaPickerConfiguration.alertTitleColor, text: subtitle)
+            alertView.show(title: atitle, subTitle: asubtitle, topLeftPoint: nil, icon: thumbnailImage)
         }
     }
     
     // MARK: - Buttons
     
-    open class func addStandardCancelButton(alertView: SCLAlertView, tapHandler: (() -> Void)? = nil) {
-        alertView.addButton(NSLocalizedString("Cancel", comment: ""), backgroundColor: FlexMediaPickerConfiguration.alertButtonColor) {
+    open class func addStandardButton(alertView: StyledMenuPopover, text: String, tapHandler: (() -> Void)? = nil) {
+        let abt = Helper.applyFontAndColorToString(FlexMediaPickerConfiguration.alertButtonFont, color: FlexMediaPickerConfiguration.alertButtonTextColor, text: text)
+        let button = FlexBaseCollectionItem(reference: UUID().uuidString, text: abt)
+        button.itemSelectionActionHandler = {
             if tapHandler != nil {
                 tapHandler?()
             }
-            else {
-                alertView.dismiss(animated: true)
+            alertView.hide()
+        }
+        alertView.addMenuItem(button)
+    }
+
+    open class func addStandardCancelButton(alertView: StyledMenuPopover, tapHandler: (() -> Void)? = nil) {
+        let abt = Helper.applyFontAndColorToString(FlexMediaPickerConfiguration.alertButtonFont, color: FlexMediaPickerConfiguration.alertButtonTextColor, text: "Cancel")
+        let closeButton = FlexBaseCollectionItem(reference: UUID().uuidString, text: abt)
+        closeButton.itemSelectionActionHandler = {
+            if tapHandler != nil {
+                tapHandler?()
             }
+            alertView.hide()
         }
     }
     
     // MARK: - Styling
     
-    open class func sclAlertViewAppearance() -> SCLAlertView.SCLAppearance {
-        let appearance = SCLAlertView.SCLAppearance(
-            kCircleHeight: 56.0,
-            kCircleIconHeight: 20.0,
-            kTitleFont: FlexMediaPickerConfiguration.alertTitleFont,
-            kTextFont: FlexMediaPickerConfiguration.alertTextFont,
-            kButtonFont: FlexMediaPickerConfiguration.alertButtonFont,
-            showCloseButton: false,
-//            circleBackgroundColor: FlexMediaPickerConfiguration.alertSecondaryStyleColor,
-            contentViewColor: FlexMediaPickerConfiguration.alertSecondaryColor,
-            contentViewBorderColor: FlexMediaPickerConfiguration.alertStyleColor,
-            titleColor: FlexMediaPickerConfiguration.alertTitleColor
-        )
-        return appearance
+    open class func getAlertViewAppearance() -> StyledMenuPopoverConfiguration {
+        let configuration = StyledMenuPopoverConfiguration()
+        configuration.styleColor = FlexMediaPickerConfiguration.alertStyleColor
+        configuration.closeButtonEnabled = true
+        configuration.menuItemSize = CGSize(width: 220, height: 32)
+        configuration.displayType = .normal
+        configuration.showTitleInHeader = false
+        configuration.menuItemStyleColor = FlexMediaPickerConfiguration.alertButtonColor
+        configuration.closeButtonStyleColor = FlexMediaPickerConfiguration.alertButtonColor
+        configuration.headerIconBackgroundColor = FlexMediaPickerConfiguration.alertSecondaryColor
+        configuration.headerIconSize = CGSize(width: 64, height: 64)
+        configuration.headerIconBorderColor = FlexMediaPickerConfiguration.alertStyleColor
+        configuration.headerIconBorderWidth = 3.5
+        configuration.headerStyleColor = .clear
+        configuration.closeButtonText = Helper.applyFontAndColorToString(FlexMediaPickerConfiguration.alertButtonFont, color: FlexMediaPickerConfiguration.alertButtonTextColor, text: "Close")
+        return configuration
     }
 }
