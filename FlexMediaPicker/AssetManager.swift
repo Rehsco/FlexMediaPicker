@@ -61,6 +61,8 @@ open class AssetManager {
         
         let fOptions = PHFetchOptions()
         fOptions.fetchLimit = fetchLimit
+        let sortOrder = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        fOptions.sortDescriptors = sortOrder
         
         DispatchQueue.global(qos: .background).async {
             let fetchResult = PHAsset.fetchAssets(in: collection, options: fOptions)

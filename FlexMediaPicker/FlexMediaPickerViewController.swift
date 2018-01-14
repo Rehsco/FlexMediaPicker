@@ -528,6 +528,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         if self.currentAssetCollection != nil && self.assetCache.count == 0 {
             return
         }
+        self.contentView?.itemCollectionView.reloadData()
         BusyViewFactory.showBusyOverlay() {
             DispatchQueue.main.async {
                 self.mainSecRef = self.contentView?.addSection(NSAttributedString(), height: 0, insets: UIEdgeInsetsMake(5, 10, 5, 10))
