@@ -213,6 +213,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
         
         if let tvc = self.getTopViewController() {
             self.player = Player()
+            self.player?.autoplay = false
             self.player?.playerDelegate = self
             self.player?.playbackDelegate = self
             self.player?.view.frame = self.bounds
@@ -231,7 +232,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
         
         self.insertSubview(player!.view, at: 1)
         self.insertSubview(self.imageSlideshow!, at: 2)
-
+        
         if let fv = self.footer as? VideoPlaybackControlPanel {
             fv.frameStepperChangeHandler = {
                 newFrame in
