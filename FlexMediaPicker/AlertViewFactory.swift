@@ -150,6 +150,7 @@ open class AlertViewFactory {
             }
             alertView.hide()
         }
+        alertView.addMenuItem(closeButton)
     }
     
     // MARK: - Styling
