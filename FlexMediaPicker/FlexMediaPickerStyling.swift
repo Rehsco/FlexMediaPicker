@@ -65,4 +65,24 @@ open class FlexMediaPickerStyling {
         BusyViewFactory.topLabelTextColor = FlexMediaPickerConfiguration.upperProgressLabelTextColor
         BusyViewFactory.bottomLabelTextColor = FlexMediaPickerConfiguration.lowerProgressLabelTextColor
     }
+    
+    open class func getPopoverViewAppearance() -> StyledMenuPopoverConfiguration {
+        let configuration = StyledMenuPopoverConfiguration()
+        configuration.styleColor = FlexMediaPickerConfiguration.alertStyleColor
+        configuration.closeButtonEnabled = false
+        configuration.menuItemSize = CGSize(width: 220, height: 32)
+        configuration.displayType = .normal
+        configuration.showTitleInHeader = false
+        configuration.menuItemStyleColor = FlexMediaPickerConfiguration.alertButtonColor
+        configuration.closeButtonStyleColor = FlexMediaPickerConfiguration.alertButtonColor
+        configuration.headerIconBackgroundColor = FlexMediaPickerConfiguration.alertSecondaryColor
+        configuration.headerIconSize = CGSize(width: 64, height: 64)
+        configuration.headerIconBorderColor = FlexMediaPickerConfiguration.alertStyleColor
+        configuration.headerIconBorderWidth = 3.5
+        configuration.headerIconTintColor = FlexMediaPickerConfiguration.alertIconColor
+        configuration.headerStyleColor = .clear
+        configuration.closeButtonTextColor = FlexMediaPickerConfiguration.alertButtonTextColor
+        configuration.closeButtonFont = FlexMediaPickerConfiguration.alertButtonFont
+        return configuration
+    }
 }

@@ -31,6 +31,7 @@ import UIKit
 import AVFoundation
 import MJRFlexStyleComponents
 import SwiftSiriWaveformView
+import StyledOverlay
 
 class VoiceRecorderView: FlexView {
     private var recordingInfoLabel: FlexLabel?
@@ -160,7 +161,7 @@ class VoiceRecorderView: FlexView {
     
     public func confirmedClose(confirmationHandler: ((Bool)->Void)? = nil) {
         if self.micMan.isRecording {
-            AlertViewFactory.confirmation(title: FlexMediaPickerConfiguration.stopRecordingOnCloseTitle, subTitle: FlexMediaPickerConfiguration.stopRecordingOnCloseMessage, buttonText: FlexMediaPickerConfiguration.stopRecordingOnCloseButtonText, iconName: FlexMediaPickerConfiguration.queryIconName, confirmationResult: { confirmed in
+            StyledMenuPopoverFactory.confirmation(title: FlexMediaPickerConfiguration.stopRecordingOnCloseTitle, subTitle: FlexMediaPickerConfiguration.stopRecordingOnCloseMessage, buttonText: FlexMediaPickerConfiguration.stopRecordingOnCloseButtonText, iconName: FlexMediaPickerConfiguration.queryIconName, configuration: FlexMediaPickerStyling.getPopoverViewAppearance(), confirmationResult: { confirmed in
                 if confirmed {
                     self.closeAndClean()
                 }

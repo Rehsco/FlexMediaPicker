@@ -329,7 +329,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             self.addSelectedAsset(mpa)
         }
         self.voiceRecorderView?.voiceRecordingFailedHandler = {
-            AlertViewFactory.showFailAlert(title: FlexMediaPickerConfiguration.recordingFailedTitle, message: FlexMediaPickerConfiguration.recordingFailedMessage, iconName: FlexMediaPickerConfiguration.alertIconName)
+            StyledMenuPopoverFactory.showFailAlert(title: FlexMediaPickerConfiguration.recordingFailedTitle, message: FlexMediaPickerConfiguration.recordingFailedMessage, iconName: FlexMediaPickerConfiguration.alertIconName, configuration: FlexMediaPickerStyling.getPopoverViewAppearance())
         }
         self.layoutSupplementaryViews(to: self.view.bounds.size)
     }

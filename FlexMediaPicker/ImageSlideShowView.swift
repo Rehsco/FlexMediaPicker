@@ -32,6 +32,7 @@ import MJRFlexStyleComponents
 import ImageSlideshow
 import AVFoundation
 import Player
+import StyledOverlay
 
 class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate, AVAudioPlayerDelegate {
     private var player: Player?
@@ -164,7 +165,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
         
         self.createBackOrCloseLeftMenu() {
             if !FlexMediaPickerConfiguration.allowMultipleSelection && AssetManager.getAcceptableAssetCount() >= FlexMediaPickerConfiguration.numberItemsAllowed {
-                AlertViewFactory.confirmation(title: FlexMediaPickerConfiguration.removeItemTitle, subTitle: FlexMediaPickerConfiguration.removeItemMessage, buttonText: FlexMediaPickerConfiguration.removeItemButtonText, iconName: FlexMediaPickerConfiguration.queryIconName, confirmationResult: { proceed in
+                StyledMenuPopoverFactory.confirmation(title: FlexMediaPickerConfiguration.removeItemTitle, subTitle: FlexMediaPickerConfiguration.removeItemMessage, buttonText: FlexMediaPickerConfiguration.removeItemButtonText, iconName: FlexMediaPickerConfiguration.queryIconName, configuration: FlexMediaPickerStyling.getPopoverViewAppearance(), confirmationResult: { proceed in
                     if proceed {
                         self.removeOrTrashLastItem?()
                         self.closeView()

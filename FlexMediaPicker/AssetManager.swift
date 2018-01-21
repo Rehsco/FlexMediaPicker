@@ -10,6 +10,8 @@ open class AssetManager {
     /// Replace this with own persistence management, if required
     public static var persistence: FlexMediaPickerAssetPersistence = FlexMediaPickerAssetPersistenceImpl()
     
+    static let allowedDisplayAssetCollectionTypes: [PHAssetCollectionSubtype] = [ .albumMyPhotoStream, .smartAlbumRecentlyAdded, .smartAlbumScreenshots, .smartAlbumSelfPortraits, .smartAlbumVideos, .albumRegular, .smartAlbumUserLibrary, .smartAlbumPanoramas ]
+    
     open static func getImage(_ name: String) -> UIImage {
         return UIImage(named: name, in: Bundle(for: AssetManager.self), compatibleWith: nil) ?? UIImage()
     }
@@ -39,12 +41,13 @@ open class AssetManager {
         guard PHPhotoLibrary.authorizationStatus() == .authorized else { return }
         
         DispatchQueue.global(qos: .background).async {
+//            let stf: PHAssetCollectionSubtype = PHAssetCollectionSubtype(rawValue: Int(UInt8(PHAssetCollectionSubtype.any.rawValue) | UInt8(PHAssetCollectionSubtype.albumMyPhotoStream.rawValue)))!
             let fetchResult = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .any, options: nil)
             
             if fetchResult.count > 0 {
                 var assets = [PHAssetCollection]()
                 fetchResult.enumerateObjects({ object, _, _ in
-                    if object.estimatedAssetCount > 0 {
+                    if object.estimatedAssetCount > 0 && self.allowedDisplayAssetCollectionTypes.contains(object.assetCollectionSubtype) {
                         assets.append(object)
                     }
                 })

@@ -30,6 +30,7 @@
 import UIKit
 import MJRFlexStyleComponents
 import StyledLabel
+import StyledOverlay
 
 open class SelectedAssetsCollectionView: ImagesCollectionView {
     var secRef: String?
@@ -124,7 +125,7 @@ open class SelectedAssetsCollectionView: ImagesCollectionView {
                 let imageName = selAsset.isAssetBased() ? "RemoveItem" : "DeleteIcon"
                 _ = selectionItemMenu.createIconMenuItem(imageName: imageName, iconSize: 24, selectionHandler: {
                     if !selAsset.isAssetBased() {
-                        AlertViewFactory.confirmation(title: FlexMediaPickerConfiguration.deleteItemTitle, subTitle: FlexMediaPickerConfiguration.deleteItemMessage, buttonText: FlexMediaPickerConfiguration.deleteItemButtonText, iconName: FlexMediaPickerConfiguration.queryIconName, confirmationResult: { proceed in
+                        StyledMenuPopoverFactory.confirmation(title: FlexMediaPickerConfiguration.deleteItemTitle, subTitle: FlexMediaPickerConfiguration.deleteItemMessage, buttonText: FlexMediaPickerConfiguration.deleteItemButtonText, iconName: FlexMediaPickerConfiguration.queryIconName, configuration: FlexMediaPickerStyling.getPopoverViewAppearance(), confirmationResult: { proceed in
                             if proceed {
                                 self.deleteOrRemoveItemHandler?(fitem.reference)
                             }

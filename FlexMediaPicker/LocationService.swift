@@ -30,6 +30,7 @@
 import CoreLocation
 import UIKit
 import MapKit
+import StyledOverlay
 
 let locationService = LocationService()
 
@@ -64,7 +65,7 @@ open class LocationService: NSObject, CLLocationManagerDelegate  {
             self.startLocationMessagingUse()
         case .restricted, .denied:
             if fullAccessRequired {
-                AlertViewFactory.showSettingsRequest(title: FlexMediaPickerConfiguration.requestPermissionTitle, message: FlexMediaPickerConfiguration.requestLocationPermissionMessage)
+                StyledMenuPopoverFactory.showSettingsRequest(title: FlexMediaPickerConfiguration.requestPermissionTitle, message: FlexMediaPickerConfiguration.requestLocationPermissionMessage, configuration: FlexMediaPickerStyling.getPopoverViewAppearance())
             }
         }
     }

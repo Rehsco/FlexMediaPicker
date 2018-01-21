@@ -6,6 +6,7 @@ import Foundation
 import AVFoundation
 import PhotosUI
 import AssetsLibrary
+import StyledOverlay
 
 protocol CameraManDelegate: class {
     func cameraManDidStart(_ cameraMan: CameraMan)
@@ -375,7 +376,7 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
         }
         if FlexMediaPickerConfiguration.maxVideoRecordingTime > 0 && time >= FlexMediaPickerConfiguration.maxVideoRecordingTime  && self.isCapturing {
             self.stopVideoRecording()
-            AlertViewFactory.showFailAlert(title: FlexMediaPickerConfiguration.recordingEndedTitle, message: FlexMediaPickerConfiguration.recordingEndedMessage, iconName: FlexMediaPickerConfiguration.alertIconName)
+            StyledMenuPopoverFactory.showFailAlert(title: FlexMediaPickerConfiguration.recordingEndedTitle, message: FlexMediaPickerConfiguration.recordingEndedMessage, iconName: FlexMediaPickerConfiguration.alertIconName, configuration: FlexMediaPickerStyling.getPopoverViewAppearance())
         }
     }
     

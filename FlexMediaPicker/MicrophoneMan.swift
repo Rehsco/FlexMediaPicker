@@ -29,6 +29,7 @@
 
 import UIKit
 import AVFoundation
+import StyledOverlay
 
 open class MicrophoneMan: NSObject {
     private var meterTimer: Timer?
@@ -69,7 +70,7 @@ open class MicrophoneMan: NSObject {
         if self.isRecording && FlexMediaPickerConfiguration.maxAudioRecordingTime > 0 && time >= FlexMediaPickerConfiguration.maxAudioRecordingTime {
             self.stopVoiceRecording()
             self.isRecording = false
-            AlertViewFactory.showFailAlert(title: FlexMediaPickerConfiguration.recordingEndedTitle, message: FlexMediaPickerConfiguration.recordingEndedMessage, iconName: FlexMediaPickerConfiguration.alertIconName)
+            StyledMenuPopoverFactory.showFailAlert(title: FlexMediaPickerConfiguration.recordingEndedTitle, message: FlexMediaPickerConfiguration.recordingEndedMessage, iconName: FlexMediaPickerConfiguration.alertIconName, configuration: FlexMediaPickerStyling.getPopoverViewAppearance())
         }
     }
     

@@ -29,6 +29,7 @@
 
 import UIKit
 import AVFoundation
+import StyledOverlay
 
 let cameraService = CameraService()
 
@@ -45,7 +46,7 @@ open class CameraService: NSObject {
                 if granted {
                     permissionGrantedHandler(true)
                 } else {
-                    AlertViewFactory.showSettingsRequest(title: FlexMediaPickerConfiguration.requestPermissionTitle, message: FlexMediaPickerConfiguration.requestCameraPermissionMessage)
+                    StyledMenuPopoverFactory.showSettingsRequest(title: FlexMediaPickerConfiguration.requestPermissionTitle, message: FlexMediaPickerConfiguration.requestCameraPermissionMessage, configuration: FlexMediaPickerStyling.getPopoverViewAppearance())
                     permissionGrantedHandler(false)
                 }
             }

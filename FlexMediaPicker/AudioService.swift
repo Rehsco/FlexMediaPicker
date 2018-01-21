@@ -29,6 +29,7 @@
 
 import UIKit
 import AVFoundation
+import StyledOverlay
 
 let audioService = AudioService()
 
@@ -48,7 +49,7 @@ open class AudioService {
         AVAudioSession.sharedInstance().requestRecordPermission() { [unowned self] allowed in
             self.isAudioRecordingGranted = allowed
             if !allowed {
-                AlertViewFactory.showSettingsRequest(title: FlexMediaPickerConfiguration.requestPermissionTitle, message: FlexMediaPickerConfiguration.requestMicrophonePermissionMessage)
+                StyledMenuPopoverFactory.showSettingsRequest(title: FlexMediaPickerConfiguration.requestPermissionTitle, message: FlexMediaPickerConfiguration.requestMicrophonePermissionMessage, configuration: FlexMediaPickerStyling.getPopoverViewAppearance())
             }
         }
     }

@@ -6,6 +6,7 @@ import UIKit
 import AVFoundation
 import PhotosUI
 import MJRFlexStyleComponents
+import StyledOverlay
 
 protocol CameraViewDelegate: class {
     func cameraNotAvailable()
@@ -188,7 +189,7 @@ class CameraView: FlexView, CameraManDelegate {
 
     public func confirmedClose(confirmationHandler: ((Bool)->Void)? = nil) {
         if self.cameraMan.isCapturing {
-            AlertViewFactory.confirmation(title: FlexMediaPickerConfiguration.stopRecordingOnCloseTitle, subTitle: FlexMediaPickerConfiguration.stopRecordingOnCloseMessage, buttonText: FlexMediaPickerConfiguration.stopRecordingOnCloseButtonText, iconName: FlexMediaPickerConfiguration.queryIconName, confirmationResult: { confirmed in
+            StyledMenuPopoverFactory.confirmation(title: FlexMediaPickerConfiguration.stopRecordingOnCloseTitle, subTitle: FlexMediaPickerConfiguration.stopRecordingOnCloseMessage, buttonText: FlexMediaPickerConfiguration.stopRecordingOnCloseButtonText, iconName: FlexMediaPickerConfiguration.queryIconName, configuration: FlexMediaPickerStyling.getPopoverViewAppearance(), confirmationResult: { confirmed in
                 if confirmed {
                     self.closeAndClean()
                 }

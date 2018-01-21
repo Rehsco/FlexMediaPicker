@@ -29,6 +29,7 @@
 
 import UIKit
 import Photos
+import StyledOverlay
 
 let photosService = PhotosService()
 
@@ -41,7 +42,7 @@ open class PhotosService: NSObject {
         case .denied, .notDetermined:
             PHPhotoLibrary.requestAuthorization { authorizationStatus -> Void in
                 if authorizationStatus == .denied {
-                    AlertViewFactory.showSettingsRequest(title: FlexMediaPickerConfiguration.requestPermissionTitle, message: FlexMediaPickerConfiguration.requestPhotosPermissionMessage)
+                    StyledMenuPopoverFactory.showSettingsRequest(title: FlexMediaPickerConfiguration.requestPermissionTitle, message: FlexMediaPickerConfiguration.requestPhotosPermissionMessage, configuration: FlexMediaPickerStyling.getPopoverViewAppearance())
                     permissionGrantedHandler(false)
                 } else if authorizationStatus == .authorized {
                     permissionGrantedHandler(true)
