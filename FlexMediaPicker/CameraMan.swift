@@ -86,7 +86,7 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
     var isPaused = false
     var isDiscontinue = false
     
-    var timeOffset = CMTimeMake(0, 0)
+    var timeOffset = CMTimeMake(value: 0, timescale: 0)
     var lastAudioPts: CMTime?
     
     let lockQueue = DispatchQueue(label: "org.cocoapods.FlexMediaPicker.Camera.LockQueue")
@@ -244,15 +244,15 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
         self.startRecordingTime = Date()
         self.recordingTimeUpdated?(self.startRecordingTime.timeIntervalSinceNow)
         
-        height = videoOutput?.videoSettings["Height"] as! Int!
-        width = videoOutput?.videoSettings["Width"] as! Int!
+        height = videoOutput?.videoSettings["Height"] as? Int
+        width = videoOutput?.videoSettings["Width"] as? Int
 
         lockQueue.sync() {
             if !self.isCapturing{
                 self.isPaused = false
                 self.isDiscontinue = false
                 self.isCapturing = true
-                self.timeOffset = CMTimeMake(0, 0)
+                self.timeOffset = CMTimeMake(value: 0, timescale: 0)
             }
         }
     }
@@ -382,9 +382,9 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
     
     func ajustTimeStamp(sample: CMSampleBuffer, offset: CMTime) -> CMSampleBuffer {
         var count: CMItemCount = 0
-        CMSampleBufferGetSampleTimingInfoArray(sample, 0, nil, &count);
-        var info = [CMSampleTimingInfo](repeating: CMSampleTimingInfo(duration: CMTimeMake(0, 0), presentationTimeStamp: CMTimeMake(0, 0), decodeTimeStamp: CMTimeMake(0, 0)), count: count)
-        CMSampleBufferGetSampleTimingInfoArray(sample, count, &info, &count);
+        CMSampleBufferGetSampleTimingInfoArray(sample, entryCount: 0, arrayToFill: nil, entriesNeededOut: &count);
+        var info = [CMSampleTimingInfo](repeating: CMSampleTimingInfo(duration: CMTimeMake(value: 0, timescale: 0), presentationTimeStamp: CMTimeMake(value: 0, timescale: 0), decodeTimeStamp: CMTimeMake(value: 0, timescale: 0)), count: count)
+        CMSampleBufferGetSampleTimingInfoArray(sample, entryCount: count, arrayToFill: &info, entriesNeededOut: &count);
         
         for i in 0..<count {
             info[i].decodeTimeStamp = CMTimeSubtract(info[i].decodeTimeStamp, offset);
@@ -392,7 +392,7 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
         }
         
         var out: CMSampleBuffer?
-        CMSampleBufferCreateCopyWithNewTiming(nil, sample, count, &info, &out);
+        CMSampleBufferCreateCopyWithNewTiming(allocator: nil, sampleBuffer: sample, sampleTimingEntryCount: count, sampleTimingArray: &info, sampleBufferOut: &out);
         return out!
     }
     

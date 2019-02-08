@@ -202,7 +202,7 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
     open func prepareAudioRecording() -> Bool {
         let session = AVAudioSession.sharedInstance()
         do {
-            try session.setCategory(AVAudioSessionCategoryPlayAndRecord, with: .defaultToSpeaker)
+            try session.setCategory(AVAudioSession.Category.playAndRecord, mode: AVAudioSession.Mode.default)
             try session.setActive(true)
             let settings = [
                 AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
@@ -310,8 +310,8 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
         exportSession?.outputURL = targetURL
         exportSession?.outputFileType = AVFileType.m4a
         exportSession?.shouldOptimizeForNetworkUse = true
-        let start = fromTime ?? CMTimeMakeWithSeconds(0.0, 0)
-        let range = CMTimeRangeMake(start, duration ?? avAsset.duration)
+        let start = fromTime ?? CMTimeMakeWithSeconds(0.0, preferredTimescale: 0)
+        let range = CMTimeRangeMake(start: start, duration: duration ?? avAsset.duration)
         exportSession?.timeRange = range
 
         exportSession?.exportAsynchronously(completionHandler: {() -> Void in
@@ -361,8 +361,8 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
         exportSession?.outputURL = targetURL
         exportSession?.outputFileType = AVFileType.mp4
         exportSession?.shouldOptimizeForNetworkUse = true
-        let start = fromTime ?? CMTimeMakeWithSeconds(0.0, 0)
-        let range = CMTimeRangeMake(start, duration ?? avAsset.duration)
+        let start = fromTime ?? CMTimeMakeWithSeconds(0.0, preferredTimescale: 0)
+        let range = CMTimeRangeMake(start: start, duration: duration ?? avAsset.duration)
         exportSession?.timeRange = range
         
         exportSession?.exportAsynchronously(completionHandler: {() -> Void in
@@ -473,4 +473,9 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
         let documentsDirectory = paths[0]
         return documentsDirectory
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromAVAudioSessionCategory(_ input: AVAudioSession.Category) -> String {
+	return input.rawValue
 }

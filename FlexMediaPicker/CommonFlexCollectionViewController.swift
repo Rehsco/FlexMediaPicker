@@ -82,11 +82,11 @@ open class CommonFlexCollectionViewController: UIViewController {
     open func refreshView() {
         self.contentView?.headerText = self.headerText
         if #available(iOS 11, *), let cv = self.contentView {
-            cv.viewElementsInsets = UIEdgeInsetsMake(self.view.safeAreaInsets.top, 0, self.view.safeAreaInsets.bottom, 0)            
-            cv.viewMargins = UIEdgeInsetsMake(self.view.safeAreaInsets.top + self.baseViewMargins.top,
-                                              self.view.safeAreaInsets.left + self.baseViewMargins.left,
-                                              self.view.safeAreaInsets.bottom + self.baseViewMargins.bottom,
-                                              self.view.safeAreaInsets.right + self.baseViewMargins.right)
+            cv.viewElementsInsets = UIEdgeInsets.init(top: self.view.safeAreaInsets.top, left: 0, bottom: self.view.safeAreaInsets.bottom, right: 0)            
+            cv.viewMargins = UIEdgeInsets.init(top: self.view.safeAreaInsets.top + self.baseViewMargins.top,
+                                              left: self.view.safeAreaInsets.left + self.baseViewMargins.left,
+                                              bottom: self.view.safeAreaInsets.bottom + self.baseViewMargins.bottom,
+                                              right: self.view.safeAreaInsets.right + self.baseViewMargins.right)
         }
     }
     

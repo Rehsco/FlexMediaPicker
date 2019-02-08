@@ -86,7 +86,7 @@ public class ImageCropView: CommonFlexView, UIGestureRecognizerDelegate {
 
     fileprivate lazy var maskLayer: CAShapeLayer = {
         let layer = CAShapeLayer()
-        layer.fillRule = kCAFillRuleEvenOdd
+        layer.fillRule = CAShapeLayerFillRule.evenOdd
         layer.fillColor = FlexMediaPickerConfiguration.overlayMaskColor.cgColor
         return layer
     }()
@@ -235,8 +235,8 @@ public class ImageCropView: CommonFlexView, UIGestureRecognizerDelegate {
         let ceilWidth = ceil(width)
         let ceilHeight = ceil(height)
         
-        if fabs(ceilWidth - width) < pow(10, kK) * RSK_EPSILON * fabs(ceilWidth + width) || fabs(ceilWidth - width) < RSK_MIN ||
-            fabs(ceilHeight - height) < pow(10, kK) * RSK_EPSILON * fabs(ceilHeight + height) || fabs(ceilHeight - height) < RSK_MIN
+        if abs(ceilWidth - width) < pow(10, kK) * RSK_EPSILON * abs(ceilWidth + width) || abs(ceilWidth - width) < RSK_MIN ||
+            abs(ceilHeight - height) < pow(10, kK) * RSK_EPSILON * abs(ceilHeight + height) || abs(ceilHeight - height) < RSK_MIN
         {
             rect.size.width = ceilWidth
             rect.size.height = ceilHeight
@@ -464,7 +464,7 @@ public class ImageCropView: CommonFlexView, UIGestureRecognizerDelegate {
         self.maskPath = StyledShapeLayer.shapePathForStyle(FlexMediaPickerConfiguration.imageMaskStyle.style, bounds: rectForMaskPath)
     }
 
-    fileprivate func croppedImage(image: UIImage, cropRect: CGRect, scale imageScale: CGFloat, orientation imageOrientation: UIImageOrientation) -> UIImage {
+    fileprivate func croppedImage(image: UIImage, cropRect: CGRect, scale imageScale: CGFloat, orientation imageOrientation: UIImage.Orientation) -> UIImage {
         if let images = image.images {
             var croppedImages = [UIImage]()
             

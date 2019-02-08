@@ -61,13 +61,13 @@ class VideoWriter {
     
     func write(sample: CMSampleBuffer, isVideo: Bool){
         if CMSampleBufferDataIsReady(sample) {
-            if fileWriter.status == AVAssetWriterStatus.unknown {
+            if fileWriter.status == AVAssetWriter.Status.unknown {
                 NSLog("Start writing, isVideo = \(isVideo), status = \(fileWriter.status.rawValue)")
                 let startTime = CMSampleBufferGetPresentationTimeStamp(sample)
                 fileWriter.startWriting()
                 fileWriter.startSession(atSourceTime: startTime)
             }
-            if fileWriter.status == AVAssetWriterStatus.failed {
+            if fileWriter.status == AVAssetWriter.Status.failed {
                 NSLog("Error occured, isVideo = \(isVideo), status = \(fileWriter.status.rawValue), \(fileWriter.error!.localizedDescription)")
                 return
             }

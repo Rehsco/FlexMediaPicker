@@ -90,7 +90,7 @@ open class LocationService: NSObject, CLLocationManagerDelegate  {
     }
     
     private func takeSnapshot(_ mapView: MKMapView, withCallback: @escaping (UIImage?, NSError?) -> ()) {
-        let options = MKMapSnapshotOptions()
+        let options = MKMapSnapshotter.Options()
         options.region = mapView.region
         options.size = mapView.frame.size
         options.scale = UIScreen.main.scale

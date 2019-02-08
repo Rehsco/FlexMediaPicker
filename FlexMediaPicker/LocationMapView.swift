@@ -54,7 +54,7 @@ class LocationMapView: MKMapView {
         
         if let location = self.singleLocation {
             let annotation = self.addLocationToMap(location, annotationTitle: self.singleLocationTag ?? "Location")
-            let region = MKCoordinateRegionMakeWithDistance(location.coordinate, 1250.0, 1250.0)
+            let region = MKCoordinateRegion.init(center: location.coordinate, latitudinalMeters: 1250.0, longitudinalMeters: 1250.0)
             let mRect = self.getMKMapRectForCoordinateRegion(region)
             self.setVisibleMapRect(mRect, animated: true)
             
@@ -81,12 +81,12 @@ class LocationMapView: MKMapView {
     }
 
     private func getMKMapRectForCoordinateRegion(_ region: MKCoordinateRegion) -> MKMapRect {
-        let a = MKMapPointForCoordinate(CLLocationCoordinate2DMake(
+        let a = MKMapPoint.init(CLLocationCoordinate2DMake(
             region.center.latitude + region.span.latitudeDelta / 2,
             region.center.longitude - region.span.longitudeDelta / 2))
-        let b = MKMapPointForCoordinate(CLLocationCoordinate2DMake(
+        let b = MKMapPoint.init(CLLocationCoordinate2DMake(
             region.center.latitude - region.span.latitudeDelta / 2,
             region.center.longitude + region.span.longitudeDelta / 2))
-        return MKMapRectMake(min(a.x,b.x), min(a.y,b.y), abs(a.x-b.x), abs(a.y-b.y))
+        return MKMapRect.init(x: min(a.x,b.x), y: min(a.y,b.y), width: abs(a.x-b.x), height: abs(a.y-b.y))
     }
 }

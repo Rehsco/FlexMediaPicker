@@ -101,7 +101,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
         self.imageSlideshow?.zoomEnabled = true
         self.imageSlideshow?.preload = .fixed(offset: 1)
         self.imageSlideshow?.circular = true
-        self.imageSlideshow?.pageControlPosition = .hidden
+        self.imageSlideshow?.pageIndicator = nil
         
         self.imageSlideshow?.willBeginDragging = {
             self.player?.view.isHidden = true
@@ -220,8 +220,8 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
             self.player?.view.frame = self.bounds
             self.player?.view.backgroundColor = FlexMediaPickerConfiguration.styleColor
             
-            tvc.addChildViewController(self.player!)
-            self.player?.didMove(toParentViewController: tvc)
+            tvc.addChild(self.player!)
+            self.player?.didMove(toParent: tvc)
             
             let nextGR = UISwipeGestureRecognizer(target: self, action: #selector(self.playerSwipeNext(_:)))
             nextGR.direction = .left
@@ -379,7 +379,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
         var sOffset: CGFloat = 0
         if #available(iOS 11, *) {
             sOffset = self.safeAreaInsets.top
-            self.cropView?.viewElementsInsets = UIEdgeInsetsMake(self.safeAreaInsets.top, 0, self.safeAreaInsets.bottom, 0)
+            self.cropView?.viewElementsInsets = UIEdgeInsets.init(top: self.safeAreaInsets.top, left: 0, bottom: self.safeAreaInsets.bottom, right: 0)
         }
         self.timeSliderPanel?.frame = CGRect(x: 0, y: FlexMediaPickerConfiguration.headerHeight + sOffset, width: self.bounds.size.width, height: FlexMediaPickerConfiguration.timeSliderPanelHeight)
         let warnBaseRect = CGRect(x: self.header.bounds.minX, y: self.header.bounds.minY, width: self.header.bounds.width, height: self.header.bounds.height * 2.0)
@@ -615,7 +615,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
     private func updateVideoTime(toOffset offset: Double, shouldUpdateFrameStepper: Bool = true, shouldUpdateTimeSlider: Bool = true) {
         if let asset = self.movieAsset {
             let durationSeconds = CMTimeGetSeconds(asset.duration)
-            let timeOffset = CMTimeMakeWithSeconds(Float64(offset) * durationSeconds, 600)
+            let timeOffset = CMTimeMakeWithSeconds(Float64(offset) * durationSeconds, preferredTimescale: 600)
             let movieTracks = asset.tracks(withMediaType: AVMediaType.video)
             if let movieTrack = movieTracks.first {
                 let totalFrames: Float64 = durationSeconds * Float64(movieTrack.nominalFrameRate)
@@ -767,6 +767,10 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
         }
     }
     
+    func player(_ player: Player, didFailWithError error: Error?) {
+        NSLog("Player did fail with error: \(error!)")
+    }
+
     func playerPlaybackStateDidChange(_ player: Player) {
         self.imageSlideshow?.isHidden = player.playbackState == .playing
     }

@@ -37,7 +37,7 @@ open class AudioService {
     public var isAudioRecordingGranted: Bool = false
 
     public func checkPermission() {
-        switch AVAudioSession.sharedInstance().recordPermission() {
+        switch AVAudioSession.sharedInstance().recordPermission {
         case .granted:
             self.isAudioRecordingGranted = true
         case .denied, .undetermined:

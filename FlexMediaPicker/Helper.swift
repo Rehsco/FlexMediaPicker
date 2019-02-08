@@ -54,8 +54,8 @@ class Helper {
     
     static func applyFontAndColorToString(_ font: UIFont, color: UIColor, text: String) -> NSAttributedString {
         let attributedString = NSAttributedString(string: text, attributes:
-            [   NSAttributedStringKey.font : font,
-                NSAttributedStringKey.foregroundColor: color
+            [   NSAttributedString.Key.font : font,
+                NSAttributedString.Key.foregroundColor: color
             ])
         return attributedString
     }

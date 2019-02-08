@@ -138,7 +138,7 @@ class ImageAssetImageSource: InputSource {
                 var frame = self.asset.currentFrame
                 repeat {
                     let secondsIn: Float64 = (frame/totalFrames)*durationSeconds
-                    let imageTimeEstimate = CMTimeMakeWithSeconds(secondsIn, 600)
+                    let imageTimeEstimate = CMTimeMakeWithSeconds(secondsIn, preferredTimescale: 600)
                     returnImage = self.videoImage(at: imageTimeEstimate, asset: asset)
                     frame += 1
                 } while returnImage == nil && frame <= self.asset.maxFrame
@@ -150,10 +150,10 @@ class ImageAssetImageSource: InputSource {
     private func videoImage(at time: CMTime, asset: AVURLAsset) -> UIImage? {
         do {
             let imgGenerator = AVAssetImageGenerator(asset: asset)
-            imgGenerator.requestedTimeToleranceBefore = kCMTimeZero
-            imgGenerator.requestedTimeToleranceAfter = kCMTimeZero
+            imgGenerator.requestedTimeToleranceBefore = CMTime.zero
+            imgGenerator.requestedTimeToleranceAfter = CMTime.zero
             imgGenerator.appliesPreferredTrackTransform = true
-            var actTime: CMTime = CMTimeMake(0, 1)
+            var actTime: CMTime = CMTimeMake(value: 0, timescale: 1)
             let cgImage = try imgGenerator.copyCGImage(at: time, actualTime: &actTime)
             let image = UIImage(cgImage: cgImage)
             return image

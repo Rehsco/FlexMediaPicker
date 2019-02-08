@@ -152,15 +152,15 @@ func RSKLineSegmentIntersection(ls1: RSKLineSegment, ls2: RSKLineSegment) -> CGP
     let denominator = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1)
     
     // Check the coincidence.
-    if CGFloat(fabs(numeratorA)) < RSK_EPSILON &&
-       CGFloat(fabs(numeratorB)) < RSK_EPSILON &&
-       CGFloat(fabs(denominator)) < RSK_EPSILON
+    if CGFloat(abs(numeratorA)) < RSK_EPSILON &&
+        CGFloat(abs(numeratorB)) < RSK_EPSILON &&
+        CGFloat(abs(denominator)) < RSK_EPSILON
     {
         return CGPoint(x: (x1 + x2) * 0.5, y: (y1 + y2) * 0.5)
     }
     
     // Check the parallelism.
-    if CGFloat(fabs(denominator)) < RSK_EPSILON {
+    if CGFloat(abs(denominator)) < RSK_EPSILON {
         return RSKPointNull
     }
     

@@ -103,7 +103,7 @@ open class PhotosService: NSObject {
         return cropRect
     }
     
-    private func imageOrientationToCG(orientation:UIImageOrientation) -> CGImagePropertyOrientation {
+    private func imageOrientationToCG(orientation:UIImage.Orientation) -> CGImagePropertyOrientation {
         switch (orientation) {
         case .up:
             return CGImagePropertyOrientation.up

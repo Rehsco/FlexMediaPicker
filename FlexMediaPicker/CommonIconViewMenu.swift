@@ -98,7 +98,7 @@ public class CommonIconViewMenu: FlexViewMenu {
         menu.menuInterItemSpacing = 10.0
         menu.menuStyle = .equallySpaces(thumbPos: .right)
         menu.borderColor = nil
-        menu.controlInsets = UIEdgeInsetsMake(6, 0, 0, 0)
+        menu.controlInsets = UIEdgeInsets.init(top: 6, left: 0, bottom: 0, right: 0)
         super.init(menu: menu, size: size, hPos: hPos, vPos: vPos)
         self.viewMenu = menu
     }

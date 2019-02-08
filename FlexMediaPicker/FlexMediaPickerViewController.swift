@@ -219,7 +219,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         self.contentView?.subHeaderText = self.getItemsCountStr()
 
         if let sav = self.selectedAssetsView, !sav.isHidden {
-            self.baseViewMargins = UIEdgeInsetsMake(0, 0, 120, 0)
+            self.baseViewMargins = UIEdgeInsets.init(top: 0, left: 0, bottom: 120, right: 0)
         }
         else {
             self.baseViewMargins = .zero
@@ -235,14 +235,14 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
 
             var cinsets:UIEdgeInsets = .zero
             if UIDevice.current.orientation == .landscapeRight {
-                cinsets = UIEdgeInsetsMake(0, 0, 0, self.view.safeAreaInsets.right)
+                cinsets = UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: self.view.safeAreaInsets.right)
             }
             else if UIDevice.current.orientation != .landscapeLeft {
-                cinsets = UIEdgeInsetsMake(self.view.safeAreaInsets.top, 0, self.view.safeAreaInsets.bottom, 0)
+                cinsets = UIEdgeInsets.init(top: self.view.safeAreaInsets.top, left: 0, bottom: self.view.safeAreaInsets.bottom, right: 0)
             }
             self.cameraView?.viewElementsInsets = cinsets
 
-            let insets = UIEdgeInsetsMake(self.view.safeAreaInsets.top, 0, self.view.safeAreaInsets.bottom, 0)
+            let insets = UIEdgeInsets.init(top: self.view.safeAreaInsets.top, left: 0, bottom: self.view.safeAreaInsets.bottom, right: 0)
             self.imageSlideshowView?.viewElementsInsets = insets
             self.voiceRecorderView?.viewElementsInsets = insets
         }
@@ -285,31 +285,33 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     // MARK: - Camera View
     
     private func showCameraView() {
-        self.cameraView?.removeFromSuperview()
-
-        self.cameraView = CameraView(frame: self.view.bounds)
-        self.view.insertSubview(self.cameraView!, at: 1)
-        self.cameraView?.headerFooterAdaptToMenu = false
-        self.cameraView?.displayView()
-        self.cameraView?.didGetPhoto = {
-            image, location in
-            DispatchQueue.main.async {
-                self.addNewImage(image, location: location)
+        Thread.ensureOnAsyncMainThread {
+            self.cameraView?.removeFromSuperview()
+            
+            self.cameraView = CameraView(frame: self.view.bounds)
+            self.view.insertSubview(self.cameraView!, at: 1)
+            self.cameraView?.headerFooterAdaptToMenu = false
+            self.cameraView?.displayView()
+            self.cameraView?.didGetPhoto = {
+                image, location in
+                DispatchQueue.main.async {
+                    self.addNewImage(image, location: location)
+                }
             }
-        }
-        self.cameraView?.cancelCameraViewHandler = {
-            DispatchQueue.main.async {
-                self.cameraView?.removeFromSuperview()
-                self.cameraView = nil
+            self.cameraView?.cancelCameraViewHandler = {
+                DispatchQueue.main.async {
+                    self.cameraView?.removeFromSuperview()
+                    self.cameraView = nil
+                }
             }
-        }
-        self.cameraView?.didRecordVideo = {
-            mpa in
-            DispatchQueue.main.async {
-                self.addSelectedAsset(mpa)
+            self.cameraView?.didRecordVideo = {
+                mpa in
+                DispatchQueue.main.async {
+                    self.addSelectedAsset(mpa)
+                }
             }
+            self.layoutSupplementaryViews(to: self.view.bounds.size)
         }
-        self.layoutSupplementaryViews(to: self.view.bounds.size)
     }
     
     // MARK: - Voice Recording
@@ -531,7 +533,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         self.contentView?.itemCollectionView.reloadData()
         BusyViewFactory.showBusyOverlay() {
             DispatchQueue.main.async {
-                self.mainSecRef = self.contentView?.addSection(NSAttributedString(), height: 0, insets: UIEdgeInsetsMake(5, 10, 5, 10))
+                self.mainSecRef = self.contentView?.addSection(NSAttributedString(), height: 0, insets: UIEdgeInsets.init(top: 5, left: 10, bottom: 5, right: 10))
                 if let ac = self.currentAssetCollection {
                     self.headerText = ac.localizedTitle
                     self.refreshView()

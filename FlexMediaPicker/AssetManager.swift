@@ -12,11 +12,11 @@ open class AssetManager {
     
     static let allowedDisplayAssetCollectionTypes: [PHAssetCollectionSubtype] = [ .albumMyPhotoStream, .smartAlbumRecentlyAdded, .smartAlbumScreenshots, .smartAlbumSelfPortraits, .smartAlbumVideos, .albumRegular, .smartAlbumUserLibrary, .smartAlbumPanoramas ]
     
-    open static func getImage(_ name: String) -> UIImage {
+    public static func getImage(_ name: String) -> UIImage {
         return UIImage(named: name, in: Bundle(for: AssetManager.self), compatibleWith: nil) ?? UIImage()
     }
     
-    open static func fetchAssetCollections(_ completion: @escaping (_ assetCollections: [PHAssetCollection]) -> Void) {
+    public static func fetchAssetCollections(_ completion: @escaping (_ assetCollections: [PHAssetCollection]) -> Void) {
         guard PHPhotoLibrary.authorizationStatus() == .authorized else { return }
         
         DispatchQueue.global(qos: .background).async {
@@ -37,7 +37,7 @@ open class AssetManager {
         }
     }
     
-    open static func fetchSmartAssetCollections(_ completion: @escaping (_ assetCollections: [PHAssetCollection]) -> Void) {
+    public static func fetchSmartAssetCollections(_ completion: @escaping (_ assetCollections: [PHAssetCollection]) -> Void) {
         guard PHPhotoLibrary.authorizationStatus() == .authorized else { return }
         
         DispatchQueue.global(qos: .background).async {
@@ -59,7 +59,7 @@ open class AssetManager {
         }
     }
     
-    open static func fetch(in collection: PHAssetCollection, fetchLimit: Int = 0, _ completion: @escaping (_ assets: [PHAsset]) -> Void) {
+    public static func fetch(in collection: PHAssetCollection, fetchLimit: Int = 0, _ completion: @escaping (_ assets: [PHAsset]) -> Void) {
         guard PHPhotoLibrary.authorizationStatus() == .authorized else { return }
         
         let fOptions = PHFetchOptions()
@@ -83,7 +83,7 @@ open class AssetManager {
         }
     }
 
-    open static func resolveAsset(_ asset: PHAsset, size: CGSize = CGSize(width: 720, height: 1280), completion: @escaping (_ image: UIImage?) -> Void) {
+    public static func resolveAsset(_ asset: PHAsset, size: CGSize = CGSize(width: 720, height: 1280), completion: @escaping (_ image: UIImage?) -> Void) {
         let imageManager = PHImageManager.default()
         let requestOptions = PHImageRequestOptions()
         requestOptions.deliveryMode = .highQualityFormat
@@ -98,7 +98,7 @@ open class AssetManager {
         }
     }
     
-    open static func resolveAssets(_ assets: [PHAsset], size: CGSize = CGSize(width: 720, height: 1280)) -> [UIImage] {
+    public static func resolveAssets(_ assets: [PHAsset], size: CGSize = CGSize(width: 720, height: 1280)) -> [UIImage] {
         let imageManager = PHImageManager.default()
         let requestOptions = PHImageRequestOptions()
         requestOptions.isSynchronous = true
@@ -115,7 +115,7 @@ open class AssetManager {
         return images
     }
     
-    open static func resolveURL(forMediaAsset mpa: FlexMediaPickerAsset, resolvedURLHandler: @escaping ((URL)->Void)) {
+    public static func resolveURL(forMediaAsset mpa: FlexMediaPickerAsset, resolvedURLHandler: @escaping ((URL)->Void)) {
         if let asset = mpa.asset {
             if asset.mediaType == .video {
                 self.resolveVideoAsset(asset, resolvedURLHandler: resolvedURLHandler)
@@ -129,7 +129,7 @@ open class AssetManager {
         }
     }
 
-    open static func isAssetSelected(_ asset: PHAsset) -> Bool {
+    public static func isAssetSelected(_ asset: PHAsset) -> Bool {
         let selectedAssets = self.persistence.getAllAssets()
         for ass in selectedAssets {
             if let pha = ass.asset {
@@ -141,7 +141,7 @@ open class AssetManager {
         return false
     }
     
-    open static func getAcceptableAssetCount() -> Int {
+    public static func getAcceptableAssetCount() -> Int {
         var numApplicableSelected = 0
         let allSelectedAssets = self.persistence.getAllAssets()
         for sa in allSelectedAssets {
@@ -162,7 +162,7 @@ open class AssetManager {
         return numApplicableSelected
     }
     
-    open static func getAcceptedAssets() -> [FlexMediaPickerAsset] {
+    public static func getAcceptedAssets() -> [FlexMediaPickerAsset] {
         var returnableAssets: [FlexMediaPickerAsset] = []
         let allSelectedAssets = self.persistence.getAllAssets()
         for sa in allSelectedAssets {
@@ -183,7 +183,7 @@ open class AssetManager {
         return returnableAssets
     }
     
-    open static func resolveVideoAsset(_ asset: PHAsset, resolvedURLHandler: @escaping ((URL)->Void)) {
+    public static func resolveVideoAsset(_ asset: PHAsset, resolvedURLHandler: @escaping ((URL)->Void)) {
         PHCachingImageManager().requestAVAsset(forVideo: asset, options: nil) { (asset, audioMix, args) in
             if let asset = asset as? AVURLAsset {
                 resolvedURLHandler(asset.url)
@@ -191,7 +191,7 @@ open class AssetManager {
         }
     }
 
-    open static func savePhoto(_ image: UIImage, location: CLLocation?, completion: ((PHAsset?) -> Void)? = nil) {
+    public static func savePhoto(_ image: UIImage, location: CLLocation?, completion: ((PHAsset?) -> Void)? = nil) {
         func retrieveImageWithIdentifer(localIdentifier:String, completion: (PHAsset?) -> Void) {
             let fetchOptions = PHFetchOptions()
             fetchOptions.predicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.image.rawValue)
@@ -266,11 +266,11 @@ open class AssetManager {
         }
     }
     
-    open static func reencodeVideo(forMediaAsset mpa: FlexMediaPickerAsset, progressHandler: ((Float)->Void)? = nil, completedURLHandler: @escaping ((URL)->Void)) {
+    public static func reencodeVideo(forMediaAsset mpa: FlexMediaPickerAsset, progressHandler: ((Float)->Void)? = nil, completedURLHandler: @escaping ((URL)->Void)) {
         AssetManager.resolveURL(forMediaAsset: mpa) { url in
             let startOffset = self.getTimeForVideoFrame(mpa.minFrame, videoURL: url)
             let endOffset = self.getTimeForVideoFrame(mpa.maxFrame, videoURL: url)
-            let duration = min(endOffset - startOffset, CMTimeMakeWithSeconds(FlexMediaPickerConfiguration.maxVideoRecordingTime, 600))
+            let duration = min(endOffset - startOffset, CMTimeMakeWithSeconds(FlexMediaPickerConfiguration.maxVideoRecordingTime, preferredTimescale: 600))
             self.persistence.encodeVideo(url, fromTime: startOffset, duration: duration, presetName: FlexMediaPickerConfiguration.videoOutputFormat, progressHandler: progressHandler, exportFinishedHandler: { url in
                 if let videoUrl = url {
                     completedURLHandler(videoUrl)
@@ -279,13 +279,13 @@ open class AssetManager {
         }
     }
 
-    open static func cropAudio(forMediaAsset mpa: FlexMediaPickerAsset, progressHandler: ((Float)->Void)? = nil, completedURLHandler: @escaping ((URL)->Void)) {
+    public static func cropAudio(forMediaAsset mpa: FlexMediaPickerAsset, progressHandler: ((Float)->Void)? = nil, completedURLHandler: @escaping ((URL)->Void)) {
         AssetManager.resolveURL(forMediaAsset: mpa) { url in
             let asset = AVURLAsset(url: url)
             let dur = asset.duration
-            let startOffset = CMTimeMakeWithSeconds(mpa.minTimeOffset * dur.seconds, dur.timescale)
-            let endOffset = CMTimeMakeWithSeconds(mpa.maxTimeOffset * dur.seconds, dur.timescale)
-            let duration = min(endOffset - startOffset, CMTimeMakeWithSeconds(FlexMediaPickerConfiguration.maxAudioRecordingTime, dur.timescale))
+            let startOffset = CMTimeMakeWithSeconds(mpa.minTimeOffset * dur.seconds, preferredTimescale: dur.timescale)
+            let endOffset = CMTimeMakeWithSeconds(mpa.maxTimeOffset * dur.seconds, preferredTimescale: dur.timescale)
+            let duration = min(endOffset - startOffset, CMTimeMakeWithSeconds(FlexMediaPickerConfiguration.maxAudioRecordingTime, preferredTimescale: dur.timescale))
             self.persistence.cropAudio(url, fromTime: startOffset, duration: duration, progressHandler: progressHandler, exportFinishedHandler: { url in
                 if let videoUrl = url {
                     completedURLHandler(videoUrl)
@@ -337,9 +337,9 @@ open class AssetManager {
             let durationSeconds = CMTimeGetSeconds(asset.duration)
             let totalFrames: Float64 = durationSeconds * Float64(movieTrack.nominalFrameRate)
             let time64 = (frame / totalFrames) * durationSeconds
-            return CMTimeMakeWithSeconds(time64, 600)
+            return CMTimeMakeWithSeconds(time64, preferredTimescale: 600)
         }
-        return CMTimeMakeWithSeconds(0.0, 0)        
+        return CMTimeMakeWithSeconds(0.0, preferredTimescale: 0)        
     }
     
     open class func getVideoFrameForTime(_ time: TimeInterval, movieAsset: AVURLAsset?) -> Float64 {
@@ -359,7 +359,7 @@ open class AssetManager {
         let asset = AVAsset(url: url)
         let imgGenerator = AVAssetImageGenerator(asset: asset)
         imgGenerator.appliesPreferredTrackTransform = true
-        if let cgImage = try? imgGenerator.copyCGImage(at: CMTimeMake(5, 1), actualTime: nil) {
+        if let cgImage = try? imgGenerator.copyCGImage(at: CMTimeMake(value: 5, timescale: 1), actualTime: nil) {
             let image = UIImage(cgImage: cgImage)
             let thImageSize = FlexMediaPickerConfiguration.thumbnailSize
             return image.scaleToSizeKeepAspect(size: thImageSize)
