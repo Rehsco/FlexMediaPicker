@@ -502,7 +502,9 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     func addSelectedAsset(_ asset: PHAsset, thumbnail: UIImage) {
         let sAsset = AssetManager.persistence.createAssetCollectionAsset(thumbnail: thumbnail, asset: asset)
         if !sAsset.isVideoOrAudio() {
-            sAsset.cropRect = photosService.detectFaceRect(inImage: thumbnail)
+            if let fullImage = AssetManager.persistence.imageFromAsset(withID: sAsset.uuid) {
+                sAsset.cropRect = photosService.detectFaceRect(inImage: fullImage)
+            }
         }
         self.addSelectedAsset(sAsset)
     }

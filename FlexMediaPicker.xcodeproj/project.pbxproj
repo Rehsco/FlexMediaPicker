@@ -909,7 +909,7 @@
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = FlexMediaPickerExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = org.cocoapods.FlexMediaPickerExample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rehsco.FlexMediaPickerExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 			};
@@ -923,7 +923,7 @@
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = FlexMediaPickerExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = org.cocoapods.FlexMediaPickerExample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rehsco.FlexMediaPickerExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 			};

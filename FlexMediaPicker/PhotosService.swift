@@ -52,7 +52,7 @@ open class PhotosService: NSObject {
             permissionGrantedHandler(false)
         }
     }
-    
+
     // MARK: - Face detection
     
     func detectFaceRect(inImage image: UIImage) -> CGRect {

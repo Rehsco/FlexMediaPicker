@@ -41,7 +41,6 @@ open class AssetManager {
         guard PHPhotoLibrary.authorizationStatus() == .authorized else { return }
         
         DispatchQueue.global(qos: .background).async {
-//            let stf: PHAssetCollectionSubtype = PHAssetCollectionSubtype(rawValue: Int(UInt8(PHAssetCollectionSubtype.any.rawValue) | UInt8(PHAssetCollectionSubtype.albumMyPhotoStream.rawValue)))!
             let fetchResult = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .any, options: nil)
             
             if fetchResult.count > 0 {
@@ -73,7 +72,9 @@ open class AssetManager {
             if fetchResult.count > 0 {
                 var assets = [PHAsset]()
                 fetchResult.enumerateObjects({ object, _, _ in
-                    assets.append(object)
+                    if self.isMediaAssetAllowed(withType: object.mediaType) {
+                        assets.append(object)
+                    }
                 })
                 
                 DispatchQueue.main.async {
@@ -83,6 +84,15 @@ open class AssetManager {
         }
     }
 
+    private static func isMediaAssetAllowed(withType type: PHAssetMediaType) -> Bool {
+        switch type {
+        case .video:
+            return FlexMediaPickerConfiguration.allowVideoSelection || FlexMediaPickerConfiguration.allowImageFromVideoSelection
+        default:
+            return true
+        }
+    }
+    
     public static func resolveAsset(_ asset: PHAsset, size: CGSize = CGSize(width: 720, height: 1280), completion: @escaping (_ image: UIImage?) -> Void) {
         let imageManager = PHImageManager.default()
         let requestOptions = PHImageRequestOptions()
@@ -107,7 +117,6 @@ open class AssetManager {
         for asset in assets {
             imageManager.requestImage(for: asset, targetSize: size, contentMode: .aspectFill, options: requestOptions) { image, _ in
                 if let image = image {
-//                    NSLog("Image found by PHImageManager for id \(asset.localIdentifier). Size = \(image.size)")
                     images.append(image)
                 }
             }

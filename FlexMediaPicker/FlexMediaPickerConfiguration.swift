@@ -203,6 +203,7 @@ public class FlexMediaPickerConfiguration {
     public static var managesAudioSession = true
 
     public static var allowMultipleSelection = true
+    public static var allowImageFromVideoSelection = true
     public static var allowVideoSelection = true
     public static var allowVoiceRecording = true
     public static var allowLocationSelection = true
