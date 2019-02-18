@@ -66,14 +66,16 @@ class CameraMediaControlPanel: FlexFooterView {
         self.triggerButton?.style = FlexMediaPickerConfiguration.takeButtonStyle
         self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonColor
         
-        self.camVidSwitch = CamVidSwitch(frame: CGRect(origin: .zero, size: FlexMediaPickerConfiguration.camVidSwitchSize), thumbIcon: camIcon!, sepIcon: vidIcon!, disabledThumbIcon: dcamIcon!, disabledSepIcon: dvidIcon!)
-        self.camVidSwitch?.onTintColor = .clear
-        self.camVidSwitch?.thumbTintColor = FlexMediaPickerConfiguration.camVidSwitchThumbColor
-        self.camVidSwitch?.borderColor = FlexMediaPickerConfiguration.camVidSwitchBorderColor
-        self.camVidSwitch?.borderWidth = FlexMediaPickerConfiguration.camVidSwitchBorderWidth
-        self.camVidSwitch?.style = FlexMediaPickerConfiguration.camVidSwitchStyle
-        self.camVidSwitch?.thumbStyle = FlexMediaPickerConfiguration.camVidSwitchStyle
-        self.addSubview(self.camVidSwitch!)
+        if FlexMediaPickerConfiguration.allowVideoSelection || FlexMediaPickerConfiguration.allowImageFromVideoSelection {
+            self.camVidSwitch = CamVidSwitch(frame: CGRect(origin: .zero, size: FlexMediaPickerConfiguration.camVidSwitchSize), thumbIcon: camIcon!, sepIcon: vidIcon!, disabledThumbIcon: dcamIcon!, disabledSepIcon: dvidIcon!)
+            self.camVidSwitch?.onTintColor = .clear
+            self.camVidSwitch?.thumbTintColor = FlexMediaPickerConfiguration.camVidSwitchThumbColor
+            self.camVidSwitch?.borderColor = FlexMediaPickerConfiguration.camVidSwitchBorderColor
+            self.camVidSwitch?.borderWidth = FlexMediaPickerConfiguration.camVidSwitchBorderWidth
+            self.camVidSwitch?.style = FlexMediaPickerConfiguration.camVidSwitchStyle
+            self.camVidSwitch?.thumbStyle = FlexMediaPickerConfiguration.camVidSwitchStyle
+            self.addSubview(self.camVidSwitch!)
+        }
         
         self.camVidSwitch?.valueChangedBlock = {
             idx, val in
