@@ -57,11 +57,11 @@ class ImageAssetImageSource: InputSource {
 
     private func downloadOrFetchImage(completionHandler: @escaping ((UIImage?)->Void)) {
         DispatchQueue.main.async {
-            if !self.asset.isVideo(), let image = AssetManager.persistence.imageFromAsset(withID: self.asset.uuid) {
+            if !self.asset.isVideo(), let image = FlexMediaPickerAssetManager.persistence.imageFromAsset(withID: self.asset.uuid) {
                 completionHandler(image)
             }
             else if let ass = self.asset.asset, ass.mediaType == .video {
-                AssetManager.resolveVideoAsset(ass, resolvedURLHandler: { url in
+                FlexMediaPickerAssetManager.resolveVideoAsset(ass, resolvedURLHandler: { url in
                     self.frameImageFromVideo(url: url, completionHandler: completionHandler)
                 })
             }
@@ -69,13 +69,13 @@ class ImageAssetImageSource: InputSource {
                 self.frameImageFromVideo(url: url, completionHandler: completionHandler)
             }
             else if let ass = self.asset.asset {
-                let images = AssetManager.resolveAssets([ass])
+                let images = FlexMediaPickerAssetManager.resolveAssets([ass])
                 if let image = images.first {
                     completionHandler(image)
                 }
             }
             else if self.asset.isAudio() {
-                AssetManager.resolveURL(forMediaAsset: self.asset, resolvedURLHandler: {url in
+                FlexMediaPickerAssetManager.resolveURL(forMediaAsset: self.asset, resolvedURLHandler: {url in
                     if let waveform = Waveform(audioAssetURL: url) {
                         let configuration = WaveformConfiguration(size: UIScreen.main.bounds.size,
                                                                   color: FlexMediaPickerConfiguration.recordingWaveformColor,
@@ -100,7 +100,7 @@ class ImageAssetImageSource: InputSource {
     
     func getVideoURL(completionHandler: @escaping ((URL?)->Void)) {
         if let ass = self.asset.asset, ass.mediaType == .video {
-            AssetManager.resolveVideoAsset(ass, resolvedURLHandler: { url in
+            FlexMediaPickerAssetManager.resolveVideoAsset(ass, resolvedURLHandler: { url in
                 completionHandler(url)
             })
         }

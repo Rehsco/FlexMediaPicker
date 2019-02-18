@@ -113,7 +113,7 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
     open func imageFromAsset(withID id: String) -> UIImage? {
         if let asset = self.assetMap[id] {
             if asset.isAssetBased() {
-                let images = AssetManager.resolveAssets([asset.asset!])
+                let images = FlexMediaPickerAssetManager.resolveAssets([asset.asset!])
                 return images.first
             }
             else {
@@ -172,10 +172,10 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
         self.videoWriter?.finish {
             if let vurl = self.currentVideoFileURL {
                 if FlexMediaPickerConfiguration.storeRecordedVideosToAssetLibrary {
-                    AssetManager.storeVideo(forURL: vurl, completion: { videoAsset in
+                    FlexMediaPickerAssetManager.storeVideo(forURL: vurl, completion: { videoAsset in
                         if let asset = videoAsset {
-                            AssetManager.resolveVideoAsset(asset, resolvedURLHandler: { url in
-                                if let thumbnail = AssetManager.getThumbnailForVideoAsset(url: url) {
+                            FlexMediaPickerAssetManager.resolveVideoAsset(asset, resolvedURLHandler: { url in
+                                if let thumbnail = FlexMediaPickerAssetManager.getThumbnailForVideoAsset(url: url) {
                                     finishedHandler(self.createAssetCollectionAsset(thumbnail: thumbnail, asset: asset))
                                 }
                             })
@@ -184,7 +184,7 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
                     })
                 }
                 else {
-                    if let thumbnail = AssetManager.getThumbnailForVideoAsset(url: vurl) {
+                    if let thumbnail = FlexMediaPickerAssetManager.getThumbnailForVideoAsset(url: vurl) {
                         finishedHandler(self.createVideoRecordAsset(thumbnail: thumbnail, videoUrl: vurl))
                     }
                 }
@@ -273,7 +273,7 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
                                                           scale: UIScreen.main.scale,
                                                           paddingFactor: 4.0)
                 if let thumbnail = UIImage(waveform: waveform, configuration: configuration) {
-                    finishedHandler(AssetManager.persistence.createAudioRecordAsset(thumbnail: thumbnail, audioUrl: url))
+                    finishedHandler(FlexMediaPickerAssetManager.persistence.createAudioRecordAsset(thumbnail: thumbnail, audioUrl: url))
                     return
                 }
             }

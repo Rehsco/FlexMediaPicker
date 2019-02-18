@@ -74,7 +74,7 @@ open class SelectedAssetsCollectionView: ImagesCollectionView {
     
     open func refreshItem(withReference reference: String) {
         DispatchQueue.main.async {
-            if let item = self.getItemForReference(reference) as? ImagesCollectionItem, let asset = AssetManager.persistence.getAsset(forID: item.reference) {
+            if let item = self.getItemForReference(reference) as? ImagesCollectionItem, let asset = FlexMediaPickerAssetManager.persistence.getAsset(forID: item.reference) {
                 self.populateItemInfo(forAsset: asset, item: item)
                 self.updateCellForItem(reference)
             }
@@ -84,7 +84,7 @@ open class SelectedAssetsCollectionView: ImagesCollectionView {
     open func getFocusedMediaAsset() -> FlexMediaPickerAsset? {
         for item in self.allPopulatedItems {
             if item.isFocused {
-                let asset = AssetManager.persistence.getAsset(forID: item.reference)
+                let asset = FlexMediaPickerAssetManager.persistence.getAsset(forID: item.reference)
                 return asset
             }
         }
@@ -96,7 +96,7 @@ open class SelectedAssetsCollectionView: ImagesCollectionView {
             self.removeAllSections()
             self.allPopulatedItems = []
             self.secRef = self.addSection()
-            let allSelectedAssets = AssetManager.persistence.getAllAssets()
+            let allSelectedAssets = FlexMediaPickerAssetManager.persistence.getAllAssets()
             var idx = 0
             var lastItem: ImagesCollectionItem? = nil
             for selAsset in allSelectedAssets {
@@ -154,7 +154,7 @@ open class SelectedAssetsCollectionView: ImagesCollectionView {
     
     private func populateItemInfo(forAsset asset: FlexMediaPickerAsset, item: ImagesCollectionItem) {
         if asset.isVideo() || asset.isAudio() {
-            AssetManager.croppedDuration(forMediaAsset: asset, durationHandler: { duration in
+            FlexMediaPickerAssetManager.croppedDuration(forMediaAsset: asset, durationHandler: { duration in
                 let timeStr = Helper.stringFromTimeInterval(interval: duration)
                 let maxAllowedDuration = asset.isVideo() ? FlexMediaPickerConfiguration.maxVideoRecordingTime : FlexMediaPickerConfiguration.maxAudioRecordingTime
                 if (maxAllowedDuration > 0 && round(duration) > maxAllowedDuration) || (asset.isVideo() && !FlexMediaPickerConfiguration.allowVideoSelection) {

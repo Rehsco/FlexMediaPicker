@@ -338,6 +338,10 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     
     // MARK: - Item Access
     
+    public class func deleteAllMedia() {
+        FlexMediaPickerAssetManager.persistence.deleteAllMedia()
+    }
+    
     func checkStatus() {
         photosService.checkStatus { accessGranted in
             if accessGranted {
@@ -350,11 +354,11 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     }
     
     func permissionGranted() {
-        AssetManager.fetchAssetCollections { collections in
+        FlexMediaPickerAssetManager.fetchAssetCollections { collections in
             self.assetCollections = collections
             self.populateContent()
         }
-        AssetManager.fetchSmartAssetCollections { collections in
+        FlexMediaPickerAssetManager.fetchSmartAssetCollections { collections in
             self.smartAssetCollections = collections
             self.populateContent()
         }
@@ -363,7 +367,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     // MARK: - Item handling
 
     private func convertSelectedVideoAssets(completedHandler: @escaping (()->Void)) {
-        let aAssets = AssetManager.getAcceptedAssets()
+        let aAssets = FlexMediaPickerAssetManager.getAcceptedAssets()
         var assetsToConvert: [FlexMediaPickerAsset] = []
         for aa in aAssets {
             // TODO: Only convert (audio / video) when required
@@ -386,7 +390,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                     
                     if let assetToConvert = assetsToConvert.first != nil ? assetsToConvert.removeFirst() : nil {
                         if assetToConvert.isVideo() {
-                            AssetManager.reencodeVideo(forMediaAsset: assetToConvert, progressHandler: { progress in
+                            FlexMediaPickerAssetManager.reencodeVideo(forMediaAsset: assetToConvert, progressHandler: { progress in
                                 BusyViewFactory.updateProgress(progress: progress, upperLabel: "Converting Video", lowerLabel: "\(idx) of \(assetsConvertCount)")
                             }, completedURLHandler: { url in
                                 assetToConvert.convertedURL = url
@@ -394,7 +398,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                             })
                         }
                         else if assetToConvert.isAudio() {
-                            AssetManager.cropAudio(forMediaAsset: assetToConvert, progressHandler: { progress in
+                            FlexMediaPickerAssetManager.cropAudio(forMediaAsset: assetToConvert, progressHandler: { progress in
                                 BusyViewFactory.updateProgress(progress: progress, upperLabel: "Converting Audio", lowerLabel: "\(idx) of \(assetsConvertCount)")
                             }, completedURLHandler: { url in
                                 assetToConvert.convertedURL = url
@@ -422,7 +426,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         self.contentView?.removeMenu(self.leftViewMenu!)
         self.contentView?.addMenu(self.backViewMenu!)
         self.contentView?.setNeedsLayout()
-        AssetManager.fetch(in: collection) { fetchedAssets in
+        FlexMediaPickerAssetManager.fetch(in: collection) { fetchedAssets in
             self.assetCache = fetchedAssets
             self.populateContent()
         }
@@ -434,7 +438,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             let img = image.fixOrientation()
             
             NSLog("Saving photo")
-            AssetManager.savePhoto(img, location: location) {
+            FlexMediaPickerAssetManager.savePhoto(img, location: location) {
                 newAsset in
                 if let imageAsset = newAsset {
                     NSLog("Saved photo has local ID \(imageAsset.localIdentifier)")
@@ -443,13 +447,13 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             }
         }
         else {
-            let imageAsset = AssetManager.persistence.createImageAsset(thumbnail: image.scaleToSizeKeepAspect(size: thImageSize), image: image)
+            let imageAsset = FlexMediaPickerAssetManager.persistence.createImageAsset(thumbnail: image.scaleToSizeKeepAspect(size: thImageSize), image: image)
             self.addSelectedAsset(imageAsset)
         }
     }
 
     private func addNewLocation(_ thumbnail: UIImage, location: CLLocation) {
-        let locAsset = AssetManager.persistence.createLocationAsset(thumbnail: thumbnail, location: location)
+        let locAsset = FlexMediaPickerAssetManager.persistence.createLocationAsset(thumbnail: thumbnail, location: location)
         self.addSelectedAsset(locAsset)
     }
 
@@ -457,11 +461,11 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         self.imageSlideshowView?.addAsset(asset)
         self.populateSelectedAssetView(focusOnLastItem: true)
         if !FlexMediaPickerConfiguration.allowMultipleSelection {
-            if AssetManager.persistence.numberOfAssets() >= FlexMediaPickerConfiguration.numberItemsAllowed {
+            if FlexMediaPickerAssetManager.persistence.numberOfAssets() >= FlexMediaPickerConfiguration.numberItemsAllowed {
                 self.selectedAssetsView?.showHide(hide: false) {
                     self.refreshView()
                 }
-                self.showImage(byIndex: AssetManager.persistence.numberOfAssets()-1)
+                self.showImage(byIndex: FlexMediaPickerAssetManager.persistence.numberOfAssets()-1)
             }
         }
     }
@@ -500,9 +504,9 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     }
     
     func addSelectedAsset(_ asset: PHAsset, thumbnail: UIImage) {
-        let sAsset = AssetManager.persistence.createAssetCollectionAsset(thumbnail: thumbnail, asset: asset)
+        let sAsset = FlexMediaPickerAssetManager.persistence.createAssetCollectionAsset(thumbnail: thumbnail, asset: asset)
         if !sAsset.isVideoOrAudio() {
-            if let fullImage = AssetManager.persistence.imageFromAsset(withID: sAsset.uuid) {
+            if let fullImage = FlexMediaPickerAssetManager.persistence.imageFromAsset(withID: sAsset.uuid) {
                 sAsset.cropRect = photosService.detectFaceRect(inImage: fullImage)
             }
         }
@@ -510,7 +514,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     }
 
     func removeSelectedAsset(_ asset: FlexMediaPickerAsset) {
-        AssetManager.persistence.deleteImageAsset(withID: asset.uuid)
+        FlexMediaPickerAssetManager.persistence.deleteImageAsset(withID: asset.uuid)
         self.populateSelectedAssetView(focusOnLastItem: true)
         if let li = asset.asset?.localIdentifier {
             if let item = self.contentView?.getItemForReference(li) {
@@ -568,7 +572,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                             return thumbnail
                         }
                         let thImageSize = CGSize(width: FlexMediaPickerConfiguration.thumbnailSize.width * 2, height: FlexMediaPickerConfiguration.thumbnailSize.height * 2)
-                        let thumbnail = AssetManager.resolveAssets([imageAsset], size: thImageSize).first
+                        let thumbnail = FlexMediaPickerAssetManager.resolveAssets([imageAsset], size: thImageSize).first
                         if let th = thumbnail {
                             self.assetThumbnailCache.addImage(id: imageAsset.localIdentifier, image: th)
                         }
@@ -586,7 +590,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                     self.updateCellForItem(uuid: fitem.reference)
                 }
                 fitem.itemDeselectionActionHandler = {
-                    if let asset = AssetManager.persistence.getAsset(forLocalIdentifier: imageAsset.localIdentifier) {
+                    if let asset = FlexMediaPickerAssetManager.persistence.getAsset(forLocalIdentifier: imageAsset.localIdentifier) {
                         self.removeSelectedAsset(asset)
                     }
                     fitem.isSelected = false
@@ -597,7 +601,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                     let timeStr = Helper.stringFromTimeInterval(interval: imageAsset.duration)
                     fitem.secondarySubTitle = Helper.applyFontAndColorToString(FlexMediaPickerConfiguration.selectedMediaCaptionFont, color: FlexMediaPickerConfiguration.selectedMediaCaptionColor, text: timeStr)
                 }
-                if AssetManager.isAssetSelected(imageAsset) {
+                if FlexMediaPickerAssetManager.isAssetSelected(imageAsset) {
                     fitem.isSelected = true
                 }
                 self.contentView?.addItem(secRef, item: fitem)
@@ -608,9 +612,9 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     func populateWithAssetCollections(_ collections: [PHAssetCollection]) {
         if let secRef = self.mainSecRef, let iconView = self.contentView as? ImagesCollectionView {
             for collection in collections {
-                AssetManager.fetch(in: collection, fetchLimit: 1, { imageAssets in
+                FlexMediaPickerAssetManager.fetch(in: collection, fetchLimit: 1, { imageAssets in
                     if let imageAsset = imageAssets.first {
-                        if let thumbnail = AssetManager.resolveAssets([imageAsset], size: iconView.thumbnailSize()).first {
+                        if let thumbnail = FlexMediaPickerAssetManager.resolveAssets([imageAsset], size: iconView.thumbnailSize()).first {
                             let fitem = ImagesCollectionItem(reference: collection.localIdentifier, icon: thumbnail)
                             fitem.isGroup = true
                             fitem.subTitle = Helper.applyFontAndColorToString(FlexMediaPickerConfiguration.collectionCaptionFont, color: FlexMediaPickerConfiguration.collectionCaptionColor, text: collection.localizedTitle ?? "")
@@ -645,7 +649,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
             sav.isHidden = true
             sav.deleteOrRemoveItemHandler = {
                 assetRef in
-                if let asset = AssetManager.persistence.getAsset(forID: assetRef) {
+                if let asset = FlexMediaPickerAssetManager.persistence.getAsset(forID: assetRef) {
                     self.removeSelectedAsset(asset)
                     self.imageSlideshowView?.removeAsset(byID: assetRef)
                 }
@@ -671,7 +675,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     
     private func applyAcceptEnabling() {
         DispatchQueue.main.async {
-            let numApplicableSelected = AssetManager.getAcceptableAssetCount()
+            let numApplicableSelected = FlexMediaPickerAssetManager.getAcceptableAssetCount()
             self.acceptMI?.enabled = (numApplicableSelected > 0)
             if numApplicableSelected > 0 {
                 if let aicImage = Helper.getAcceptedAssetCountIcon(acceptableAssetCount: numApplicableSelected) {
@@ -679,7 +683,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                     self.rightViewMenu?.viewMenu?.thumbSize = aicImage.size
                 }
             }
-            self.selectedAssetsView?.showHide(hide: AssetManager.persistence.numberOfAssets() == 0) {
+            self.selectedAssetsView?.showHide(hide: FlexMediaPickerAssetManager.persistence.numberOfAssets() == 0) {
                 self.refreshView()
             }
             self.rightViewMenu?.viewMenu?.setNeedsLayout()
@@ -688,7 +692,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     
     private func acceptSelectedAssets() {
         self.convertSelectedVideoAssets {
-            let aa = AssetManager.getAcceptedAssets()
+            let aa = FlexMediaPickerAssetManager.getAcceptedAssets()
             self.mediaAcceptedHandler?(aa)
         }
     }
@@ -721,7 +725,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
         if let issv = self.imageSlideshowView {
             self.cleanupTakeViews()
             issv.isHidden = false
-            issv.setAssets(AssetManager.persistence.getAllAssets())
+            issv.setAssets(FlexMediaPickerAssetManager.persistence.getAllAssets())
             issv.setCurrentPage(idx, animated: false)
         }
     }
@@ -745,7 +749,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
                 self.addNewImage(image, location: nil)
             }
             issv.removeOrTrashLastItem = {
-                if let asset = AssetManager.persistence.getAllAssets().last {
+                if let asset = FlexMediaPickerAssetManager.persistence.getAllAssets().last {
                     self.removeSelectedAsset(asset)
                 }
             }

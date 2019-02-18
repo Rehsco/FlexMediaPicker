@@ -43,8 +43,8 @@
 		5BC562751F50394700A848F2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5BC562731F50394700A848F2 /* Main.storyboard */; };
 		5BC562771F50394700A848F2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5BC562761F50394700A848F2 /* Assets.xcassets */; };
 		5BC5627A1F50394700A848F2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5BC562781F50394700A848F2 /* LaunchScreen.storyboard */; };
-		5BC562831F503A9A00A848F2 /* AssetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC562821F503A9A00A848F2 /* AssetManager.swift */; };
-		5BC562841F503A9A00A848F2 /* AssetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC562821F503A9A00A848F2 /* AssetManager.swift */; };
+		5BC562831F503A9A00A848F2 /* FlexMediaPickerAssetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC562821F503A9A00A848F2 /* FlexMediaPickerAssetManager.swift */; };
+		5BC562841F503A9A00A848F2 /* FlexMediaPickerAssetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC562821F503A9A00A848F2 /* FlexMediaPickerAssetManager.swift */; };
 		5BC562861F503ABB00A848F2 /* FlexMediaPickerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC562851F503ABB00A848F2 /* FlexMediaPickerConfiguration.swift */; };
 		5BC562871F503ABB00A848F2 /* FlexMediaPickerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC562851F503ABB00A848F2 /* FlexMediaPickerConfiguration.swift */; };
 		5BC5628B1F50412900A848F2 /* FlexMediaPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC5628A1F50412900A848F2 /* FlexMediaPickerViewController.swift */; };
@@ -134,7 +134,7 @@
 		5BC562761F50394700A848F2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5BC562791F50394700A848F2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5BC5627B1F50394700A848F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5BC562821F503A9A00A848F2 /* AssetManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetManager.swift; sourceTree = "<group>"; };
+		5BC562821F503A9A00A848F2 /* FlexMediaPickerAssetManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlexMediaPickerAssetManager.swift; sourceTree = "<group>"; };
 		5BC562851F503ABB00A848F2 /* FlexMediaPickerConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlexMediaPickerConfiguration.swift; sourceTree = "<group>"; };
 		5BC5628A1F50412900A848F2 /* FlexMediaPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlexMediaPickerViewController.swift; sourceTree = "<group>"; };
 		5BC5628E1F50436700A848F2 /* CommonFlexCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonFlexCollectionViewController.swift; sourceTree = "<group>"; };
@@ -228,7 +228,7 @@
 				5BD6281B1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift */,
 				5BD6281E1F84C57F001DB4BA /* FlexMediaPickerAssetPersistenceImpl.swift */,
 				5BD1E6E51F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift */,
-				5BC562821F503A9A00A848F2 /* AssetManager.swift */,
+				5BC562821F503A9A00A848F2 /* FlexMediaPickerAssetManager.swift */,
 			);
 			name = Assets;
 			sourceTree = "<group>";
@@ -635,7 +635,7 @@
 				5B88356B1FB204F900782FB5 /* FlexMediaPickerStyling.swift in Sources */,
 				5BBFFABE1F51DF7500C08350 /* MediaControlPanel.swift in Sources */,
 				5BC11D011FADB34000BBC03B /* MicrophoneMan.swift in Sources */,
-				5BC562831F503A9A00A848F2 /* AssetManager.swift in Sources */,
+				5BC562831F503A9A00A848F2 /* FlexMediaPickerAssetManager.swift in Sources */,
 				5BCE9C261FAB79A2008D2E31 /* LocationService.swift in Sources */,
 				5BD1E6E61F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift in Sources */,
 				5BC3EF951FA757E800D21B14 /* CommonFlexView.swift in Sources */,
@@ -692,7 +692,7 @@
 				5BE0F1751FA203B300BEC1CB /* UIScrollViewExtensions.swift in Sources */,
 				5BC5629C1F5059E400A848F2 /* ImagesCollectionView.swift in Sources */,
 				5BE57D161F83AE340037D4EF /* TimeSliderInfoView.swift in Sources */,
-				5BC562841F503A9A00A848F2 /* AssetManager.swift in Sources */,
+				5BC562841F503A9A00A848F2 /* FlexMediaPickerAssetManager.swift in Sources */,
 				5BDF22FB1F7F9A65000A6B7E /* ImageSlideShowView.swift in Sources */,
 				5BC562991F50599700A848F2 /* UIImageExtensions.swift in Sources */,
 				5BC562871F503ABB00A848F2 /* FlexMediaPickerConfiguration.swift in Sources */,

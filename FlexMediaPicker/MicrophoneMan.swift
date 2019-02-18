@@ -59,12 +59,12 @@ open class MicrophoneMan: NSObject {
             self.isRecording = false
         }
         else {
-            self.isRecording = AssetManager.persistence.startAudioRecording()
+            self.isRecording = FlexMediaPickerAssetManager.persistence.startAudioRecording()
         }
     }
     
     @objc func updateAudioMeter(timer: Timer) {
-        let (power, time) = AssetManager.persistence.updateAudioMeter()
+        let (power, time) = FlexMediaPickerAssetManager.persistence.updateAudioMeter()
         self.recordingTimeUpdated?(time, power)
         
         if self.isRecording && FlexMediaPickerConfiguration.maxAudioRecordingTime > 0 && time >= FlexMediaPickerConfiguration.maxAudioRecordingTime {
@@ -75,7 +75,7 @@ open class MicrophoneMan: NSObject {
     }
     
     func stopVoiceRecording() {
-        AssetManager.persistence.stopAudioRecording(true) {
+        FlexMediaPickerAssetManager.persistence.stopAudioRecording(true) {
             audioAsset in
             if let aa = audioAsset {
                 self.voiceRecordedEventHandler?(aa)
@@ -90,14 +90,14 @@ open class MicrophoneMan: NSObject {
     func pauseRecording() {
         if self.isRecording {
             self.isPaused = true
-            AssetManager.persistence.pauseAudioRecording()
+            FlexMediaPickerAssetManager.persistence.pauseAudioRecording()
         }
     }
     
     func resumeRecording() {
         if self.isRecording && self.isPaused {
             self.isPaused = false
-            AssetManager.persistence.resumeAudioRecording()
+            FlexMediaPickerAssetManager.persistence.resumeAudioRecording()
         }
     }
 }

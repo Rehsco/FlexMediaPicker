@@ -164,7 +164,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
         self.addSubview(self.assetWarningLabel!)
         
         self.createBackOrCloseLeftMenu() {
-            if !FlexMediaPickerConfiguration.allowMultipleSelection && AssetManager.getAcceptableAssetCount() >= FlexMediaPickerConfiguration.numberItemsAllowed {
+            if !FlexMediaPickerConfiguration.allowMultipleSelection && FlexMediaPickerAssetManager.getAcceptableAssetCount() >= FlexMediaPickerConfiguration.numberItemsAllowed {
                 StyledMenuPopoverFactory.confirmation(title: FlexMediaPickerConfiguration.removeItemTitle, subTitle: FlexMediaPickerConfiguration.removeItemMessage, buttonText: FlexMediaPickerConfiguration.removeItemButtonText, iconName: FlexMediaPickerConfiguration.queryIconName, configuration: FlexMediaPickerStyling.getPopoverViewAppearance(), confirmationResult: { proceed in
                     if proceed {
                         self.removeOrTrashLastItem?()
@@ -179,7 +179,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
         
         self.rightViewMenu = CommonIconViewMenu(size: CGSize(width: 160, height: 36), hPos: .right, vPos: .header, menuIconSize: 24)
         self.cropMI = self.rightViewMenu?.createIconMenuItem(imageName: "", selectedImageName: "crop", iconSize: 24, selectionHandler: {
-            if let asset = self.currentAsset, let image = AssetManager.persistence.imageFromAsset(withID: asset.uuid) {
+            if let asset = self.currentAsset, let image = FlexMediaPickerAssetManager.persistence.imageFromAsset(withID: asset.uuid) {
                 self.cropView = ImageCropView(frame: UIScreen.main.bounds, image: image, cropRect: asset.cropRect)
                 self.cropView?.imageCroppedHandler = {
                     cropRect in
@@ -520,7 +520,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
 
             self.player?.url = nil
             if imageAsset.asset.isVideo() {
-                AssetManager.resolveURL(forMediaAsset: imageAsset.asset, resolvedURLHandler: { url in
+                FlexMediaPickerAssetManager.resolveURL(forMediaAsset: imageAsset.asset, resolvedURLHandler: { url in
                     DispatchQueue.main.async {
                         self.videoControlPanel.isHidden = self.header.isHidden
                         self.timeSliderPanel?.showHide(hide: self.header.isHidden)
@@ -536,7 +536,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
                 })
             }
             else if imageAsset.asset.isAudio() {
-                AssetManager.resolveURL(forMediaAsset: imageAsset.asset, resolvedURLHandler: { url in
+                FlexMediaPickerAssetManager.resolveURL(forMediaAsset: imageAsset.asset, resolvedURLHandler: { url in
                     DispatchQueue.main.async {
                         self.videoControlPanel.isHidden = self.header.isHidden
                         self.timeSliderPanel?.showHide(hide: self.header.isHidden)
@@ -697,7 +697,7 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
     // MARK: - Asset Handling
     
     private func applyControlsEnabling() {
-        let numApplicableSelected = AssetManager.getAcceptableAssetCount()
+        let numApplicableSelected = FlexMediaPickerAssetManager.getAcceptableAssetCount()
         if let ami = self.acceptMI {
             DispatchQueue.main.async {
                 ami.enabled = (numApplicableSelected > 0)

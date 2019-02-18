@@ -139,8 +139,8 @@ class CameraMediaControlPanel: FlexFooterView {
 
 extension CameraMediaControlPanel {
     @objc func onCameraTriggerPressed(_ recognizer: UITapGestureRecognizer) {
-        guard let cvs = self.camVidSwitch else { return }
-        if cvs.on {
+        let shouldTakeVideo = self.camVidSwitch?.on ?? false
+        if shouldTakeVideo {
             self.isVideoModeActive = !self.isVideoModeActive
             self.recVideoActionHandler?()
         }
@@ -151,8 +151,8 @@ extension CameraMediaControlPanel {
     }
     
     func applyTriggerButtonStyle() {
-        guard let cvs = self.camVidSwitch else { return }
-        if cvs.on {
+        let shouldTakeVideo = self.camVidSwitch?.on ?? false
+        if shouldTakeVideo {
             self.backTriggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonBorderColor
             if self.isVideoModeActive {
                 self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonRecordingColor

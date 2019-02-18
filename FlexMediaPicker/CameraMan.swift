@@ -262,7 +262,7 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
             if self.isCapturing{
                 self.isCapturing = false
                 DispatchQueue.main.async {
-                    AssetManager.persistence.stopRecordVideo() {
+                    FlexMediaPickerAssetManager.persistence.stopRecordVideo() {
                         mpa in
                         NSLog("Recording finished.")
                         if let mpa = mpa {
@@ -315,11 +315,11 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
 
             let isVideo = captureOutput is AVCaptureVideoDataOutput
             
-            if !AssetManager.persistence.isVideoRecorderCreated() && !isVideo {
+            if !FlexMediaPickerAssetManager.persistence.isVideoRecorderCreated() && !isVideo {
                 let fmt = CMSampleBufferGetFormatDescription(sampleBuffer)
                 let asbd = CMAudioFormatDescriptionGetStreamBasicDescription(fmt!)
                 
-                AssetManager.persistence.startRecordVideo(
+                FlexMediaPickerAssetManager.persistence.startRecordVideo(
                     height: self.height!, width: self.width!,
                     channels: Int((asbd?.pointee.mChannelsPerFrame)!),
                     samples: (asbd?.pointee.mSampleRate)!
@@ -372,7 +372,7 @@ class CameraMan: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptu
                 self.lastAudioPts = pts
             }
 
-            AssetManager.persistence.writeVideoData(sample: buffer, isVideo: isVideo)
+            FlexMediaPickerAssetManager.persistence.writeVideoData(sample: buffer, isVideo: isVideo)
         }
         if FlexMediaPickerConfiguration.maxVideoRecordingTime > 0 && time >= FlexMediaPickerConfiguration.maxVideoRecordingTime  && self.isCapturing {
             self.stopVideoRecording()

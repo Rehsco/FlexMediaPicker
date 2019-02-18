@@ -6,14 +6,14 @@ import Foundation
 import UIKit
 import Photos
 
-open class AssetManager {
+open class FlexMediaPickerAssetManager {
     /// Replace this with own persistence management, if required
     public static var persistence: FlexMediaPickerAssetPersistence = FlexMediaPickerAssetPersistenceImpl()
     
     static let allowedDisplayAssetCollectionTypes: [PHAssetCollectionSubtype] = [ .albumMyPhotoStream, .smartAlbumRecentlyAdded, .smartAlbumScreenshots, .smartAlbumSelfPortraits, .smartAlbumVideos, .albumRegular, .smartAlbumUserLibrary, .smartAlbumPanoramas ]
     
     public static func getImage(_ name: String) -> UIImage {
-        return UIImage(named: name, in: Bundle(for: AssetManager.self), compatibleWith: nil) ?? UIImage()
+        return UIImage(named: name, in: Bundle(for: FlexMediaPickerAssetManager.self), compatibleWith: nil) ?? UIImage()
     }
     
     public static func fetchAssetCollections(_ completion: @escaping (_ assetCollections: [PHAssetCollection]) -> Void) {
@@ -276,7 +276,7 @@ open class AssetManager {
     }
     
     public static func reencodeVideo(forMediaAsset mpa: FlexMediaPickerAsset, progressHandler: ((Float)->Void)? = nil, completedURLHandler: @escaping ((URL)->Void)) {
-        AssetManager.resolveURL(forMediaAsset: mpa) { url in
+        FlexMediaPickerAssetManager.resolveURL(forMediaAsset: mpa) { url in
             let startOffset = self.getTimeForVideoFrame(mpa.minFrame, videoURL: url)
             let endOffset = self.getTimeForVideoFrame(mpa.maxFrame, videoURL: url)
             let duration = min(endOffset - startOffset, CMTimeMakeWithSeconds(FlexMediaPickerConfiguration.maxVideoRecordingTime, preferredTimescale: 600))
@@ -289,7 +289,7 @@ open class AssetManager {
     }
 
     public static func cropAudio(forMediaAsset mpa: FlexMediaPickerAsset, progressHandler: ((Float)->Void)? = nil, completedURLHandler: @escaping ((URL)->Void)) {
-        AssetManager.resolveURL(forMediaAsset: mpa) { url in
+        FlexMediaPickerAssetManager.resolveURL(forMediaAsset: mpa) { url in
             let asset = AVURLAsset(url: url)
             let dur = asset.duration
             let startOffset = CMTimeMakeWithSeconds(mpa.minTimeOffset * dur.seconds, preferredTimescale: dur.timescale)
@@ -310,7 +310,7 @@ open class AssetManager {
             durationHandler(duration)
         }
         else {
-            AssetManager.resolveURL(forMediaAsset: mpa) { url in
+            FlexMediaPickerAssetManager.resolveURL(forMediaAsset: mpa) { url in
                 let asset = AVURLAsset(url: url)
                 let duration = asset.duration
                 let durationSeconds = CMTimeGetSeconds(duration)
@@ -327,7 +327,7 @@ open class AssetManager {
             durationHandler(endTime-startTime)
         }
         else {
-            AssetManager.resolveURL(forMediaAsset: mpa) { url in
+            FlexMediaPickerAssetManager.resolveURL(forMediaAsset: mpa) { url in
                 let asset = AVURLAsset(url: url)
                 let duration = asset.duration
                 let durationSeconds = CMTimeGetSeconds(duration)

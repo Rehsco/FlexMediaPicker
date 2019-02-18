@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -21,16 +21,30 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="APg-wa-KEg">
-                                <rect key="frame" x="143" y="149" width="88" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="APg-wa-KEg">
+                                <rect key="frame" x="16" y="149" width="343" height="30"/>
                                 <state key="normal" title="Pick Image"/>
                                 <connections>
                                     <action selector="pickImageSelected:" destination="BYZ-38-t0r" eventType="touchUpInside" id="5sk-NU-AZp"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oFi-cP-cKO">
+                                <rect key="frame" x="16" y="211" width="343" height="30"/>
+                                <state key="normal" title="Pick Image or Video"/>
+                                <connections>
+                                    <action selector="pickImageOrVideoSelected:" destination="BYZ-38-t0r" eventType="touchUpInside" id="fxF-BC-muI"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="APg-wa-KEg" firstAttribute="leading" secondItem="oFi-cP-cKO" secondAttribute="leading" id="8sO-WF-WMQ"/>
+                            <constraint firstItem="oFi-cP-cKO" firstAttribute="top" secondItem="APg-wa-KEg" secondAttribute="bottom" constant="32" id="9tF-hl-Tbj"/>
+                            <constraint firstItem="APg-wa-KEg" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="XeM-Hh-S6G"/>
+                            <constraint firstItem="APg-wa-KEg" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="129" id="ahX-E9-9lr"/>
+                            <constraint firstItem="APg-wa-KEg" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="lC9-cB-PH2"/>
+                            <constraint firstItem="APg-wa-KEg" firstAttribute="trailing" secondItem="oFi-cP-cKO" secondAttribute="trailing" id="nwk-WP-r19"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
