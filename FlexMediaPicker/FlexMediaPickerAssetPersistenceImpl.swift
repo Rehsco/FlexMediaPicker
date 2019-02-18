@@ -47,7 +47,7 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
     open var baseVideoDirName = "fmpvideo"
     open var baseAudioDirName = "fmpaudio"
 
-    open var imagePersistence: ImagePersistenceInterface = FlexMediaPickerImagePersistenceImpl()!
+    open var imagePersistence: ImagePersistenceInterface = FlexMediaPickerImagePersistenceImpl(storageID: "FlexMediaPickerImageStorage")!
     
     // MARK: - Asset Management
     
@@ -114,11 +114,9 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
         if let asset = self.assetMap[id] {
             if asset.isAssetBased() {
                 let images = AssetManager.resolveAssets([asset.asset!])
-                NSLog("\(#function): Asset based image for \(asset.uuid)")
                 return images.first
             }
             else {
-                NSLog("\(#function): persisted image for \(asset.uuid)")
                 return self.imagePersistence.getImage(asset.uuid)
             }
         }
@@ -129,12 +127,10 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
         if let asset = self.assetMap[id] {
             if asset.isVideo() {
                 if let url = asset.videoURL {
-                    NSLog("Deleting video. Deleting file \(url.absoluteString)")
                     self.deleteFile(url)
                 }
             }
             else {
-                NSLog("Deleting image")
                 self.imagePersistence.deleteImage(id)
             }
             self.assetMap.removeValue(forKey: id)
@@ -164,7 +160,6 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
                 } catch _ {
                 }
             }
-            NSLog("setup video writer with \(width), \(height)")
             self.videoWriter = VideoWriter(fileUrl: url, height: height, width: width, channels: channels, samples: samples)
         }
     }
