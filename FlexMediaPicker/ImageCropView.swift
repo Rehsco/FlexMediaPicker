@@ -144,7 +144,7 @@ public class ImageCropView: CommonFlexView, UIGestureRecognizerDelegate {
         }
     }
     
-    var imageCroppedHandler: ((CGRect)->Void)?
+    public var imageCroppedHandler: ((CGRect)->Void)?
     fileprivate let initialCropRect: CGRect
     public weak var delegate: RSKImageCropViewControllerDelegate?
 
