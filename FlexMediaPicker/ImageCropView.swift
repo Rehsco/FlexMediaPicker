@@ -335,9 +335,7 @@ public class ImageCropView: CommonFlexView, UIGestureRecognizerDelegate {
         }
     }
 
-    // MARK: - Private
-    
-    fileprivate func reset(animated: Bool) {
+    public func reset(animated: Bool) {
         if animated {
             UIView.beginAnimations("rsk_reset", context: nil)
             UIView.setAnimationCurve(.easeInOut)
@@ -355,6 +353,8 @@ public class ImageCropView: CommonFlexView, UIGestureRecognizerDelegate {
         }
     }
 
+    // MARK: - Private
+    
     fileprivate func resetContentOffset() {
         guard let zoomView = imageScrollView.zoomView else { return }
         
