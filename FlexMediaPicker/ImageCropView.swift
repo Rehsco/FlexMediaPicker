@@ -36,34 +36,6 @@ import MJRFlexStyleComponents
     let kK = CGFloat(0)
 #endif
 
-/**
- The `RSKImageCropViewControllerDelegate` protocol defines messages sent to a image crop view controller delegate when crop image was canceled or the original image was cropped.
- */
-public protocol RSKImageCropViewControllerDelegate: class {
-
-    /**
-     Tells the delegate that crop image has been canceled.
-     */
-    func didCancelCrop()
-
-    /**
-     Tells the delegate that the original image will be cropped.
-     */
-    func willCropImage(_ originalImage: UIImage)
-
-    /**
-     Tells the delegate that the original image has been cropped. Additionally provides a crop rect used to produce image.
-     */
-    func didCropImage(_ croppedImage: UIImage, usingCropRect cropRect: CGRect)
-
-    /**
-     Tells the delegate that the original image has been cropped. Additionally provides a crop rect and a rotation angle used to produce image.
-     */
-    func didCropImage(_ croppedImage: UIImage, usingCropRect cropRect: CGRect, rotationAngle: CGFloat)
-
-}
-
-/// TODO: create handlers instead of delegate
 
 public class ImageCropView: CommonFlexView, UIGestureRecognizerDelegate {
     fileprivate let kResetAnimationDuration = CGFloat(0.4)
@@ -145,8 +117,8 @@ public class ImageCropView: CommonFlexView, UIGestureRecognizerDelegate {
     }
     
     public var imageCroppedHandler: ((CGRect)->Void)?
+    public var imageCropCancelledHandler: (()->Void)?
     fileprivate let initialCropRect: CGRect
-    public weak var delegate: RSKImageCropViewControllerDelegate?
 
     public init(frame: CGRect, image: UIImage, cropRect: CGRect = CGRect(x: 0, y: 0, width: 1, height: 1)) {
         self.initialCropRect = cropRect
@@ -191,6 +163,7 @@ public class ImageCropView: CommonFlexView, UIGestureRecognizerDelegate {
         self.addMenu(self.rightViewMenu!)
         
         self.createBackOrCloseLeftMenu {
+            self.imageCropCancelledHandler?()
             self.closeView()
         }
     }
@@ -565,30 +538,6 @@ public class ImageCropView: CommonFlexView, UIGestureRecognizerDelegate {
         // Step 10: return the cropped image affter processing.
         
         return UIImage(cgImage: croppedImage.cgImage!, scale: imageScale, orientation: imageOrientation)
-    }
-
-    internal func cropImage() {
-        guard let originalImage = originalImage else { return }
-        
-        delegate?.willCropImage(originalImage)
-        
-        DispatchQueue.global(qos: .default).async {
-            let croppedImage = self.croppedImage(
-                image: originalImage,
-                cropRect: self.cropRect,
-                rotationAngle: self.rotationAngle,
-                zoomScale: self.imageScrollView.zoomScale,
-                maskPath: self.maskPath,
-                applyMaskToCroppedImage: self.isApplyMaskToCroppedImage)
-            
-            DispatchQueue.main.async {
-                self.delegate?.didCropImage(croppedImage, usingCropRect: self.cropRect, rotationAngle: self.rotationAngle)
-            }
-        }
-    }
-
-    fileprivate func cancelCrop() {
-        delegate?.didCancelCrop()
     }
 
     // MARK: - UIGestureRecognizerDelegate
