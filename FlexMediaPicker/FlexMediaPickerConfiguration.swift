@@ -6,7 +6,7 @@ import UIKit
 import MJRFlexStyleComponents
 import AVFoundation
 
-public class FlexMediaPickerConfiguration {
+public class FlexMediaPickerConfiguration: StyleEnvironment {
     
     // MARK: Colors
     
@@ -20,9 +20,6 @@ public class FlexMediaPickerConfiguration {
     public static var noCameraColor = UIColor(red: 0.86, green: 0.86, blue: 0.86, alpha: 1)
     public static var settingsColor = UIColor.white
     public static var headerTextColor = UIColor.white
-
-    public static var iconsColor = UIColor.white
-    public static var disabledIconsColor = UIColor(white: 0.6, alpha: 1.0)
 
     public static var selectedMediaStyleColor = UIColor(red: 0.09, green: 0.11, blue: 0.13, alpha: 0.7)
     public static var selectedMediaCaptionColor = UIColor(white: 0.85, alpha: 1.0)
@@ -235,6 +232,4 @@ public class FlexMediaPickerConfiguration {
     public static var firstWarningForRecordingLimitAtTimeLeft: TimeInterval = 10
     /// Indicates that the permitted recording length is imminently reached
     public static var secondWarningForRecordingLimitAtTimeLeft: TimeInterval = 3
-
-    public init() {}
 }
