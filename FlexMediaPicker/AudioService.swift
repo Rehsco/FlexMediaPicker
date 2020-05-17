@@ -42,6 +42,8 @@ open class AudioService {
             self.isAudioRecordingGranted = true
         case .denied, .undetermined:
             self.requestPermission()
+        @unknown default:
+            self.requestPermission()
         }
     }
     

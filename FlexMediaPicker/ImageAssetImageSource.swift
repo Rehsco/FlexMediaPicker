@@ -36,6 +36,7 @@ class ImageAssetImageSource: InputSource {
     var hasFetchedImage: Bool = false
     var imageViewRef: UIImageView?
     var asset: FlexMediaPickerAsset
+    let waveformImageDrawer = WaveformImageDrawer()
     
     init(asset: FlexMediaPickerAsset) {
         self.asset = asset
@@ -76,18 +77,21 @@ class ImageAssetImageSource: InputSource {
             }
             else if self.asset.isAudio() {
                 FlexMediaPickerAssetManager.resolveURL(forMediaAsset: self.asset, resolvedURLHandler: {url in
-                    if let waveform = Waveform(audioAssetURL: url) {
-                        let configuration = WaveformConfiguration(size: UIScreen.main.bounds.size,
-                                                                  color: FlexMediaPickerConfiguration.recordingWaveformColor,
-                                                                  style: .gradient,
-                                                                  position: .middle,
-                                                                  scale: UIScreen.main.scale,
-                                                                  paddingFactor: 4.0)
-                        completionHandler(UIImage(waveform: waveform, configuration: configuration))
-                    }
-                    else {
-                        NSLog("There is no image")
-                        completionHandler(self.asset.thumbnail)
+
+                    let configuration = WaveformConfiguration(size: UIScreen.main.bounds.size,
+                                                              color: FlexMediaPickerConfiguration.recordingWaveformColor,
+                                                              style: .gradient,
+                                                              position: .middle,
+                                                              scale: UIScreen.main.scale,
+                                                              paddingFactor: 4.0)
+                    self.waveformImageDrawer.waveformImage(fromAudioAt: url, with: configuration) { image in
+                        if let thumbnail = image {
+                            completionHandler(thumbnail)
+                        }
+                        else {
+                            NSLog("There is no image")
+                            completionHandler(self.asset.thumbnail)
+                        }
                     }
                 })
             }

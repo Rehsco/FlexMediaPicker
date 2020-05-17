@@ -276,6 +276,8 @@ extension UIImage {
             fallthrough
         case .upMirrored:
             break
+        @unknown default:
+            break
         }
         
         switch (self.imageOrientation) {
@@ -298,6 +300,8 @@ extension UIImage {
         case .left:
             break
         case .right:
+            break
+        @unknown default:
             break
         }
         

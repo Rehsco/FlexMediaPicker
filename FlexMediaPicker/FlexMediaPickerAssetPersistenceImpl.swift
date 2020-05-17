@@ -44,6 +44,8 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
     private var exportSession: AVAssetExportSession?
     private var progressUpdateTimer: Timer?
 
+    private let waveformImageDrawer = WaveformImageDrawer()
+
     open var baseVideoDirName = "fmpvideo"
     open var baseAudioDirName = "fmpaudio"
 
@@ -265,17 +267,21 @@ open class FlexMediaPickerAssetPersistenceImpl: NSObject, FlexMediaPickerAssetPe
     open func stopAudioRecording(_ success: Bool = true, finishedHandler: @escaping ((FlexMediaPickerAsset?)->Void)) {
         if success {
             self.audioRecorder?.stop()
-            if let url = self.currentAudioFileURL, let waveform = Waveform(audioAssetURL: url) {
+            if let url = self.currentAudioFileURL {
                 let configuration = WaveformConfiguration(size: FlexMediaPickerConfiguration.thumbnailSize,
                                                           color: FlexMediaPickerConfiguration.recordingWaveformColor,
                                                           style: .gradient,
                                                           position: .middle,
                                                           scale: UIScreen.main.scale,
                                                           paddingFactor: 4.0)
-                if let thumbnail = UIImage(waveform: waveform, configuration: configuration) {
+                waveformImageDrawer.waveformImage(fromAudioAt: url, with: configuration) { image in
+                    guard let thumbnail = image else {
+                        NSLog("Could not create image!")
+                        return
+                    }
                     finishedHandler(FlexMediaPickerAssetManager.persistence.createAudioRecordAsset(thumbnail: thumbnail, audioUrl: url))
-                    return
                 }
+                return
             }
         }
         finishedHandler(nil)

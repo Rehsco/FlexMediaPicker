@@ -15,7 +15,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.4.2</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -26,6 +26,8 @@
 	<string>In order to add location images and add locations to photos you need to grant access to locations</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Using microphone for this demo</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>The app needs access to your photolibrary</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>The app needs access to your photolibrary</string>
 	<key>UIBackgroundModes</key>

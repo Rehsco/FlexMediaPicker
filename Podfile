@@ -8,7 +8,6 @@ pod 'ImageSlideshow'
 pod 'ImagePersistence'
 pod 'TaskQueue'
 pod 'Player'
-pod 'SwiftSiriWaveformView'
 pod 'DSWaveformImage'
 
 target 'FlexMediaPicker' do

@@ -30,7 +30,6 @@
 import UIKit
 import AVFoundation
 import MJRFlexStyleComponents
-import SwiftSiriWaveformView
 import StyledOverlay
 
 class VoiceRecorderView: FlexView {

@@ -121,6 +121,8 @@ open class PhotosService: NSObject {
             return CGImagePropertyOrientation.rightMirrored
         case .left:
             return CGImagePropertyOrientation.left
+        @unknown default:
+            return CGImagePropertyOrientation.up
         }
     }
 }

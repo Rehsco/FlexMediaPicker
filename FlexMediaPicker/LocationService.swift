@@ -53,6 +53,8 @@ open class LocationService: NSObject, CLLocationManagerDelegate  {
             return true
         case .notDetermined, .restricted, .denied:
             return false
+        @unknown default:
+            return false
         }
     }
     
@@ -67,6 +69,8 @@ open class LocationService: NSObject, CLLocationManagerDelegate  {
             if fullAccessRequired {
                 StyledMenuPopoverFactory.showSettingsRequest(title: FlexMediaPickerConfiguration.requestPermissionTitle, message: FlexMediaPickerConfiguration.requestLocationPermissionMessage, configuration: FlexMediaPickerStyling.getPopoverViewAppearance())
             }
+        @unknown default:
+            break
         }
     }
     

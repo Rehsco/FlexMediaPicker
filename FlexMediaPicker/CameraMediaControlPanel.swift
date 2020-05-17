@@ -151,24 +151,26 @@ extension CameraMediaControlPanel {
     }
     
     func applyTriggerButtonStyle() {
-        let shouldTakeVideo = self.camVidSwitch?.on ?? false
-        if shouldTakeVideo {
-            self.backTriggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonBorderColor
-            if self.isVideoModeActive {
-                self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonRecordingColor
-            }
-            else {
-                self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonNotRecordingColor
-            }
-        }
-        else {
-            if self.isVideoModeActive {
-                self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonRecordingColorWhileInCameraMode
-                self.backTriggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonRecordingBorderColorWhileInCameraMode
-            }
-            else {
-                self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonColor
+        Helper.ensureOnAsyncMainThread {
+            let shouldTakeVideo = self.camVidSwitch?.on ?? false
+            if shouldTakeVideo {
                 self.backTriggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonBorderColor
+                if self.isVideoModeActive {
+                    self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonRecordingColor
+                }
+                else {
+                    self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonNotRecordingColor
+                }
+            }
+            else {
+                if self.isVideoModeActive {
+                    self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonRecordingColorWhileInCameraMode
+                    self.backTriggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonRecordingBorderColorWhileInCameraMode
+                }
+                else {
+                    self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonColor
+                    self.backTriggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonBorderColor
+                }
             }
         }
     }

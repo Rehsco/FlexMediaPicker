@@ -35,6 +35,7 @@ import Player
 import StyledOverlay
 
 class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate, AVAudioPlayerDelegate {
+    
     private var player: Player?
     private var audioPlayer: AVAudioPlayer?
 
@@ -822,6 +823,9 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
     }
     
     func playerPlaybackWillLoop(_ player: Player) {
+    }
+    
+    func playerPlaybackDidLoop(_ player: Player) {
     }
     
     // Helper

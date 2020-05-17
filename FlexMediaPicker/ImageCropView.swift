@@ -498,7 +498,7 @@ public class ImageCropView: CommonFlexView, UIGestureRecognizerDelegate {
             height: ceil(maskSize.height / zoomScale))
         
         UIGraphicsBeginImageContextWithOptions(contextSize, false, imageScale)
-        guard let ctx = UIGraphicsGetCurrentContext() else {
+        guard let _ = UIGraphicsGetCurrentContext() else {
             return croppedImage
         }
         

@@ -125,12 +125,14 @@ extension VoiceRecorderMediaControlPanel {
     }
     
     func applyTriggerButtonStyle() {
-        self.backTriggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonBorderColor
-        if self.isRecording {
-            self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonRecordingColor
-        }
-        else {
-            self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonNotRecordingColor
+        Helper.ensureOnAsyncMainThread {
+            self.backTriggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonBorderColor
+            if self.isRecording {
+                self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonRecordingColor
+            }
+            else {
+                self.triggerButton?.styleColor = FlexMediaPickerConfiguration.takeButtonNotRecordingColor
+            }
         }
     }
 }
