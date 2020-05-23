@@ -530,7 +530,7 @@ open class FlexMediaPickerViewController: CommonFlexCollectionViewController {
     override open func populateContent() {
         super.populateContent()
         self.contentView?.removeAllSections()
-        if self.assetCollections.count == 0 && self.currentAssetCollection == nil {
+        if self.assetCollections.count == 0 && self.currentAssetCollection == nil && self.smartAssetCollections.count == 0 {
             return
         }
         if self.currentAssetCollection != nil && self.assetCache.count == 0 {
