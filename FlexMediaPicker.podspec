@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'FlexMediaPicker'
-  s.version          = '5.0.1'
+  s.version          = '5.0.2'
   s.license          = 'MIT'
   s.summary          = 'Image'
   s.homepage         = 'https://github.com/Rehsco/FlexMediaPicker.git'
