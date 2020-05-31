@@ -34,7 +34,7 @@ class ScrollViewNotifications {
     static let ScrollViewEndsZoom = "scrollview-ends-zoom"
 }
 
-extension UIScrollView: UIScrollViewDelegate {
+extension UIScrollView {
     
     public func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {
         let note = Notification(name: Notification.Name(rawValue: ScrollViewNotifications.ScrollViewBeginsZoom))

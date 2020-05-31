@@ -27,12 +27,6 @@
 		5BC11D081FADCCF200BBC03B /* VoiceRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC11D061FADCCF200BBC03B /* VoiceRecorderView.swift */; };
 		5BC3EF891FA72A4B00D21B14 /* CGGeometryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF881FA72A4B00D21B14 /* CGGeometryExtension.swift */; };
 		5BC3EF8A1FA72A4B00D21B14 /* CGGeometryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF881FA72A4B00D21B14 /* CGGeometryExtension.swift */; };
-		5BC3EF8C1FA72A6900D21B14 /* RSKImageScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF8B1FA72A6900D21B14 /* RSKImageScrollView.swift */; };
-		5BC3EF8D1FA72A6900D21B14 /* RSKImageScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF8B1FA72A6900D21B14 /* RSKImageScrollView.swift */; };
-		5BC3EF8F1FA72A9800D21B14 /* RSKTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF8E1FA72A9800D21B14 /* RSKTouchView.swift */; };
-		5BC3EF901FA72A9800D21B14 /* RSKTouchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF8E1FA72A9800D21B14 /* RSKTouchView.swift */; };
-		5BC3EF921FA72AF000D21B14 /* ImageCropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF911FA72AF000D21B14 /* ImageCropView.swift */; };
-		5BC3EF931FA72AF000D21B14 /* ImageCropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC3EF911FA72AF000D21B14 /* ImageCropView.swift */; };
 		5BC562631F50392D00A848F2 /* FlexMediaPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5BC562611F50392D00A848F2 /* FlexMediaPicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5BC562701F50394700A848F2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC5626F1F50394700A848F2 /* AppDelegate.swift */; };
 		5BC562721F50394700A848F2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC562711F50394700A848F2 /* ViewController.swift */; };
@@ -91,12 +85,12 @@
 		5BDC841D1F52CE8B00BF45B5 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC841B1F52CE8B00BF45B5 /* CameraView.swift */; };
 		5BDF22FA1F7F9A65000A6B7E /* ImageSlideShowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDF22F91F7F9A65000A6B7E /* ImageSlideShowView.swift */; };
 		5BDF22FB1F7F9A65000A6B7E /* ImageSlideShowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDF22F91F7F9A65000A6B7E /* ImageSlideShowView.swift */; };
-		5BE0F1741FA203B300BEC1CB /* UIScrollViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE0F1731FA203B300BEC1CB /* UIScrollViewExtensions.swift */; };
-		5BE0F1751FA203B300BEC1CB /* UIScrollViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE0F1731FA203B300BEC1CB /* UIScrollViewExtensions.swift */; };
 		5BE45C591F7C004000322FCC /* ImageAssetImageSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE45C581F7C004000322FCC /* ImageAssetImageSource.swift */; };
 		5BE45C5A1F7C004000322FCC /* ImageAssetImageSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE45C581F7C004000322FCC /* ImageAssetImageSource.swift */; };
 		5BE57D151F83AE340037D4EF /* TimeSliderInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE57D141F83AE340037D4EF /* TimeSliderInfoView.swift */; };
 		5BE57D161F83AE340037D4EF /* TimeSliderInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE57D141F83AE340037D4EF /* TimeSliderInfoView.swift */; };
+		69027FE5247FB9BB0038DD65 /* UIScrollViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69027FE4247FB9BB0038DD65 /* UIScrollViewExtensions.swift */; };
+		69027FE6247FBA0F0038DD65 /* UIScrollViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69027FE4247FB9BB0038DD65 /* UIScrollViewExtensions.swift */; };
 		6955CE402471512F00F92021 /* SwiftSiriWaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6955CE3F2471512F00F92021 /* SwiftSiriWaveformView.swift */; };
 		6955CE412471512F00F92021 /* SwiftSiriWaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6955CE3F2471512F00F92021 /* SwiftSiriWaveformView.swift */; };
 		903231DFC07DA9FD099D7C2D /* Pods_FlexMediaPicker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A355FF259B4BD6806377BAD5 /* Pods_FlexMediaPicker.framework */; };
@@ -115,9 +109,6 @@
 		5BC11D031FADCB1900BBC03B /* VoiceRecorderMediaControlPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceRecorderMediaControlPanel.swift; sourceTree = "<group>"; };
 		5BC11D061FADCCF200BBC03B /* VoiceRecorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceRecorderView.swift; sourceTree = "<group>"; };
 		5BC3EF881FA72A4B00D21B14 /* CGGeometryExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGGeometryExtension.swift; sourceTree = "<group>"; };
-		5BC3EF8B1FA72A6900D21B14 /* RSKImageScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSKImageScrollView.swift; sourceTree = "<group>"; };
-		5BC3EF8E1FA72A9800D21B14 /* RSKTouchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSKTouchView.swift; sourceTree = "<group>"; };
-		5BC3EF911FA72AF000D21B14 /* ImageCropView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCropView.swift; sourceTree = "<group>"; };
 		5BC5625E1F50392D00A848F2 /* FlexMediaPicker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FlexMediaPicker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BC562611F50392D00A848F2 /* FlexMediaPicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlexMediaPicker.h; sourceTree = "<group>"; };
 		5BC562621F50392D00A848F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -154,9 +145,9 @@
 		5BDC84181F52CC8F00BF45B5 /* Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		5BDC841B1F52CE8B00BF45B5 /* CameraView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		5BDF22F91F7F9A65000A6B7E /* ImageSlideShowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSlideShowView.swift; sourceTree = "<group>"; };
-		5BE0F1731FA203B300BEC1CB /* UIScrollViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIScrollViewExtensions.swift; sourceTree = "<group>"; };
 		5BE45C581F7C004000322FCC /* ImageAssetImageSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAssetImageSource.swift; sourceTree = "<group>"; };
 		5BE57D141F83AE340037D4EF /* TimeSliderInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSliderInfoView.swift; sourceTree = "<group>"; };
+		69027FE4247FB9BB0038DD65 /* UIScrollViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIScrollViewExtensions.swift; sourceTree = "<group>"; };
 		6955CE3F2471512F00F92021 /* SwiftSiriWaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftSiriWaveformView.swift; sourceTree = "<group>"; };
 		7F0A6406FB8E47035C90A29C /* Pods-FlexMediaPickerExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlexMediaPickerExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-FlexMediaPickerExample/Pods-FlexMediaPickerExample.release.xcconfig"; sourceTree = "<group>"; };
 		89B7DD93059BEE76E18453D9 /* Pods_FlexMediaPickerExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FlexMediaPickerExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -257,16 +248,6 @@
 			name = "Voice Recorder";
 			sourceTree = "<group>";
 		};
-		5BC3EF871FA72A3100D21B14 /* Image Crop View */ = {
-			isa = PBXGroup;
-			children = (
-				5BC3EF8B1FA72A6900D21B14 /* RSKImageScrollView.swift */,
-				5BC3EF8E1FA72A9800D21B14 /* RSKTouchView.swift */,
-				5BC3EF911FA72AF000D21B14 /* ImageCropView.swift */,
-			);
-			name = "Image Crop View";
-			sourceTree = "<group>";
-		};
 		5BC562541F50392D00A848F2 = {
 			isa = PBXGroup;
 			children = (
@@ -324,7 +305,6 @@
 				5BC5628D1F50435B00A848F2 /* Base UI */,
 				5BC11CFF1FADB2B600BBC03B /* Voice Recorder */,
 				5BDC84131F52CC2300BF45B5 /* Camera */,
-				5BC3EF871FA72A3100D21B14 /* Image Crop View */,
 				5B8835661FB1F67900782FB5 /* Selected Media View */,
 				5BDF22F81F7F9A3E000A6B7E /* Media Viewer */,
 				5BBFFAC01F51DF8000C08350 /* Control Panels */,
@@ -335,8 +315,8 @@
 		5BC562811F503A8700A848F2 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				69027FE4247FB9BB0038DD65 /* UIScrollViewExtensions.swift */,
 				5BC562971F50599700A848F2 /* UIImageExtensions.swift */,
-				5BE0F1731FA203B300BEC1CB /* UIScrollViewExtensions.swift */,
 				5BC667801FA4D948004D517D /* CGRectHelper.swift */,
 				5BC3EF881FA72A4B00D21B14 /* CGGeometryExtension.swift */,
 				5B88355D1FB1AC0600782FB5 /* StringExtension.swift */,
@@ -567,6 +547,7 @@
 				"${PODS_ROOT}/Target Support Files/Pods-FlexMediaPickerExample/Pods-FlexMediaPickerExample-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/DSWaveformImage/DSWaveformImage.framework",
 				"${BUILT_PRODUCTS_DIR}/DateToolsSwift/DateToolsSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/FlexImageCropView/FlexImageCropView.framework",
 				"${BUILT_PRODUCTS_DIR}/ImagePersistence/ImagePersistence.framework",
 				"${BUILT_PRODUCTS_DIR}/ImageSlideshow/ImageSlideshow.framework",
 				"${BUILT_PRODUCTS_DIR}/MJRFlexStyleComponents/MJRFlexStyleComponents.framework",
@@ -579,6 +560,7 @@
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DSWaveformImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DateToolsSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FlexImageCropView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ImagePersistence.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ImageSlideshow.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MJRFlexStyleComponents.framework",
@@ -638,11 +620,9 @@
 				5BD79AB91F66879A0023CE21 /* VideoWriter.swift in Sources */,
 				5BE57D151F83AE340037D4EF /* TimeSliderInfoView.swift in Sources */,
 				5BC5629B1F5059E400A848F2 /* ImagesCollectionView.swift in Sources */,
-				5BC3EF921FA72AF000D21B14 /* ImageCropView.swift in Sources */,
 				5BC562981F50599700A848F2 /* UIImageExtensions.swift in Sources */,
 				5BC11D041FADCB1900BBC03B /* VoiceRecorderMediaControlPanel.swift in Sources */,
 				5BC9193B1FB05D6900A37AC4 /* AudioService.swift in Sources */,
-				5BC3EF8F1FA72A9800D21B14 /* RSKTouchView.swift in Sources */,
 				5BC5628F1F50436700A848F2 /* CommonFlexCollectionViewController.swift in Sources */,
 				5BDF22FA1F7F9A65000A6B7E /* ImageSlideShowView.swift in Sources */,
 				5B88355E1FB1AC0600782FB5 /* StringExtension.swift in Sources */,
@@ -651,10 +631,9 @@
 				5BC5628B1F50412900A848F2 /* FlexMediaPickerViewController.swift in Sources */,
 				5BC6D94E1F763F190051B0A3 /* CamVidSwitch.swift in Sources */,
 				5BC11D071FADCCF200BBC03B /* VoiceRecorderView.swift in Sources */,
-				5BE0F1741FA203B300BEC1CB /* UIScrollViewExtensions.swift in Sources */,
+				69027FE5247FB9BB0038DD65 /* UIScrollViewExtensions.swift in Sources */,
 				5BC667811FA4D948004D517D /* CGRectHelper.swift in Sources */,
 				5BC9193E1FB065D800A37AC4 /* PhotosService.swift in Sources */,
-				5BC3EF8C1FA72A6900D21B14 /* RSKImageScrollView.swift in Sources */,
 				5BCCDEC41F82A44A00914DC1 /* PositionUpdateTimer.swift in Sources */,
 				5BBFFABB1F51796500C08350 /* FlexMediaPickerAsset.swift in Sources */,
 				5B8835681FB1F6C800782FB5 /* SelectedAssetsCollectionView.swift in Sources */,
@@ -667,7 +646,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6955CE412471512F00F92021 /* SwiftSiriWaveformView.swift in Sources */,
-				5BC3EF931FA72AF000D21B14 /* ImageCropView.swift in Sources */,
 				5BC562901F50436700A848F2 /* CommonFlexCollectionViewController.swift in Sources */,
 				5B88356C1FB204F900782FB5 /* FlexMediaPickerStyling.swift in Sources */,
 				5BC11D021FADB34000BBC03B /* MicrophoneMan.swift in Sources */,
@@ -684,7 +662,6 @@
 				5BD6281D1F84C556001DB4BA /* FlexMediaPickerAssetPersistence.swift in Sources */,
 				5BC3EF8A1FA72A4B00D21B14 /* CGGeometryExtension.swift in Sources */,
 				5BC11D051FADCB1900BBC03B /* VoiceRecorderMediaControlPanel.swift in Sources */,
-				5BE0F1751FA203B300BEC1CB /* UIScrollViewExtensions.swift in Sources */,
 				5BC5629C1F5059E400A848F2 /* ImagesCollectionView.swift in Sources */,
 				5BE57D161F83AE340037D4EF /* TimeSliderInfoView.swift in Sources */,
 				5BC562841F503A9A00A848F2 /* FlexMediaPickerAssetManager.swift in Sources */,
@@ -699,17 +676,16 @@
 				5BBFFABC1F51796500C08350 /* FlexMediaPickerAsset.swift in Sources */,
 				5BD79ABA1F66879A0023CE21 /* VideoWriter.swift in Sources */,
 				5BC5628C1F50412900A848F2 /* FlexMediaPickerViewController.swift in Sources */,
-				5BC3EF901FA72A9800D21B14 /* RSKTouchView.swift in Sources */,
 				5BC562701F50394700A848F2 /* AppDelegate.swift in Sources */,
 				5BDC84161F52CC3000BF45B5 /* CameraMan.swift in Sources */,
 				5BC9193F1FB065D800A37AC4 /* PhotosService.swift in Sources */,
 				5BE45C5A1F7C004000322FCC /* ImageAssetImageSource.swift in Sources */,
-				5BC3EF8D1FA72A6900D21B14 /* RSKImageScrollView.swift in Sources */,
 				5BC667821FA4D948004D517D /* CGRectHelper.swift in Sources */,
 				5BC6D94F1F763F190051B0A3 /* CamVidSwitch.swift in Sources */,
 				5BD1E6E71F88BEB80027E663 /* FlexMediaPickerImagePersistenceImpl.swift in Sources */,
 				5B8835691FB1F6C800782FB5 /* SelectedAssetsCollectionView.swift in Sources */,
 				5BC11D081FADCCF200BBC03B /* VoiceRecorderView.swift in Sources */,
+				69027FE6247FBA0F0038DD65 /* UIScrollViewExtensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -869,8 +845,9 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = FlexMediaPicker/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MARKETING_VERSION = 5.0.1;
+				MARKETING_VERSION = 5.1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.cocoapods.FlexMediaPicker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -892,8 +869,9 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = FlexMediaPicker/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MARKETING_VERSION = 5.0.1;
+				MARKETING_VERSION = 5.1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.cocoapods.FlexMediaPicker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -908,8 +886,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = V7Y9TF9C7U;
 				INFOPLIST_FILE = FlexMediaPickerExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 5.0.1;
+				MARKETING_VERSION = 5.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.rehsco.FlexMediaPickerExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -923,8 +902,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = V7Y9TF9C7U;
 				INFOPLIST_FILE = FlexMediaPickerExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 5.0.1;
+				MARKETING_VERSION = 5.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.rehsco.FlexMediaPickerExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

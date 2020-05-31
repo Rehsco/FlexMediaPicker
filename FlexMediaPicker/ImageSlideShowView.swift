@@ -33,6 +33,7 @@ import ImageSlideshow
 import AVFoundation
 import Player
 import StyledOverlay
+import FlexImageCropView
 
 class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate, AVAudioPlayerDelegate {
     

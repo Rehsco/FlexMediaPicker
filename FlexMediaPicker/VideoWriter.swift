@@ -40,7 +40,7 @@ class VideoWriter {
         fileWriter = try? AVAssetWriter(outputURL: fileUrl, fileType: AVFileType.mov)
         
         let videoOutputSettings: Dictionary<String, AnyObject> = [
-            AVVideoCodecKey : AVVideoCodecH264 as AnyObject,
+            AVVideoCodecKey : AVVideoCodecType.h264 as AnyObject,
             AVVideoWidthKey : width as AnyObject,
             AVVideoHeightKey : height as AnyObject
         ];
