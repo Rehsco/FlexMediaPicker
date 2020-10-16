@@ -786,7 +786,9 @@ class ImageSlideShowView: CommonFlexView, PlayerDelegate, PlayerPlaybackDelegate
     // MARK: - PlayerPlaybackDelegate
     
     func playerCurrentTimeDidChange(_ player: Player) {
-        let fraction = Double(player.currentTime) / Double(player.maximumDuration)
+        let current: Double = player.currentTime.seconds
+        let maxDur: TimeInterval = player.maximumDuration
+        let fraction = Double(current) / Double(maxDur)
         if !fraction.isNaN {
             if fraction >= self.maximumAVOffset {
                 self.player?.stop()

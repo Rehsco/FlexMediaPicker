@@ -76,6 +76,23 @@ class Helper {
         }
     }
 
+    static func stringFromTimeInterval(interval: CMTime) -> String {
+        let totalSeconds = Int(interval.seconds)
+        let hours:Int = Int(totalSeconds / 3600)
+        let minutes:Int = Int(totalSeconds % 3600 / 60)
+        let seconds:Int = Int((totalSeconds % 3600) % 60)
+
+        if minutes == 0 && hours == 0 {
+            return NSString(format: "%0.2ds",seconds) as String
+        }
+        else if hours == 0 {
+            return NSString(format: "%0.2d:%0.2d",minutes,seconds) as String
+        }
+        else {
+            return NSString(format: "%0.2d:%0.2d:%0.2d",hours,minutes,seconds) as String
+        }
+    }
+
     static func getMaskRect(inRect rect: CGRect) -> CGRect {
         switch FlexMediaPickerConfiguration.imageMaskFitting {
         case .scaleToFill:
