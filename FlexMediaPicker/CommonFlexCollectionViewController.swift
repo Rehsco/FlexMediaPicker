@@ -28,7 +28,8 @@
  */
 
 import UIKit
-import MJRFlexStyleComponents
+import FlexCollections
+import FlexViews
 
 open class CommonFlexCollectionViewController: UIViewController {
     open var leftViewMenu: CommonIconViewMenu?

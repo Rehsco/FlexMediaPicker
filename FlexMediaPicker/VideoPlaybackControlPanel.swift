@@ -28,7 +28,9 @@
  */
 
 import UIKit
-import MJRFlexStyleComponents
+import FlexMenu
+import FlexViews
+import FlexSlider
 
 enum VideoPlaybackPanelState {
     case audio

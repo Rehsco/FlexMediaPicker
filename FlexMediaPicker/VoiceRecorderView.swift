@@ -29,7 +29,8 @@
 
 import UIKit
 import AVFoundation
-import MJRFlexStyleComponents
+import FlexViews
+import FlexControls
 import StyledOverlay
 
 class VoiceRecorderView: FlexView {

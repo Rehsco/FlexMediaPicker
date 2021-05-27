@@ -28,7 +28,8 @@
  */
 
 import UIKit
-import MJRFlexStyleComponents
+import FlexViews
+import FlexSlider
 
 class VideoTimeSliderView: FlexView {
     private var timeSlider: FlexMutableSlider?

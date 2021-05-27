@@ -1,7 +1,6 @@
-platform :ios, '12.0'
+platform :ios, '12.1'
 use_frameworks!
 
-pod 'MJRFlexStyleComponents'
 pod 'DateToolsSwift'
 pod 'StyledOverlay'
 pod 'ImageSlideshow'

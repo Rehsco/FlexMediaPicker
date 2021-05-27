@@ -28,7 +28,8 @@
  */
 
 import UIKit
-import MJRFlexStyleComponents
+import FlexViews
+import FlexMenu
 
 class MainMediaControlPanel: MediaControlPanel {
     private var rightMenu: CommonIconViewMenu?

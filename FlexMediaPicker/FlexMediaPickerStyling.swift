@@ -28,8 +28,10 @@
  */
 
 import UIKit
-import MJRFlexStyleComponents
+import FlexControls
 import StyledOverlay
+import FlexCollections
+import FlexViews
 
 open class FlexMediaPickerStyling {
 

@@ -29,7 +29,7 @@
 
 
 import UIKit
-import MJRFlexStyleComponents
+import FlexViews
 import DateToolsSwift
 import Photos
 import ImageSlideshow
@@ -39,6 +39,7 @@ import TaskQueue
 import StyledLabel
 import StyledOverlay
 import MapKit
+import FlexMenu
 
 class ImageMediaCollectionView: ImagesCollectionView {
     private var mediaControlPanel = MainMediaControlPanel(frame: CGRect(x: 0, y: 0, width: 100, height: 100))

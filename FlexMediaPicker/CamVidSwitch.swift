@@ -27,7 +27,7 @@
  *
  */
 import UIKit
-import MJRFlexStyleComponents
+import FlexSlider
 
 class CamVidSwitch: FlexSwitch {
     private var thumbIcon: UIImage?

@@ -28,7 +28,9 @@
  */
 
 import UIKit
-import MJRFlexStyleComponents
+import FlexMenu
+import FlexViews
+import FlexControls
 
 class VoiceRecorderMediaControlPanel: FlexFooterView {
     private var rightMenu: CommonIconViewMenu?

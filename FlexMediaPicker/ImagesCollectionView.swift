@@ -28,7 +28,8 @@
  */
 
 import UIKit
-import MJRFlexStyleComponents
+import FlexCollections
+import FlexViews
 
 open class ImagesCollectionView: FlexCollectionView {
     

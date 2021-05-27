@@ -5,10 +5,11 @@
 import UIKit
 import AVFoundation
 import PhotosUI
-import MJRFlexStyleComponents
+import FlexViews
 import StyledOverlay
+import FlexControls
 
-protocol CameraViewDelegate: class {
+protocol CameraViewDelegate: AnyObject {
     func cameraNotAvailable()
 }
 

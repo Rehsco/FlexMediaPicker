@@ -28,7 +28,9 @@
  */
 
 import UIKit
-import MJRFlexStyleComponents
+import FlexMenu
+import FlexViews
+import FlexControls
 
 class CameraMediaControlPanel: FlexFooterView {
     private var flashItem: FlexMenuItem?

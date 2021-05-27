@@ -28,7 +28,8 @@
  */
 
 import UIKit
-import MJRFlexStyleComponents
+import FlexMenu
+import FlexViews
 
 enum MediaControlAction {
     case camera

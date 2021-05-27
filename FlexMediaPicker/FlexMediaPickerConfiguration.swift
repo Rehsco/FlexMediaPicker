@@ -3,8 +3,9 @@
  */
 
 import UIKit
-import MJRFlexStyleComponents
+import FlexControls
 import AVFoundation
+import FlexViews
 
 public class FlexMediaPickerConfiguration: StyleEnvironment {
     

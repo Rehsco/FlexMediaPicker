@@ -28,7 +28,7 @@
  */
 
 import UIKit
-import MJRFlexStyleComponents
+import FlexViews
 import StyledLabel
 import StyledOverlay
 

@@ -28,7 +28,7 @@
  */
 
 import UIKit
-import MJRFlexStyleComponents
+import FlexControls
 
 class TimeSliderInfoView: UIView {
     private var minimumTimeLabel: FlexLabel?

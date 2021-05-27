@@ -28,7 +28,9 @@
  */
 
 import UIKit
-import MJRFlexStyleComponents
+import FlexViews
+import FlexMenu
+import FlexControls
 import ImageSlideshow
 import AVFoundation
 import Player

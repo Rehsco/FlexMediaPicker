@@ -8,7 +8,7 @@ import PhotosUI
 import AssetsLibrary
 import StyledOverlay
 
-protocol CameraManDelegate: class {
+protocol CameraManDelegate: AnyObject {
     func cameraManDidStart(_ cameraMan: CameraMan)
     func cameraMan(_ cameraMan: CameraMan, didChangeInput input: AVCaptureDeviceInput)
 }
